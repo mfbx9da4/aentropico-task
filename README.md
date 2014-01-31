@@ -63,10 +63,11 @@ PART 2
 
 Suppose you have a Retailer Data Table with the following information fields:
 
-“cust_id” : Customer ID
-“trans_id” : Transaction ID
-“date” : Date of transaction
-“Code” : Product Code
+	“cust_id” : Customer ID
+	“trans_id” : Transaction ID
+	“date” : Date of transaction
+	“Code” : Product Code
+
 These will help us identify who bought what, when, and in which transaction.
 
 Write down 10 specific questions that can be answered with this data set and suggest some computations to build next in the API you created so we can sell this report to a Store Manager.
@@ -74,3 +75,9 @@ Write down 10 specific questions that can be answered with this data set and sug
 Example: 
 What is the pair of products that will be bought together every monday so I can put them in promotion? - COMP: Analyze correlations of products bought together, or build a recommendation engine for products.
 This is just a brainstorming exercise, feel free to throw any ideas that come to your mind.
+
+1. Customer clustering into groups
+2. Associating dates with products
+3. Patterns of customer buying
+4. Do people buy same product several times
+5. Which products are only bought once and never again.
