@@ -120,10 +120,30 @@ body{font-size:16px;}
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3 { page-break-after: avoid; }
 }
-</style><title>README</title></head><body><p>PART 1</p>
+</style><title>README</title></head><body><h2 id="checklist">Checklist</h2>
+<ul>
+<li>011969310606</li>
+<li>grunt</li>
+<li>15.14</li>
+</ul>
+<h4 id="internet">Internet:</h4>
+<ul>
+<li>Sort out stats/genetics module</li>
+<li>Sort out uploading to amazon</li>
+<li>Post form with url input</li>
+<li>bootstrap docs (form)!</li>
+<li>all docs from juan</li>
+<li>passport for email and pwd</li>
+<li>udacity algorithms docs</li>
+<li>get jade for angular!</li>
+<li>set default sublime syntax</li>
+<li>syntax not working sublime</li>
+<li>destroy all software</li>
+</ul>
+<h2 id="part-1">PART 1</h2>
 <p>Create a simple API using Node.js. 
 When we make a post request with a url of some csv data (eg http://aedata-tmp.s3.amazonaws.com/seriesA080328.csv), the server should return a JobId.
-When we make a get request with the JobId previously returned we will get the results of the computation in a json file. The computation should be done however you want and it will make a dummy prediction for the next 20 values of the y variable. The api should then return an html file with the original data, the calculation, and some graph in d3.js (e.g. http://bl.ocks.org/mbostock/3883245) that represents the prediction.</p>
+When we make a get request with the JobId previously returned we will get the results of the computation in a json file. The computation should be done however you want and it will make a dummy prediction for the next 20 values of the y variable. The api should then return an html file with the original data, the calculation, and some graph in d3.js (e.g. <a href="http://bl.ocks.org/">blocks</a>mbostock/3883245) that represents the prediction.</p>
 <p>Example</p>
 <p>Post request to run Algorithm "000000"</p>
 <pre><code>curl -v -H "Content-Type: application/json" -X POST --data '{"url":"http://aedata-tmp.s3.amazonaws.com/seriesA080328.csv"}' http://myserver/algorithms/000000:
@@ -149,20 +169,20 @@ When we make a get request with the JobId previously returned we will get the re
 <p>2.
 Create a frontend in Angular.js for users to upload their own link to a csv file and get back an html report with the prediction on the values.</p>
 <p>BONUS: Please enhance backend API above to have all the data uploaded by the users to be uploaded directly to an Amazon S3 bucket, make the data upload bypass the api server by getting a policy from the server and using the policy to upload directly the files to S3 from the client. Find attached some examples of an angular api that does that (sierpinski.zip)</p>
-<p>BONUS: Enhance the visualization by making it reusable. http://bost.ocks.org/mike/chart/
-We don't mean simply using some of the many d3 based visualization libraries, but instead try to develop a roadmap to transform many of the available examples ( http://bost.ocks.org/mike/ , 
-http://christopheviau.com/d3list/gallery.html ) into reusable charts. Find attached one book that explains in detail how to do this with Angular.</p>
+<p>BONUS: Enhance the visualization by making it reusable. <a href="http://bost.ocks.org/mike/chart/">http://bost.ocks.org/mike/chart/</a>
+We don't mean simply using some of the many d3 based visualization libraries, but instead try to develop a roadmap to transform many of the available examples ( <a href="http://bost.ocks.org/mike/">http://bost.ocks.org/mike/</a> , 
+<a href="http://christopheviau.com/d3list/gallery.html">http://christopheviau.com/d3list/gallery.html</a> ) into reusable charts. Find attached one book that explains in detail how to do this with Angular.</p>
 <p>Feel free to improve or simplify whatever you want.</p>
 <p>Here are some resources for you.
 Angular:
-http://www.ng-newsletter.com/posts/beginner2expert-how_to_start.html
+<a href="http://www.ng-newsletter.com/posts/beginner2expert-how_to_start.html">http://www.ng-newsletter.com/posts/beginner2expert-how_to_start.html</a>
 Node.js
-http://www.hacksparrow.com/express-js-tutorial.html
-http://javascriptissexy.com/learn-node-js-completely-and-with-confidence/</p>
+<a href="http://www.hacksparrow.com/express-js-tutorial.html">http://www.hacksparrow.com/express-js-tutorial.html</a>
+<a href="http://javascriptissexy.com/learn-node-js-completely-and-with-confidence/">http://javascriptissexy.com/learn-node-js-completely-and-with-confidence/</a></p>
 <p>We suggest you to use MongoDB as your database, maintain the code using Github.com and make the deployment using Heroku.</p>
 <p>Let us know if you have any questions at any time. We would be glad to help you and guide you through this task if you find it interesting enough.</p>
 <p>We know this might be a lot of work but just take your time and let us know your advances, as soon as we hear from you we can set up another skype chat.</p>
-<p>PART 2</p>
+<h2 id="part-2">PART 2</h2>
 <p>Suppose you have a Retailer Data Table with the following information fields:</p>
 <pre><code>“cust_id” : Customer ID
 “trans_id” : Transaction ID
@@ -174,6 +194,7 @@ http://javascriptissexy.com/learn-node-js-completely-and-with-confidence/</p>
 <p>Example: 
 What is the pair of products that will be bought together every monday so I can put them in promotion? - COMP: Analyze correlations of products bought together, or build a recommendation engine for products.
 This is just a brainstorming exercise, feel free to throw any ideas that come to your mind.</p>
+<h3 id="answer">Answer</h3>
 <ol>
 <li>Customer clustering into groups</li>
 <li>Associating dates with products</li>
