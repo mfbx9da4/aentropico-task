@@ -33,6 +33,22 @@ Response Body
 
     } 
 
+Checklist:
+
+	- 011969310606
+	- grunt
+	- 15.14
+
+Internet
+
+	- Sort out stats/genetics module
+	- Sort out uploading to amazon
+	- Post form with url input
+	- bootstrap docs (form)!
+	- all docs from juan
+	- passport for email and pwd
+	- udacity algorithms docs
+	- get jade for angular!
 
 2.
 Create a frontend in Angular.js for users to upload their own link to a csv file and get back an html report with the prediction on the values.

@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+
+<title>AWS JS SDK - The Canonical Angular Guide | ng-newsletter</title>
+
+<meta name="author" content="Ari Lerner">
+<meta name="description" content="In this week's post, we dive deep in the new AWS JS sdk framework and learn how to use it with angular. In this post, we're building a payment gateway to remove the need for a backend to take payments. angularjs angularjs tutorial angular">
+<meta name="keywords" content="angularjs getting started with angularjs how to configure angularjs angular tutorial angularjs tutorial stripe stripe angularjs angularjs stripe stripe.js payments without a backend angularjs payment angularjs angularjs tutorial angular realtime firebase angularfire">
+
+<meta name="msvalidate.01" content="BE7DA3BEF0F11153F6E4B5585C12DB20" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ng-newsletter" />
+<meta property="og:url" content="http://ng-newsletter.com" />
+<meta property="og:image" content="http://ng-newsletter.com/img/" />
+<meta property="og:description" content="In this week's post, we dive deep in the new AWS JS sdk framework and learn how to use it with angular. In this post, we're building a payment gateway to remove the need for a backend to take payments." />
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:creator" value="@auser" />
+<meta name="twitter:title" value="ng-newsletter" />
+<meta name="twitter:description" value="In this week's post, we dive deep in the new AWS JS sdk framework and learn how to use it with angular. In this post, we're building a payment gateway to remove the need for a backend to take payments." />
+<meta name="twitter:image" value="http://ng-newsletter.com/img/" />
+
+<link rel="alternate" type="application/rss+xml" href="feed.rss" title="Sitewide RSS 2.0 Feed">
+<link rel="alternate" type="application/atom+xml" href="atom.xml" title="Sitewide ATOM Feed">
+<link rel="alternate" type="application/atom+json" href="atom.json" title="Sitewide JSON Feed">
+
+<link href="/favicon.ico" rel="icon" type="image/ico" />
+<link href="/css/site.css" media="screen" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Roboto:400italic,700italic,400,700|Open+Sans:r,i,b,bi|Bitter:r,i,b" media="screen" rel="stylesheet" type="text/css" />
+<script src="/js/vendor/custom.modernizr.js"></script>
+<script src="/js/vendor/d3.v3.min.js"></script>
+<script src="/js/vendor/angular/angular.min.js"></script>
+<script src="/js/vendor/angular-route/angular-route.min.js"></script>
+<script src="/js/vendor/angular-animate.min.js"></script>
+<script src="/js/vendor/angular-translate.min.js"></script>
+<script src="/js/vendor/angular-cookies/angular-cookies.min.js"></script>
+
+
+</head>
+<body>
+
+    
+    <div id="header">
+  <div id="topNav">
+    <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">ng-newsletter</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <ul class="right">
+      		<li><a href="/posts">Articles</a></li>
+          <li><a href="/advent2013/">25 days of Angular</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/sponsor">Sponsorship</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+  <div class="headerContent">
+  </div>
+</div>
+
+    <div class="container">
+      <div id="article">
+        <article class="post">
+          <header>
+            <h1 class="mega">AWS JS SDK - The Canonical Angular Guide</h1>
+          </header>
+          
+          <p>One of the biggest benefits to building a single page app (SPA) is the ability to host flat files, rather than needing to build and service a back-end infrastructure.</p>
+
+<p>However, most of the applications that we will build need to be powered by a back-end server with custom data. There are a growing number of options to enable us developers to focus on building only our front-end code and leave the back-ends alone.</p>
+
+<p>Amazon released a new option for us late last week to allow us to build server-less web applications from right inside the browser: <a href="http://aws.amazon.com/">Amazon AWS Javascript SDK</a>.</p>
+
+<p>Their browser-based (and server-side with NodeJS) SDK allows us to confidently host our applications and interact with production-grade back-end services. </p>
+
+<p>Now, it&rsquo;s possible to host our application stack entirely on Amazon infrastructure, using S3 to host our application and files, DynamoDB as a NoSQL store, and other web-scale services. We can even securely accept payments from the client side and get all the benefits of the Amazon CDN.</p>
+
+<p>With this release, the Javascript SDK now allows us to interact with a large portion of the dozens of Amazon AWS services. These services include:</p>
+
+<h3>DynamoDB</h3>
+
+<p>The fast, fully managed NoSQL database service that allows you to scale to <em>infinite</em> size with automatic triplicate replication with secure access controls.</p>
+
+<h3>Simple Notification Service (SNS)</h3>
+
+<p>The fast, flexible fully managed push notification service that allows us to push messages to mobile devices as well as other services, such as email or even to amazon&rsquo;s own Simple Queue Service (SQS).</p>
+
+<h3>Simple Queue Service (SQS)</h3>
+
+<p>The fast, reliable, fully managed queue service that allows us to create huge queues in a fully managed way. It allows us to create large request objects so we can fully decouple our application&rsquo;s components from each other using a common queue.</p>
+
+<h3>Simple Storage Service (S3)</h3>
+
+<p>The web-scale and fully managed data store that allows us to store large objects (up to 5 terabytes) with an unlimited number of objects. We can use S3 to securely store encrypted and protected data all over the world. We&rsquo;ll even use S3 to host our own Angular apps.</p>
+
+<h3>Security Token Service (STS)</h3>
+
+<p>The web-service that allows us to request temporary and limited privileged credentials for IAM users. We won&rsquo;t cover this in-depth, but it does provide a nice interface to creating limited secure operations on our data.</p>
+
+<p>The full list of services can be found on the official project <a href="https://github.com/aws/aws-sdk-js">here</a>.</p>
+
+<h2>AWSJS + Angular</h2>
+
+<p>In this section, we intend on demonstrating how to get our applications up and running on the AWSJS stack in minutes. </p>
+
+<p>To do so, we&rsquo;re going to create a mini, bare-bones version of <a href="https://gumroad.com/">Gumroad</a> that we will allow our users to upload screenshots and we&rsquo;ll let them sell their screenshots by integrating with the fantastic <a href="http://stripe.com">Stripe</a> API.</p>
+
+<blockquote>
+<p>We cannot recommend enough these two services and this mini-demo is not intended on replacing their services, only to demonstrate the power of Angular and the AWS API.</p>
+</blockquote>
+
+<p>To create our product, we&rsquo;ll need to:</p>
+
+<ul>
+<li>Allow users to login to our service and store their unique emails</li>
+<li>Allow users to upload files that are associated with them</li>
+<li>Allow buyers to click on images and present them with an option to buy the uploaded image</li>
+<li>Take credit card charges and accept money, directly from a single page angular app</li>
+</ul>
+
+<p>We&rsquo;ve included the entire source of the article at <a href="http://d.pr/aL9q">http://d.pr/aL9q</a>.</p>
+
+<h2>Getting started</h2>
+
+<p>We&rsquo;ll start with a standard structured <code>index.html</code>:</p>
+<pre class="highlight html"><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://code.angularjs.org/1.2.0-rc.3/angular-route.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;styles/bootstrap.min.css&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">ng-view</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;scripts/app.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;scripts/controllers.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;scripts/services.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;scripts/directives.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre>
+<p>In this standard angular template, we&rsquo;re not loading anything crazy. We&rsquo;re loading the base angular library as well as <code>ngRoute</code> and our custom application code.</p>
+
+<p>Our application code is also standard. Our <code>scripts/app.js</code> simply defines an angular module along with a single route <code>/</code>:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span>
+  <span class="s1">'ngRoute'</span><span class="p">,</span> 
+  <span class="s1">'myApp.services'</span><span class="p">,</span> 
+  <span class="s1">'myApp.directives'</span><span class="p">])</span>
+<span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$routeProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$routeProvider</span>
+  <span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">controller</span><span class="p">:</span> <span class="s1">'MainCtrl'</span><span class="p">,</span>
+    <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'templates/main.html'</span><span class="p">,</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">otherwise</span><span class="p">({</span>
+    <span class="na">redirectTo</span><span class="p">:</span> <span class="s1">'/'</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</pre>
+<p>Our <code>scripts/controllers.js</code> creates controllers from the main module:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'MainCtrl'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="p">});</span>
+</pre>
+<p>And our <code>scripts/services.js</code> and <code>scripts/directives.js</code> are simple as well:</p>
+<pre class="highlight javascript"><span class="c1">// scripts/services.js
+</span><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp.services'</span><span class="p">,</span> <span class="p">[]);</span>
+</pre><pre class="highlight javascript"><span class="c1">// scripts/directives.js
+</span><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp.directives'</span><span class="p">,</span> <span class="p">[])</span>
+</pre>
+<p><img alt="Angular Structure" src="/images/aws/dir_tree.png" /></p>
+
+<h2>Introduction</h2>
+
+<p>The aws ecosystem is huge and is used all over the world, in production. The gross amount of useful services that Amazon runs makes it a fantastic platform to power our applications on top of.</p>
+
+<p>Historically, the APIs have not always been the easiest to use and understand, so we hope to address some of that confusion here.</p>
+
+<p>Traditionally, we&rsquo;d use a signed request with our applications utilizing the client<em>id/secret access key model. Since we&rsquo;re operating in the browser, it&rsquo;s not a good idea to embed our client</em>id and our client_secret in the browser where anyone can see it. (It&rsquo;s not much of a secret anyway if it&rsquo;s embedded in clear text, right?).</p>
+
+<p>Luckily, the AWS team has provided us with an alternative method of identifying and authenticating our site to give access to the aws resources.</p>
+
+<p>The first steps to creating an AWS-based angular app will be to set up this relatively complex authentication and authorization we&rsquo;ll use throughout the process.</p>
+
+<p>Currently (at the time of this writing), the AWS JS library integrates cleanly with three authentication providers:</p>
+
+<ul>
+<li>Facebook</li>
+<li>Google Plus</li>
+<li>Amazon Login</li>
+</ul>
+
+<p>In this section, we&rsquo;ll be focusing on integrating with the <code>Google+</code> API to host our login, but the process is very similar for the other two authentication providers.</p>
+
+<h2>Installation</h2>
+
+<p>First things first, we&rsquo;ll need to <em>install</em> the files in our <code>index.html</code>. Inside of our <code>index.html</code>, we&rsquo;ll need to include the aws-sdk library as well as the Google API library. </p>
+
+<p>We&rsquo;ll modify our <code>index.html</code> to include these libraries:</p>
+<pre class="highlight html"><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://code.angularjs.org/1.2.0-rc.3/angular-route.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc1.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;styles/bootstrap.min.css&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">ng-view</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;scripts/app.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;scripts/controllers.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;scripts/services.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;scripts/directives.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;https://js.stripe.com/v2/&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+      <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+       <span class="kd">var</span> <span class="nx">po</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'script'</span><span class="p">);</span> <span class="nx">po</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s1">'text/javascript'</span><span class="p">;</span> <span class="nx">po</span><span class="p">.</span><span class="nx">async</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+       <span class="nx">po</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="s1">'https://apis.google.com/js/client:plusone.js?onload=onLoadCallback'</span><span class="p">;</span>
+       <span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">'script'</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span> <span class="nx">s</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">insertBefore</span><span class="p">(</span><span class="nx">po</span><span class="p">,</span> <span class="nx">s</span><span class="p">);</span>
+     <span class="p">})();</span>
+    <span class="nt">&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre>
+<p>Now, notice that we added an <code>onload</code> callback for the Google Javascript library and we <strong>did not</strong> use the <code>ng-app</code> to bootstrap our application. If we let angular automatically bootstrap our application, we&rsquo;ll run into a race condition where the Google API may not be loaded when the application starts. </p>
+
+<p>This non-deterministic nature of our application will make the experience unusable, so instead we will manually bootstrap our app in the <code>onLoadCallback</code> function.</p>
+
+<p>To manually bootstrap the application, we&rsquo;ll add the <code>onLoadCallback</code> function to the window service. Before we can call to bootstrap angular, we&rsquo;ll need to ensure that the google login client is loaded.</p>
+
+<p>The google API client, or <code>gapi</code> gets included at run-time and is set by default to lazy-load its services. By telling the <code>gapi.client</code> to load the oauth2 library in advance of starting our app, we will avoid any potential mishaps of the oauth2 library being unavailable.</p>
+<pre class="highlight javascript"><span class="c1">// in scripts/app.js
+</span><span class="nb">window</span><span class="p">.</span><span class="nx">onLoadCallback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// When the document is ready
+</span>  <span class="nx">angular</span><span class="p">.</span><span class="nx">element</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Bootstrap the oauth2 library
+</span>    <span class="nx">gapi</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="s1">'oauth2'</span><span class="p">,</span> <span class="s1">'v2'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Finally, bootstrap our angular app
+</span>      <span class="nx">angular</span><span class="p">.</span><span class="nx">bootstrap</span><span class="p">(</span><span class="nb">document</span><span class="p">,</span> <span class="p">[</span><span class="s1">'myApp'</span><span class="p">]);</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</pre>
+<p>With the libraries available and our application ready to be bootstrapped, we can set up the authorization part of our app.</p>
+
+<h2>Running</h2>
+
+<p>As we are using services that depend upon our URL to be an expected URL, we&rsquo;ll need to run this as a server, rather than simply loading the html in our browser.</p>
+
+<p>We recommend using the incredibly simple python SimpleHTTPServer</p>
+<pre class="highlight shell"><span class="gp">$ </span>python -m SimpleHTTPServer 9000
+</pre>
+<p>Now we can load the url <code>http://localhost:9000/</code> in our browser.</p>
+
+<h2>User authorization/authentication</h2>
+
+<p>First, we&rsquo;ll need to get a <code>client_id</code> and a <code>client_secret</code> from Google so that we&rsquo;ll be able to actually interact with the google plus login system.</p>
+
+<p>To get an app, head over to the <a href="https://developers.google.com/console">Google APIs console</a> and create a project.</p>
+
+<p><img alt="Create a google plus project" src="/images/aws/google_create_project.png" /></p>
+
+<p>Open the project by clicking on the name and click on the <em>APIs &amp; auth</em> nav button. From here, we&rsquo;ll need to enable the <code>Google+ API</code>. Find the <em>APIs</em> button and click on it. Find the <code>Google+ API</code> item and click the OFF to ON slider.</p>
+
+<p><img alt="Enable Google+ API" src="/images/aws/google_enable_plus.png" /></p>
+
+<p>Once that&rsquo;s set, we&rsquo;ll need to create and register an application and use it&rsquo;s application ID to make authenticated calls. </p>
+
+<p>Find the <code>Registered apps</code> option and click on it to create an app. Make sure to select the Web Application option when it asks about the type of application.</p>
+
+<p><img alt="Create a registered application" src="/images/aws/google_create_app.png" /></p>
+
+<p>Once this is set, you&rsquo;ll be brought to the application details page. Select the <code>OAuth 2.0 Client ID</code> dropdown and take note of the application&rsquo;s Client ID. We&rsquo;ll use this in a few minutes.</p>
+
+<p>Lastly, add the localhost origin to the WEB ORIGIN of the application. This will ensure we can develop with the API locally:</p>
+
+<p><img alt="Registered app details" src="/images/aws/google_app_details.png" /></p>
+
+<p>Next, we&rsquo;ll create a google+ login directive. This Angular directive will enable us to add a customized login button to our app with a single file element. </p>
+
+<blockquote>
+<p>For more information about directives, check out our <a href="http://www.ng-newsletter.com/posts/directives.html">in-depth post on directives</a>.</p>
+</blockquote>
+
+<p>We&rsquo;re going to have two pieces of functionality with our google login, we&rsquo;ll create an element that we&rsquo;ll attach a the standard google login button and we&rsquo;ll want to run a custom function after the button has been rendered.</p>
+
+<p>The final directive will look like the following in <code>scripts/directives.js</code>:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp.directives'</span><span class="p">,</span> <span class="p">[])</span>
+<span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'googleSignin'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'A'</span><span class="p">,</span>
+    <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;span id=&quot;signinButton&quot;&gt;&lt;/span&gt;'</span><span class="p">,</span>
+    <span class="na">replace</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">afterSignin</span><span class="p">:</span> <span class="s1">'&amp;'</span>
+    <span class="p">},</span>
+    <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">ele</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Set standard google class
+</span>      <span class="nx">attrs</span><span class="p">.</span><span class="nx">$set</span><span class="p">(</span><span class="s1">'class'</span><span class="p">,</span> <span class="s1">'g-signin'</span><span class="p">);</span>
+      <span class="c1">// Set the clientid
+</span>      <span class="nx">attrs</span><span class="p">.</span><span class="nx">$set</span><span class="p">(</span><span class="s1">'data-clientid'</span><span class="p">,</span> 
+          <span class="nx">attrs</span><span class="p">.</span><span class="nx">clientId</span><span class="o">+</span><span class="s1">'.apps.googleusercontent.com'</span><span class="p">);</span>
+      <span class="c1">// build scope urls
+</span>      <span class="kd">var</span> <span class="nx">scopes</span> <span class="o">=</span> <span class="nx">attrs</span><span class="p">.</span><span class="nx">scopes</span> <span class="o">||</span> <span class="p">[</span>
+        <span class="s1">'auth/plus.login'</span><span class="p">,</span> 
+        <span class="s1">'auth/userinfo.email'</span>
+      <span class="p">];</span>
+      <span class="kd">var</span> <span class="nx">scopeUrls</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">scopes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">scopeUrls</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">'https://www.googleapis.com/'</span> <span class="o">+</span> <span class="nx">scopes</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+      <span class="p">};</span>
+
+      <span class="c1">// Create a custom callback method
+</span>      <span class="kd">var</span> <span class="nx">callbackId</span> <span class="o">=</span> <span class="s2">&quot;_googleSigninCallback&quot;</span><span class="p">,</span>
+          <span class="nx">directiveScope</span> <span class="o">=</span> <span class="nx">scope</span><span class="p">;</span>
+      <span class="nb">window</span><span class="p">[</span><span class="nx">callbackId</span><span class="p">]</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">oauth</span> <span class="o">=</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="nx">directiveScope</span><span class="p">.</span><span class="nx">afterSignin</span><span class="p">({</span><span class="na">oauth</span><span class="p">:</span> <span class="nx">oauth</span><span class="p">});</span>
+        <span class="nb">window</span><span class="p">[</span><span class="nx">callbackId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="p">};</span>
+
+      <span class="c1">// Set standard google signin button settings
+</span>      <span class="nx">attrs</span><span class="p">.</span><span class="nx">$set</span><span class="p">(</span><span class="s1">'data-callback'</span><span class="p">,</span> <span class="nx">callbackId</span><span class="p">);</span>
+      <span class="nx">attrs</span><span class="p">.</span><span class="nx">$set</span><span class="p">(</span><span class="s1">'data-cookiepolicy'</span><span class="p">,</span> <span class="s1">'single_host_origin'</span><span class="p">);</span>
+      <span class="nx">attrs</span><span class="p">.</span><span class="nx">$set</span><span class="p">(</span><span class="s1">'data-requestvisibleactions'</span><span class="p">,</span> <span class="s1">'http://schemas.google.com/AddActivity'</span><span class="p">)</span>
+      <span class="nx">attrs</span><span class="p">.</span><span class="nx">$set</span><span class="p">(</span><span class="s1">'data-scope'</span><span class="p">,</span> <span class="nx">scopeUrls</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">' '</span><span class="p">));</span>
+
+      <span class="c1">// Finally, reload the client library to 
+</span>      <span class="c1">// force the button to be painted in the browser
+</span>      <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+       <span class="kd">var</span> <span class="nx">po</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'script'</span><span class="p">);</span> <span class="nx">po</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s1">'text/javascript'</span><span class="p">;</span> <span class="nx">po</span><span class="p">.</span><span class="nx">async</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+       <span class="nx">po</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="s1">'https://apis.google.com/js/client:plusone.js'</span><span class="p">;</span>
+       <span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">'script'</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span> <span class="nx">s</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">insertBefore</span><span class="p">(</span><span class="nx">po</span><span class="p">,</span> <span class="nx">s</span><span class="p">);</span>
+      <span class="p">})();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>Although it&rsquo;s long, it&rsquo;s fairly straightforward. We&rsquo;re assigning the google button class <code>g-signin</code>, attaching the clientid based on an attribute we pass in, building the scopes, etc.</p>
+
+<p>One unique part of this directive is that we&rsquo;re creating a custom callback on the window object. Effectively, this will allow us to <em>fake</em> the callback method needing to be called in Javascript when we make the function to allow us to actually make the call to the local <code>afterSignin</code> action instead. </p>
+
+<p>We&rsquo;ll then clean up the global object because we&rsquo;re allergic to global state in AngularJS.</p>
+
+<p>With our directive primed and ready to go, we can include the directive in our view. We&rsquo;re going to call the directive in our view like so, replacing the <code>client-id</code> and the <code>after-signin</code> attributes on the directive to our own. </p>
+
+<blockquote>
+<p>Make sure to include the <code>oauth</code> parameter exactly as it&rsquo;s spelled in the <code>after-signup</code> attribute. This is called this way due to how angular directives call methods with parameters inside of directives.</p>
+</blockquote>
+<pre class="highlight html"><span class="nt">&lt;h2&gt;</span>Signin to ngroad<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">google-signin</span> 
+  <span class="na">client-id=</span><span class="s">'CLIENT_ID'</span> 
+  <span class="na">after-signin=</span><span class="s">&quot;signedIn(oauth)&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="nt">&lt;pre&gt;</span>{{ user | json }}<span class="nt">&lt;/pre&gt;</span>
+</pre>
+<h4>See it</h4>
+
+<div ng-controller="DemoCtrl">
+  <div>
+    <h2>Signin to ngroad</h2>
+    <div google-signin 
+      client-id='395118764244-q12ta6un8j1ns15o5blj203sho962prs' 
+      after-signin="signedIn(oauth)"></div>
+  </div>
+  <pre class="height150">{{ user | json }}</pre>
+</div>
+
+<blockquote>
+<p>The user data in the example is the returned access_token for your login (if you log in). It is <strong>not</strong> saved on our servers, not sensitive data, and will disappear when you leave the page.</p>
+</blockquote>
+
+<p>Finally, we&rsquo;ll need our button to <em>actually</em> cause an action, so we&rsquo;ll need to define our <code>after-signin</code> method <code>signedIn(oauth)</code> in our controller.</p>
+
+<p>This <code>signedIn()</code> method will kill off the authenticated page for us in our real application. Note, this method would be an ideal place to set a redirect to a new route, for instance the <code>/dashboard</code> route for authenticated users.</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'MainCtrl'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">signedIn</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">oauth</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="nx">oauth</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<h2>UserService</h2>
+
+<p>Before we dive a bit deeper into the AWS-side of things, let&rsquo;s create ourselves a <code>UserService</code> that is responsible for holding on to our new user. This <code>UserService</code> will handle the bulk of the work for interacting with the AWS backend as well as keep a copy of the current user.</p>
+
+<p>Although we&rsquo;re not quite ready to attach a backend, we can start building it out to handle holding on to a persistent copy of the user instance.</p>
+
+<p>In our <code>scripts/services.js</code>, we&rsquo;ll create the beginnings of our <code>UserService</code>:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp.services'</span><span class="p">,</span> <span class="p">[])</span>
+<span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'UserService'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$q</span><span class="p">,</span> <span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">_user</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="na">setCurrentUser</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">u</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">u</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">service</span><span class="p">.</span><span class="nx">_user</span> <span class="o">=</span> <span class="nx">u</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">service</span><span class="p">.</span><span class="nx">currentUser</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+        <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="na">currentUser</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+      <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">_user</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="k">return</span> <span class="nx">service</span><span class="p">;</span>
+<span class="p">});</span>
+</pre>
+<p>Although this setup is a bit contrived for the time being, we&rsquo;ll want the functionality to set the currentUser as a permanent fixture in the service. </p>
+
+<blockquote>
+<p>Remember, services are singleton objects that live for the duration of the application lifecycle.</p>
+</blockquote>
+
+<p>Now, instead of simply setting our user in the return of the <code>signedIn()</code> function, we can set the user to the <code>UserService</code>:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'MainCtrl'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">signedIn</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">oauth</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">UserService</span><span class="p">.</span><span class="nx">setCurrentUser</span><span class="p">(</span><span class="nx">oauth</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="nx">user</span><span class="p">;</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>For our application to work, we&rsquo;re going to need to hold on to actual user emails so we can provide a better method of interacting with our users as well as holding on to some persistent, unique data per-user.</p>
+
+<p>We&rsquo;ll use the <code>gapi.client.oauth2.userinfo.get()</code> method to fetch the user&rsquo;s email address rather than holding on to the user&rsquo;s <code>access_token</code> (and other various access details).</p>
+
+<p>In our <code>UserService</code>, we&rsquo;ll update our <code>currentUser()</code> method to include this functionality:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="err">}</span><span class="p">,</span>
+<span class="nx">currentUser</span><span class="err">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">_user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">_user</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">gapi</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">oauth2</span><span class="p">.</span><span class="nx">userinfo</span><span class="p">.</span><span class="nx">get</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">service</span><span class="p">.</span><span class="nx">_user</span> <span class="o">=</span> <span class="nx">e</span><span class="p">;</span>
+    <span class="p">})</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// ...
+</span></pre>
+<h2>All aboard AWS</h2>
+
+<p>Now, as we said when we first started this journey, we&rsquo;ll need to set up authorization with the AWS services.</p>
+
+<p>If you do not have an AWS account, head over to <a href="http://aws.amazon.com/">aws.amazon.com</a> and grab an account. It&rsquo;s free and quick.</p>
+
+<p>Now, first things first: we&rsquo;ll need to create an IAM role. IAM, or AWS&rsquo;s Identity and Access Management service is one of the reasons why the AWS services are so powerful. We can create fine-grain access controls over our systems and data using IAM.</p>
+
+<p>Unfortunately, this flexibility and power of IAM also makes it a bit more complex, so we&rsquo;ll walk through creating it here and making it as clear as we can.</p>
+
+<p>Let&rsquo;s create the IAM role. Head to the <a href="https://console.aws.amazon.com/iam/home?region=us-east-1#roles">IAM console</a> and click on the Roles navigation link.</p>
+
+<p>Click the <em>Create New Role</em> button and give our new role a name. We&rsquo;ll call ours the <code>google-web-role</code>.</p>
+
+<p><img alt="Create a new role" src="/images/aws/iam_create_role.png" /></p>
+
+<p>Next, we&rsquo;ll need to configure the IAM role to be a <em>Web Identity Provider Access</em> role type. This is how we&rsquo;ll be able to manage our new role&rsquo;s access to our AWS services.</p>
+
+<p><img alt="Set the role type" src="/images/aws/iam_web_provider.png" /></p>
+
+<p>Now, remember the CLIENT ID that we created from google above? In the next screen, select Google from the dropdown and paste the CLIENT ID into the Audience box.</p>
+
+<p>This will join our IAM role and our Google app together so that our application can call out to AWS services with an authenticated Google user.</p>
+
+<p><img alt="Google auth" src="/images/aws/iam_google.png" /></p>
+
+<p>Click through the <em>Verify Trust</em> (the next screen). This screen shows the raw configuration for AWS services. Next, we&rsquo;ll create the policy for our applications.</p>
+
+<p>The Policy Generator is the easiest method of getting up and running quickly to build policies. This is where we&rsquo;ll set what actions our users can and cannot take.</p>
+
+<p>In this step, we&rsquo;re going to be taking very specific actions that our web users can take. We&rsquo;re going to allow our users to the following actions for each service:</p>
+
+<h4>S3</h4>
+
+<p>On the specific bucket (<code>ng-newsletter-example</code>, in our example app), we&rsquo;re going to allow our users to take the following actions:</p>
+
+<ul>
+<li>GetObject</li>
+<li>ListBucket</li>
+<li>PutObject</li>
+</ul>
+
+<p>The Amazon Resource Name (ARN) for our s3 bucket is:</p>
+<pre class="highlight javascript"><span class="nx">arn</span><span class="err">:</span><span class="nx">aws</span><span class="err">:</span><span class="nx">s3</span><span class="err">:::</span><span class="nx">ng</span><span class="o">-</span><span class="nx">newsletter</span><span class="o">-</span><span class="nx">example</span><span class="o">/*</span>
+</pre>
+<h4>DynamoDB</h4>
+
+<p>For two specific table resources, we&rsquo;re going to allow the following actions:</p>
+
+<ul>
+<li>GetItem</li>
+<li>PutItem</li>
+<li>Query</li>
+</ul>
+
+<p>The Amazon Resource Name (ARN) for our dynamoDB tables are the following:</p>
+<pre class="highlight javascript"><span class="p">[</span>
+  <span class="s2">&quot;arn:aws:dynamodb:us-east-1:&lt;ACCOUNT_ID&gt;:table/Users&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;arn:aws:dynamodb:us-east-1:&lt;ACCOUNT_ID&gt;:table/UsersItems&quot;</span>
+<span class="p">]</span>
+</pre>
+<blockquote>
+<p>Your <ACCOUNT_ID> can be found on your Account dashboard. Click on the <code>My Account</code> button at the top of the page and navigate to the page. Your ACCOUNT_ID is the number called &lsquo;Account Number:&rsquo;.</p>
+</blockquote>
+
+<p>The final version of our policy can be found <a href="http://d.pr/9Obg">here</a>.</p>
+
+<p><img alt="Adding the IAM policy" src="/images/aws/iam_permissions.png" /></p>
+
+<blockquote>
+<p>For more information on the confusing ARN numbers, check out the amazon documentation on them <a href="http://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html">here</a>.</p>
+</blockquote>
+
+<p>One final piece of information that we&rsquo;ll need to hold on to is the <code>Role ARN</code>. We can find this <code>Role ARN</code> on the summary tab of the IAM user in our IAM console.</p>
+
+<p>Take note of this string as we&rsquo;ll set it in a moment.</p>
+
+<p><img alt="Role ARN" src="/images/aws/iam_summary.png" /></p>
+
+<p>Now that we&rsquo;re finally done with creating our IAM user, we can move on to integrating it inside of our angular app.</p>
+
+<h2>AWSService</h2>
+
+<p>We&rsquo;ll move the root of our application for integrating with AWS into it&rsquo;s own service we&rsquo;re going to build called the <code>AWSService</code>. </p>
+
+<p>Since we are going to need to have the ability to custom configure our service at configure-time, we&rsquo;ll want to create it as a <code>provider</code>.</p>
+
+<blockquote>
+<p>Remember, the <em>only</em> service-type that can be <em>injected</em> into the <code>.config()</code> function is the <code>.provider()</code> type.</p>
+</blockquote>
+
+<p>First, we&rsquo;ll create the stub of our provider in <code>scripts/services.js</code>:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="p">.</span><span class="nx">provider</span><span class="p">(</span><span class="s1">'AWSService'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="nx">self</span><span class="p">.</span><span class="nx">arn</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+  <span class="nx">self</span><span class="p">.</span><span class="nx">setArn</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arn</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">arn</span><span class="p">)</span> <span class="nx">self</span><span class="p">.</span><span class="nx">arn</span> <span class="o">=</span> <span class="nx">arn</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">self</span><span class="p">.</span><span class="nx">$get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$q</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>As we can already start to notice, we&rsquo;ll need to set the <code>Role ARN</code> for this service so that we can attach the proper user to the correct services.</p>
+
+<p>Setting up our <code>AWSService</code> as a provider like we do above enables us to set the following in our <code>scripts/app.js</code> file:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> 
+  <span class="p">[</span><span class="s1">'ngRoute'</span><span class="p">,</span> <span class="s1">'myApp.services'</span><span class="p">,</span> <span class="s1">'myApp.directives'</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">AWSServiceProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">AWSServiceProvider</span>
+    <span class="p">.</span><span class="nx">setArn</span><span class="p">(</span>
+      <span class="s1">'arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/google-web-role'</span><span class="p">);</span>
+<span class="p">})</span>
+</pre>
+<p>Now, we can carry on with the <code>AWSService</code> and not worry about overriding our <code>Role ARN</code> as well as it becomes incredibly easy to share amongst our different applications instead of recreating it every time.</p>
+
+<p>Our <code>AWSService</code> at this point doesn&rsquo;t really do anything yet. The last component that we&rsquo;ll need to ensure works is that we give access to our actual users who log in. </p>
+
+<p>This final step is where we&rsquo;ll need to tell the AWS library that we have an authenticated user that can operate as our IAM role.</p>
+
+<p>We&rsquo;ll create this <code>credentials</code> as a promise that will eventually be resolved so we can define the different portions of our application without needing to bother checking if the credentials have been loaded simply by using the <code>.then()</code> method on promises.</p>
+
+<p>Let&rsquo;s modify our <code>$get()</code> method in our service adding a method that we&rsquo;ll call <code>setToken()</code> to create a new set of <code>WebIdentityCredentials</code>:</p>
+<pre class="highlight javascript">  <span class="c1">// ...
+</span>  <span class="nx">self</span><span class="p">.</span><span class="nx">$get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$q</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">credentialsDefer</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">(),</span>
+        <span class="nx">credentialsPromise</span> <span class="o">=</span> <span class="nx">credentialsDefer</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">credentials</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">credentialsPromise</span><span class="p">;</span>
+      <span class="p">},</span>
+      <span class="na">setToken</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span> <span class="nx">providerId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="na">RoleArn</span><span class="p">:</span> <span class="nx">self</span><span class="p">.</span><span class="nx">arn</span><span class="p">,</span>
+          <span class="na">WebIdentityToken</span><span class="p">:</span> <span class="nx">token</span><span class="p">,</span>
+          <span class="na">RoleSessionName</span><span class="p">:</span> <span class="s1">'web-id'</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">providerId</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">config</span><span class="p">[</span><span class="s1">'ProviderId'</span><span class="p">]</span> <span class="o">=</span> <span class="nx">providerId</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nx">self</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="nx">config</span><span class="p">;</span>
+        <span class="nx">AWS</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">credentials</span> <span class="o">=</span> 
+          <span class="k">new</span> <span class="nx">AWS</span><span class="p">.</span><span class="nx">WebIdentityCredentials</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+        <span class="nx">credentialsDefer</span>
+          <span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">AWS</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">credentials</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1">// ...
+</span></pre>
+<p>Now, when we get our <code>oauth.access_token</code> back from our login through Google, we&rsquo;ll pass in the <code>id_token</code> to this function which will take care of the AWS config setup.</p>
+
+<p>Let&rsquo;s modify the <code>UserService</code> service such that we call the <code>setToken()</code> method:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'UserService'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$q</span><span class="p">,</span> <span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">_user</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="na">setCurrentUser</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">u</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">u</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">AWSService</span><span class="p">.</span><span class="nx">setToken</span><span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">id_token</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">service</span><span class="p">.</span><span class="nx">currentUser</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+        <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">u</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="c1">// ...
+</span></pre>
+<h2>Starting on dynamo</h2>
+
+<p>In our application, we&rsquo;ll want to associate any images that one user uploads to that unique user. To create this association, we&rsquo;ll create a dynamo table that stores our users as well as another that stores the association between the user and the user&rsquo;s uploaded files.</p>
+
+<p>To start interacting with dynamo, we&rsquo;ll first need to instantiate a dynamo object. We&rsquo;ll do this inside of our <code>AWSService</code> service object, like so:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">setToken</span><span class="err">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">token</span><span class="p">,</span> <span class="nx">providerId</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...
+</span><span class="p">},</span>
+<span class="nx">dynamo</span><span class="err">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+  <span class="nx">credentialsPromise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">table</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AWS</span><span class="p">.</span><span class="nx">DynamoDB</span><span class="p">(</span><span class="nx">params</span><span class="p">);</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">table</span><span class="p">);</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+<span class="p">},</span>
+<span class="c1">// ...
+</span></pre>
+<p>As we discussed earlier, by using promises inside of our service objects, we only need to use the promise <code>.then()</code> api method to ensure our credentials are set when we&rsquo;re starting to use them.</p>
+
+<p>You might ask why we&rsquo;re setting <code>params</code> with our <code>dynamo</code> function. Sometimes we&rsquo;ll want to interact with our dynamoDB with different configurations and different setups. This might cause us to need to recreate objects that we already use once in our page. </p>
+
+<p>Rather than having this duplication around with our different <code>AWS</code> objects, we&rsquo;ll <em>cache</em> these objects using the built-in angular <code>$cacheFactory</code> service.</p>
+
+<h2>$cacheFactory</h2>
+
+<p>The <code>$cacheFactory</code> service enables us to create an object if we need it or recycle and reuse an object if we&rsquo;ve already needed it in the past. </p>
+
+<p>To start caching, we&rsquo;ll create a <code>dynamoCache</code> object where we&rsquo;ll store our cached dynamo objects:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">self</span><span class="p">.</span><span class="nx">$get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$q</span><span class="p">,</span> <span class="nx">$cacheFactory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">dynamoCache</span> <span class="o">=</span> <span class="nx">$cacheFactory</span><span class="p">(</span><span class="s1">'dynamo'</span><span class="p">),</span>
+      <span class="nx">credentialsDefer</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">(),</span>
+      <span class="nx">credentialsPromise</span> <span class="o">=</span> <span class="nx">credentialsDefer</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="p">{</span>
+  <span class="c1">// ...
+</span></pre>
+<p>Now, back in our <code>dynamo</code> method, we can draw from the cache if the object exists in the cache or we can set it to create the object when necessary:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">dynamo</span><span class="err">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+  <span class="nx">credentialsPromise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">table</span> <span class="o">=</span> 
+      <span class="nx">dynamoCache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">table</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">table</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AWS</span><span class="p">.</span><span class="nx">DynamoDB</span><span class="p">(</span><span class="nx">params</span><span class="p">);</span>
+      <span class="nx">dynamoCache</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">),</span> <span class="nx">table</span><span class="p">);</span>
+    <span class="p">};</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">table</span><span class="p">);</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+<span class="p">},</span>
+<span class="c1">// ...
+</span></pre>
+<h2>Saving our currentUser</h2>
+
+<p>When a user logs in and we fetch the user&rsquo;s email, this is a good point for us to add the user to our user&rsquo;s database.</p>
+
+<p>To create a <code>dynamo</code> object, we&rsquo;ll use the promise api method <code>.then()</code> again, this time outside of the service. We&rsquo;ll create an object that will enable us to interact with the User&rsquo;s table we&rsquo;ll create in the dynamo API console.</p>
+
+<blockquote>
+<p>We&rsquo;ll need to manually create these dynamo tables the first time because we do not want to give access to our web users the ability to create dynamo tables, which might include us. </p>
+</blockquote>
+
+<p>To create a dynamo table, head to the <a href="https://console.aws.amazon.com/dynamodb/home">dynamo console</a> and find the Create Table button.</p>
+
+<p>Create a table called <code>Users</code> with a primary key type of <code>Hash</code>. The Hash Attribute Name will be the primary key that we&rsquo;ll use to get and put objects on the table. For this demo, we&rsquo;ll use the string: <code>User email</code>.</p>
+
+<p><img alt="Create the Users dynamo table" src="/images/aws/dynamo_create_users.png" /></p>
+
+<p>Click through the next two screens and set up a basic alarm by entering your email. Although this step isn&rsquo;t 100% necessary, it&rsquo;s easy to forget that our tables are up and without being reminded, we might just end up leaving them up forever.</p>
+
+<p>Once we&rsquo;ve clicked through the final review screen and click create, we&rsquo;ll end up with a brand new Dynamo table where we will store our users.</p>
+
+<p>While we are at the console, we&rsquo;ll create the <em>join</em> table. This is the table that will join the User and the items they upload.</p>
+
+<p>Find the Create Table button again and create a table called <code>UsersItems</code> with a primary key type of <code>Hash and Range</code>. For this table, The Hash Attribute Name will also be <code>User email</code> and the Range Attribute Name will be <code>ItemId</code>.</p>
+
+<p>This will allow us to query for User&rsquo;s who have created items based on the User&rsquo;s email.</p>
+
+<p>The rest of the options that are available on the next screens are optional and we can click through the rest.</p>
+
+<p>At this point, we have two <code>dynamo</code> tables available. </p>
+
+<p>Back to our <code>UserService</code>, we&rsquo;ll first query the table to see if the user is already saved in our database, otherwise we&rsquo;ll create an entry in our dynamo database.</p>
+<pre class="highlight javascript">  <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">_user</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="na">UsersTable</span><span class="p">:</span> <span class="s2">&quot;Users&quot;</span><span class="p">,</span>
+    <span class="na">UserItemsTable</span><span class="p">:</span> <span class="s2">&quot;UsersItems&quot;</span><span class="p">,</span>
+    <span class="c1">// ...
+</span>    <span class="na">currentUser</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">_user</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">_user</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// After we've loaded the credentials
+</span>        <span class="nx">AWSService</span><span class="p">.</span><span class="nx">credentials</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="nx">gapi</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">oauth2</span><span class="p">.</span><span class="nx">userinfo</span><span class="p">.</span><span class="nx">get</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">email</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">email</span><span class="p">;</span>
+            <span class="c1">// Get the dynamo instance for the
+</span>            <span class="c1">// UsersTable
+</span>            <span class="nx">AWSService</span><span class="p">.</span><span class="nx">dynamo</span><span class="p">({</span>
+              <span class="na">params</span><span class="p">:</span> <span class="p">{</span><span class="na">TableName</span><span class="p">:</span> <span class="nx">service</span><span class="p">.</span><span class="nx">UsersTable</span><span class="p">}</span>
+            <span class="p">})</span>
+            <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">table</span><span class="p">)</span> <span class="p">{</span>
+              <span class="c1">// find the user by email
+</span>              <span class="nx">table</span><span class="p">.</span><span class="nx">getItem</span><span class="p">({</span>
+                <span class="na">Key</span><span class="p">:</span> <span class="p">{</span><span class="s1">'User email'</span><span class="err">:</span> <span class="p">{</span><span class="na">S</span><span class="p">:</span> <span class="nx">email</span><span class="p">}}</span>
+              <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+                  <span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="c1">// User didn't previously exist
+</span>                    <span class="c1">// so create an entry
+</span>                    <span class="kd">var</span> <span class="nx">itemParams</span> <span class="o">=</span> <span class="p">{</span>
+                      <span class="na">Item</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s1">'User email'</span><span class="err">:</span> <span class="p">{</span><span class="na">S</span><span class="p">:</span> <span class="nx">email</span><span class="p">},</span> 
+                        <span class="nl">data</span><span class="p">:</span> <span class="p">{</span> <span class="na">S</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">}</span>
+                      <span class="p">}</span>
+                    <span class="p">};</span>
+                    <span class="nx">table</span><span class="p">.</span><span class="nx">putItem</span><span class="p">(</span><span class="nx">itemParams</span><span class="p">,</span> 
+                      <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nx">service</span><span class="p">.</span><span class="nx">_user</span> <span class="o">=</span> <span class="nx">e</span><span class="p">;</span>
+                        <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+                    <span class="p">});</span>
+                  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="c1">// The user already exists
+</span>                    <span class="nx">service</span><span class="p">.</span><span class="nx">_user</span> <span class="o">=</span> 
+                      <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">Item</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">S</span><span class="p">);</span>
+                    <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">_user</span><span class="p">);</span>
+                  <span class="p">}</span>
+              <span class="p">});</span>
+            <span class="p">});</span>
+          <span class="p">});</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="c1">// ...
+</span></pre>
+<p>Although it looks like a lot of code, this simply does a <code>find or create by username</code> on our dynamoDB.</p>
+
+<p>At this point, we can finally get back to our view and check out what&rsquo;s happening in the view. </p>
+
+<p>In our <code>templates/main.html</code>, we&rsquo;ll add a container that simply shows the Login form if there is no user and shows the user details if there is a user.</p>
+
+<p>We&rsquo;ll do this with simple <code>ng-show</code> directives and our new google-signin directive.</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>Home<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">ng-show=</span><span class="s">&quot;!user&quot;</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-12&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;h2&gt;</span>Signup or login to ngroad<span class="nt">&lt;/h2&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">google-signin</span> 
+        <span class="na">client-id=</span><span class="s">'395118764200'</span> 
+        <span class="na">after-signin=</span><span class="s">&quot;signedIn(oauth)&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">ng-show=</span><span class="s">&quot;user&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;pre&gt;</span>{{ user | json }}<span class="nt">&lt;/pre&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>With our view set up, we can now work with logged in users inside the second <code>&lt;div&gt;</code> (in production, it&rsquo;s a good idea to make it a separate route).</p>
+
+<h2>Uploading to s3</h2>
+
+<p>Now that we have our logged in user stored in dynamo, it&rsquo;s time we create the ability to handle file upload where we&rsquo;ll store our files directly on S3.</p>
+
+<p>First and foremost, a shallow dive into CORS. CORS, or Cross-Origin Resource Sharing is a security features that modern browsers support allowing us to make requests to foreign domains using a standard protocol.</p>
+
+<p>Luckily, the AWS team has made supporting CORS incredibly simple. If we&rsquo;re hosting our site on s3, then we don&rsquo;t even need to set up CORS (other than for development purposes).</p>
+
+<p>To enable CORS on a bucket, head to the <a href="https://console.aws.amazon.com/s3/home">s3 console</a> and find the bucket that we&rsquo;re going to use for file uploads. For this demo, we&rsquo;re using the <code>ng-newsletter-example</code> bucket.</p>
+
+<p>Once the bucket has been located, click on it and load the Properties tab and pull open the Permissions option. click on the <em>Add CORS configuration</em> button and pick the standard CORS configuration.</p>
+
+<p><img alt="Enable CORS on an S3 bucket" src="/images/aws/s3_cors.png" /></p>
+
+<p>We&rsquo;ll create a simple file upload directive that kicks off a method that uses the HTML5 File API to handle the file upload. This way, when the user selects the file the file upload will immediately start.</p>
+
+<p>To handle the file selection directive, we&rsquo;ll create a simple directive that binds to the change event and calls a method after the file has been selected.</p>
+
+<p>The directive is simple:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'fileUpload'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'A'</span><span class="p">,</span>
+    <span class="na">scope</span><span class="p">:</span> <span class="p">{</span> <span class="na">fileUpload</span><span class="p">:</span> <span class="s1">'&amp;'</span> <span class="p">},</span>
+    <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;input type=&quot;file&quot; id=&quot;file&quot; /&gt; '</span><span class="p">,</span>
+    <span class="na">replace</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">ele</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">ele</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'change'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">file</span> <span class="o">=</span> <span class="nx">ele</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">files</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">file</span><span class="p">)</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">fileUpload</span><span class="p">({</span><span class="na">files</span><span class="p">:</span> <span class="nx">file</span><span class="p">});</span>
+      <span class="p">})</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</pre>
+<p>This directive can be used in our view like so:</p>
+<pre class="highlight html"><span class="c">&lt;!-- ... --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span>
+  <span class="err">&lt;</span><span class="na">div</span> <span class="na">class=</span><span class="s">&quot;col-md-12&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">file-upload=</span><span class="s">&quot;onFile(files)&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>Now, when the file selection has been made, it will call the method <code>onFile(files)</code> in our current scope.</p>
+
+<blockquote>
+<p>Although we&rsquo;re creating our own file directive here, we recommend checking out the <a href="https://github.com/twilson63/ngUpload">ngUpload</a> library for handling file uploads.</p>
+</blockquote>
+
+<p>Inside the <code>onFile(files)</code> method, we&rsquo;ll want to handle the file upload to s3 and save the record to our dynamo database table. Instead of placing this functionality in the controller, we&rsquo;ll be nice angular citizens and place this in our <code>UserService</code> service.</p>
+
+<p>First, we&rsquo;ll need to make sure we have the ability to get an s3 Javascript object just like we made the <code>dynamo</code> available. </p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="kd">var</span> <span class="nx">dynamoCache</span> <span class="o">=</span> <span class="nx">$cacheFactory</span><span class="p">(</span><span class="s1">'dynamo'</span><span class="p">),</span>
+    <span class="nx">s3Cache</span> <span class="o">=</span> <span class="nx">$cacheFactory</span><span class="p">(</span><span class="s1">'s3Cache'</span><span class="p">);</span>
+<span class="c1">// ...
+</span><span class="k">return</span> <span class="p">{</span>
+  <span class="c1">// ...
+</span>  <span class="nl">s3</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="nx">credentialsPromise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">s3Obj</span> <span class="o">=</span> <span class="nx">s3Cache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">));</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">s3Obj</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">s3Obj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AWS</span><span class="p">.</span><span class="nx">S3</span><span class="p">(</span><span class="nx">params</span><span class="p">);</span>
+        <span class="nx">s3Cache</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">),</span> <span class="nx">s3Obj</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">s3Obj</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="c1">// ...
+</span></pre>
+<p>This method works the exact same way that our dynamo object creation works, giving us direct access to the s3 instance object as we&rsquo;ll see shortly.</p>
+
+<h2>Handling file uploads</h2>
+
+<p>To handle file uploads, we&rsquo;ll create a method that we&rsquo;ll call <code>uploadItemForSale()</code> in our <code>UserService</code>. Planning our functionality, we&rsquo;ll want to:</p>
+
+<ul>
+<li>Upload the file to S3</li>
+<li>Get a signedUrl for the file</li>
+<li>Save this information to our database</li>
+</ul>
+
+<p>We&rsquo;re going to be using our current user through this process, so we&rsquo;ll start out by making sure we have our user and get an instance</p>
+<pre class="highlight javascript"><span class="c1">// in scripts/services.js
+// ...
+</span><span class="err">}</span><span class="p">,</span>
+<span class="nx">Bucket</span><span class="err">:</span> <span class="s1">'ng-newsletter-example'</span><span class="p">,</span>
+<span class="nx">uploadItemForSale</span><span class="err">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">items</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+  <span class="nx">service</span><span class="p">.</span><span class="nx">currentUser</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Handle the upload
+</span>    <span class="nx">AWSService</span><span class="p">.</span><span class="nx">s3</span><span class="p">({</span>
+      <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">Bucket</span><span class="p">:</span> <span class="nx">service</span><span class="p">.</span><span class="nx">Bucket</span>
+      <span class="p">}</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">s3</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// We have a handle of our s3 bucket
+</span>      <span class="c1">// in the s3 object
+</span>    <span class="p">});</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+<span class="p">},</span>
+<span class="c1">// ...
+</span></pre>
+<p>With the handle of the s3 bucket, we can create a file to upload. There are 3 required parameters when uploading to s3:</p>
+
+<ul>
+<li>Key - The key of the file object</li>
+<li>Body - The file blob itself</li>
+<li>ContentType - The type of file</li>
+</ul>
+
+<p>Luckily for us, all this information is available on the file object when we get it from the browser.</p>
+<pre class="highlight javascript"><span class="c1">// ...
+// Handle the upload
+</span><span class="nx">AWSService</span><span class="p">.</span><span class="nx">s3</span><span class="p">({</span>
+  <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+    <span class="na">Bucket</span><span class="p">:</span> <span class="nx">service</span><span class="p">.</span><span class="nx">Bucket</span>
+  <span class="p">}</span>
+<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">s3</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// We have a handle of our s3 bucket
+</span>  <span class="c1">// in the s3 object
+</span>  <span class="kd">var</span> <span class="nx">file</span> <span class="o">=</span> <span class="nx">items</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// Get the first file
+</span>  <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">Key</span><span class="p">:</span> <span class="nx">file</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+    <span class="na">Body</span><span class="p">:</span> <span class="nx">file</span><span class="p">,</span>
+    <span class="na">ContentType</span><span class="p">:</span> <span class="nx">file</span><span class="p">.</span><span class="nx">type</span>
+  <span class="p">}</span>
+
+  <span class="nx">s3</span><span class="p">.</span><span class="nx">putObject</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The file has been uploaded
+</span>    <span class="c1">// or an error has occurred during the upload
+</span>  <span class="p">});</span>
+<span class="p">});</span>
+<span class="c1">// ...
+</span></pre>
+<p>By default, s3 uploads files in a protected form. It prevents us from uploading and having the files available to the public without some work. This is a definite <em>feature</em> as anything that we upload to s3 will be protected and it forces us to make conscious choices about what files will be public and which are not.</p>
+
+<p>With that in mind, we&rsquo;ll create a temporary url that expires after a given amount of time. In our ngroad marketplace, this will give a time-expiry on each of the items that are available for sale.</p>
+
+<p>In any case, to create a temporary url, we&rsquo;ll fetch a <code>signedUrl</code> and store that in our join table for User&rsquo;s Items:</p>
+<pre class="highlight javascript">  <span class="c1">// ...
+</span>  <span class="nx">s3</span><span class="p">.</span><span class="nx">putObject</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">Bucket</span><span class="p">:</span> <span class="nx">service</span><span class="p">.</span><span class="nx">Bucket</span><span class="p">,</span> 
+        <span class="na">Key</span><span class="p">:</span> <span class="nx">file</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> 
+        <span class="na">Expires</span><span class="p">:</span> <span class="mi">900</span><span class="o">*</span><span class="mi">4</span> <span class="c1">// 1 hour
+</span>      <span class="p">};</span>
+      <span class="nx">s3</span><span class="p">.</span><span class="nx">getSignedUrl</span><span class="p">(</span><span class="s1">'getObject'</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> 
+        <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// Now we have a url
+</span>      <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="err">}</span><span class="p">);</span>
+<span class="c1">// ...
+</span></pre>
+<p>Finally, we can save our User&rsquo;s object along with the file they uploaded in our Join table:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">s3</span><span class="p">.</span><span class="nx">getSignedUrl</span><span class="p">(</span><span class="s1">'getObject'</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Now we have a url
+</span>    <span class="nx">AWSService</span><span class="p">.</span><span class="nx">dynamo</span><span class="p">({</span>
+      <span class="na">params</span><span class="p">:</span> <span class="p">{</span><span class="na">TableName</span><span class="p">:</span> <span class="nx">service</span><span class="p">.</span><span class="nx">UserItemsTable</span><span class="p">}</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">table</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">itemParams</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">Item</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s1">'ItemId'</span><span class="err">:</span> <span class="p">{</span><span class="na">S</span><span class="p">:</span> <span class="nx">file</span><span class="p">.</span><span class="nx">name</span><span class="p">},</span>
+          <span class="s1">'User email'</span><span class="err">:</span> <span class="p">{</span><span class="na">S</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">},</span> 
+          <span class="nl">data</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">S</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+              <span class="na">itemId</span><span class="p">:</span> <span class="nx">file</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+              <span class="na">itemSize</span><span class="p">:</span> <span class="nx">file</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span>
+              <span class="na">itemUrl</span><span class="p">:</span> <span class="nx">url</span>
+            <span class="p">})</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+      <span class="nx">table</span><span class="p">.</span><span class="nx">putItem</span><span class="p">(</span><span class="nx">itemParams</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+<span class="c1">// ...
+</span></pre>
+<p>This method, all together is available <a href="https://gist.github.com/auser/7316267#file-services-js-L98">here</a>.</p>
+
+<p>We can use this new method inside of our controller&rsquo;s <code>onFile()</code> method, which we can write to be similar to:</p>
+<pre class="highlight javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">onFile</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">files</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">UserService</span><span class="p">.</span><span class="nx">uploadItemForSale</span><span class="p">(</span><span class="nx">files</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Refresh the current items for sale
+</span>  <span class="p">});</span>
+<span class="p">}</span>
+</pre>
+<h2>Querying dynamo</h2>
+
+<p>Ideally, we&rsquo;ll want to be able to list all the products a certain user has available for purchase. In order to set up a listing of the available items, we will use the <code>query</code> api.</p>
+
+<p>The dynamo query api is a tad esoteric and can be considerably confusing when looking at it at first glance.</p>
+
+<blockquote>
+<p>The dynamo query documentation is available <a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Query.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Query.html</a></p>
+</blockquote>
+
+<p>Basically, we&rsquo;ll match object schemes up with a comparison operator, such as <code>equal</code>, <code>lt</code> (less than), or <code>gt</code> (greater than) and several more.  Our join table&rsquo;s key is the <code>User email</code> key, so we&rsquo;ll match this key against the current user&rsquo;s email as the query key.</p>
+
+<p>As we did with our other APIs related to users, we&rsquo;ll creat a method inside of our <code>UserService</code> to handle this querying of the database:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">itemsForSale</span><span class="err">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+  <span class="nx">service</span><span class="p">.</span><span class="nx">currentUser</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">AWSService</span><span class="p">.</span><span class="nx">dynamo</span><span class="p">({</span>
+      <span class="na">params</span><span class="p">:</span> <span class="p">{</span><span class="na">TableName</span><span class="p">:</span> <span class="nx">service</span><span class="p">.</span><span class="nx">UserItemsTable</span><span class="p">}</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">table</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">table</span><span class="p">.</span><span class="nx">query</span><span class="p">({</span>
+        <span class="na">TableName</span><span class="p">:</span> <span class="nx">service</span><span class="p">.</span><span class="nx">UserItemsTable</span><span class="p">,</span>
+        <span class="na">KeyConditions</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s2">&quot;User email&quot;</span><span class="err">:</span> <span class="p">{</span>
+            <span class="s2">&quot;ComparisonOperator&quot;</span><span class="err">:</span> <span class="s2">&quot;EQ&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;AttributeValueList&quot;</span><span class="err">:</span> <span class="p">[</span>
+              <span class="p">{</span><span class="na">S</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">}</span>
+            <span class="p">]</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">Items</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">items</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">S</span><span class="p">));</span>
+          <span class="p">});</span>
+          <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">items</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+<span class="p">},</span>
+<span class="c1">// ...
+</span></pre>
+<blockquote>
+<p>In the above query, the <code>KeyConditions</code> and <code>&quot;User email&quot;</code> are required parameters. </p>
+</blockquote>
+
+<h2>Showing the listing in HTML</h2>
+
+<p>To show our user&rsquo;s images in HTML, we&rsquo;ll simply assign the result of our new <code>itemsForSale()</code> method to a property of the controller&rsquo;s scope:</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">getItemsForSale</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">UserService</span><span class="p">.</span><span class="nx">itemsForSale</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">images</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">images</span> <span class="o">=</span> <span class="nx">images</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">getItemsForSale</span><span class="p">();</span> <span class="c1">// Load the user's list initially
+</span></pre>
+<p>Now we can iterate over the list of items easily using the <code>ng-repeat</code> directive:</p>
+<pre class="highlight html"><span class="c">&lt;!-- ... --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">ng-show=</span><span class="s">&quot;images&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-sm-6 col-md-4&quot;</span> 
+    <span class="na">ng-repeat=</span><span class="s">&quot;image in images&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;thumbnail&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;img</span> <span class="na">ng-click=</span><span class="s">&quot;sellImage(image)&quot;</span>
+          <span class="na">data-ng-src=</span><span class="s">&quot;{{image.itemUrl}}&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p><img alt="Image listing" src="/images/aws/image_listing.png" /></p>
+
+<h2>Selling our work</h2>
+
+<p>The final component of our AWS-powered demo app is the ability to create sales from our Single Page App. </p>
+
+<blockquote>
+<p>In order to actually take money from customers, we&rsquo;ll need a thin backend component that will need to convert stripe tokens into sales on Stripe. We cover this in our upcoming book that&rsquo;s available for pre-release at <a href="http://www.ng-book.com/">ng-book.com</a>.</p>
+</blockquote>
+
+<p>To start handling payments, we&rsquo;ll create a <code>StripeService</code> that will handle creating charges for us. Since we&rsquo;ll want to support configuring Stripe in the <code>.config()</code> method in our module, we&rsquo;ll need to create a <code>.provider()</code>.</p>
+
+<p>The service itself is incredibly simple as it leverages the <code>Stripe.js</code> library to do the heavy lifting work.</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="p">.</span><span class="nx">provider</span><span class="p">(</span><span class="s1">'StripeService'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+
+  <span class="nx">self</span><span class="p">.</span><span class="nx">setPublishableKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">Stripe</span><span class="p">.</span><span class="nx">setPublishableKey</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">self</span><span class="p">.</span><span class="nx">$get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$q</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">createCharge</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">obj</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">'number'</span><span class="p">)</span> <span class="o">||</span>
+            <span class="o">!</span><span class="nx">obj</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">'cvc'</span><span class="p">)</span> <span class="o">||</span>
+            <span class="o">!</span><span class="nx">obj</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">'exp_month'</span><span class="p">)</span> <span class="o">||</span>
+            <span class="o">!</span><span class="nx">obj</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">'exp_year'</span><span class="p">)</span>
+          <span class="p">)</span> <span class="p">{</span>
+          <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s2">&quot;Bad input&quot;</span><span class="p">,</span> <span class="nx">obj</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">Stripe</span><span class="p">.</span><span class="nx">card</span><span class="p">.</span><span class="nx">createToken</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> 
+            <span class="kd">function</span><span class="p">(</span><span class="nx">status</span><span class="p">,</span> <span class="nx">resp</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">if</span> <span class="p">(</span><span class="nx">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">resp</span><span class="p">);</span>
+              <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">status</span><span class="p">);</span>
+              <span class="p">}</span>
+          <span class="p">});</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>If you do not have a Stripe account, get one at <a href="http://stripe.com">stripe.com</a>. Stripe is an incredibly developer friendly payment processing gateway, which makes it ideal for us building our ngroad marketplace on it.</p>
+
+<p>Once you have an account, find your <code>Account Settings</code> page and locate the <code>API Keys</code> page. Find the publishable key (either the test one &ndash; which will not actually make charges or the production version) and take note of it. </p>
+
+<p>In our <code>scripts/app.js</code> file, add the following line and replace the &lsquo;pk<em>test</em>YOUR_KEY&rsquo; publishable key with yours.</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">StripeServiceProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">StripeServiceProvider</span>
+    <span class="p">.</span><span class="nx">setPublishableKey</span><span class="p">(</span><span class="s1">'pk_test_YOUR_KEY'</span><span class="p">);</span>
+<span class="p">})</span>
+</pre>
+<h2>Using Stripe</h2>
+
+<p>When a user clicks on an image they like, we&rsquo;ll open a form in the browser that takes credit card information. We&rsquo;ll set the form to submit to an action on our controller called <code>submitPayment()</code>.</p>
+
+<p>Notice above where we have the thumbnail of the image, we include an action when the image is clicked that calls the <code>sellImage()</code> action with the image.</p>
+
+<p>Implementing the <code>sellImage()</code> function in the <code>MainCtrl</code>, it looks like:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">sellImage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">image</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">showCC</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">currentItem</span> <span class="o">=</span> <span class="nx">image</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// ...
+</span></pre>
+<p>Now, when the image is clicked, the <code>showCC</code> property will be true and we can show the credit card form. We&rsquo;ve included an incredibly simple one here:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-show=</span><span class="s">&quot;showCC&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;form</span> <span class="na">ng-submit=</span><span class="s">&quot;submitPayment()&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;span</span> <span class="na">ng-bind=</span><span class="s">&quot;errors&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
+    <span class="nt">&lt;span&gt;</span>Card Number<span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> 
+            <span class="na">ng-minlength=</span><span class="s">&quot;16&quot;</span>
+            <span class="na">ng-maxlength=</span><span class="s">&quot;20&quot;</span>
+            <span class="na">size=</span><span class="s">&quot;20&quot;</span>
+            <span class="na">data-stripe=</span><span class="s">&quot;number&quot;</span>
+            <span class="na">ng-model=</span><span class="s">&quot;charge.number&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;span&gt;</span>CVC<span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> 
+            <span class="na">ng-minlength=</span><span class="s">&quot;3&quot;</span> 
+            <span class="na">ng-maxlength=</span><span class="s">&quot;4&quot;</span> 
+            <span class="na">data-stripe=</span><span class="s">&quot;cvc&quot;</span>
+            <span class="na">ng-model=</span><span class="s">&quot;charge.cvc&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;span&gt;</span>Expiration (MM/YYYY)<span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> 
+      <span class="na">ng-minlength=</span><span class="s">&quot;2&quot;</span> 
+      <span class="na">ng-maxlength=</span><span class="s">&quot;2&quot;</span> 
+      <span class="na">size=</span><span class="s">&quot;2&quot;</span> 
+      <span class="na">data-stripe=</span><span class="s">&quot;exp_month&quot;</span>
+      <span class="na">ng-model=</span><span class="s">&quot;charge.exp_month&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;span&gt;</span> / <span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> 
+      <span class="na">ng-minlength=</span><span class="s">&quot;4&quot;</span> 
+      <span class="na">ng-maxlength=</span><span class="s">&quot;4&quot;</span> 
+      <span class="na">size=</span><span class="s">&quot;4&quot;</span> 
+      <span class="na">data-stripe=</span><span class="s">&quot;exp-year&quot;</span>
+      <span class="na">ng-model=</span><span class="s">&quot;charge.exp_year&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;hidden&quot;</span>
+      <span class="na">name=</span><span class="s">&quot;email&quot;</span>
+      <span class="na">value=</span><span class="s">&quot;user.email&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span><span class="nt">&gt;</span>Submit Payment<span class="nt">&lt;/button&gt;</span>
+  <span class="nt">&lt;/form&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>We&rsquo;re binding the form almost entirely to the <code>charge</code> object on the scope, which we will use when we make the charge.</p>
+
+<p>The form itself submits to the function <code>submitPayment()</code> on the controller&rsquo;s scope. The <code>submitPayment()</code> function looks like:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">submitPayment</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">UserService</span>
+    <span class="p">.</span><span class="nx">createPayment</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">currentItem</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">.</span><span class="nx">charge</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">showCC</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+<span class="c1">// ...
+</span></pre>
+<p>The last thing that we&rsquo;ll have to do to be able to <em>take charges</em> is implement the <code>createPayment()</code> method on the UserService.</p>
+
+<p>Now, since we&rsquo;re taking payment on the client-side, we&rsquo;re technically not going to be able to process payments, we can only accept the <code>stripeToken</code> which we can set a background process to manage handling turning the stripe tokens into actual payments.</p>
+
+<p>Inside of our <code>createPayment()</code> function, we&rsquo;ll call our <code>StripeService</code> to generate the <code>stripeToken</code>. Then, we&rsquo;ll add the payment to an Amazon <code>SQS</code> queue so that our background process can make the charge.</p>
+
+<p>First, we&rsquo;ll use the <code>AWSService</code> to access our SQS queues. </p>
+
+<p>Unlike our other services, the SQS service requires a bit more integration to make it work as they require us to have a URL to interact with them. In our <code>AWSService</code> service object, we&rsquo;ll need to cache the URL that we&rsquo;re working with and create a new object every time time using that object instead. The idea behind the workflow is the exact same, however.</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">self</span><span class="p">.</span><span class="nx">$get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$q</span><span class="p">,</span> <span class="nx">$cacheFactory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">dynamoCache</span> <span class="o">=</span> <span class="nx">$cacheFactory</span><span class="p">(</span><span class="s1">'dynamo'</span><span class="p">),</span>
+      <span class="nx">s3Cache</span> <span class="o">=</span> <span class="nx">$cacheFactory</span><span class="p">(</span><span class="s1">'s3Cache'</span><span class="p">),</span>
+      <span class="nx">sqsCache</span> <span class="o">=</span> <span class="nx">$cacheFactory</span><span class="p">(</span><span class="s1">'sqs'</span><span class="p">);</span>
+<span class="c1">// ...
+</span><span class="nl">sqs</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+  <span class="nx">credentialsPromise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">sqsCache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">)),</span>
+        <span class="nx">queued</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">sqs</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AWS</span><span class="p">.</span><span class="nx">SQS</span><span class="p">();</span>
+      <span class="nx">sqs</span><span class="p">.</span><span class="nx">createQueue</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span> 
+        <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">url</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">QueueUrl</span><span class="p">;</span>
+            <span class="nx">sqsCache</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">),</span> <span class="nx">url</span><span class="p">);</span>
+            <span class="nx">queued</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">queued</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">queued</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">queued</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">queue</span> <span class="o">=</span> 
+        <span class="k">new</span> <span class="nx">AWS</span><span class="p">.</span><span class="nx">SQS</span><span class="p">({</span><span class="na">params</span><span class="p">:</span> <span class="p">{</span><span class="na">QueueUrl</span><span class="p">:</span> <span class="nx">url</span><span class="p">}});</span>
+      <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">queue</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">})</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span> 
+<span class="p">}</span>
+<span class="c1">// ...
+</span></pre>
+<p>Now we can use SQS inside of our <code>createPayment()</code> function. One caveat to the SQS service is that it can only send simple messages, such as with strings and numbers. It cannot send objects, so we&rsquo;ll need to call  <code>JSON.stringify</code> on our objects that we&rsquo;ll want to pass through the queue.</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">ChargeTable</span><span class="err">:</span> <span class="s2">&quot;UserCharges&quot;</span><span class="p">,</span>
+<span class="c1">// ...
+</span><span class="nx">createPayment</span><span class="err">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">charge</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+  <span class="nx">StripeService</span><span class="p">.</span><span class="nx">createCharge</span><span class="p">(</span><span class="nx">charge</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">stripeToken</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+    <span class="nx">AWSService</span><span class="p">.</span><span class="nx">sqs</span><span class="p">(</span>
+      <span class="p">{</span><span class="na">QueueName</span><span class="p">:</span> <span class="nx">service</span><span class="p">.</span><span class="nx">ChargeTable</span><span class="p">}</span>
+    <span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">queue</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">queue</span><span class="p">.</span><span class="nx">sendMessage</span><span class="p">({</span>
+        <span class="na">MessageBody</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+          <span class="na">item</span><span class="p">:</span> <span class="nx">item</span><span class="p">,</span>
+          <span class="na">stripeToken</span><span class="p">:</span> <span class="nx">stripeToken</span>
+        <span class="p">})</span>
+      <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+      <span class="p">})</span>
+    <span class="p">})</span>
+  <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p>When we submit the form&hellip;</p>
+
+<p><img alt="Payment handling" src="/images/aws/app_payment.png" /></p>
+
+<p>Our SQS queue grows and we have a payment just waiting to be completed.</p>
+
+<p><img alt="SQS queue" src="/images/aws/sqs_status.png" /></p>
+
+<h2>Conclusion</h2>
+
+<p>The entire source for this article is available at <a href="http://d.pr/aL9q">http://d.pr/aL9q</a>.</p>
+
+<p>Amazon&rsquo;s AWS presents us with powerful services so that we can completely change the way we work and deploy our angular apps. </p>
+
+<p>For more in-depth information about Angular, both more in-depth articles about back-end infrastructure and all levels of Angular, check out our upcoming book at <a href="http://ng-book.com/">ng-book.com</a>.</p>
+
+<script type="text/javascript" src="/js/posts/aws.js"></script>
+
+<script type="text/javascript">
+  window.___gcfg = { isSignedOut: true };
+  (function() {
+   var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+   po.src = 'https://apis.google.com/js/client:plusone.js?onload=onLoadCallback';
+   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+ })();
+</script>
+
+
+          <div class="container" id="signupApp" ng-cloak>
+  <div id="topbar_signup_embed">
+  Get the weekly email all focused on AngularJS. <b>Sign up below</b> to receive the weekly email and exclusive content.
+  <form name="ngSignup" action="http://willcodeforfoo.us6.list-manage1.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=fa61364f13" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    
+    <div class="row collapse">
+      <div class="small-9 columns">
+        <input ng-class="{error: ngSignup.email.$dirty && ngSignup.email.$invalid}" type="email" ng-minlength=3 ng-model="ngSignup.email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address" required>
+      </div>
+      <div class="small-3 columns">
+        <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" ng-disabled="ngSignup.$invalid" class="button postfix"></div>
+      </div>
+        <div class="small-12 columns error" ng-show="ngSignup.EMAIL.$dirty && ngSignup.EMAIL.$invalid">
+          <small class="error" ng-show="ngSignup.EMAIL.$error.required">Your email is required.</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.minlength">Your email is required to be at least 3 characters</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.email">That is not a valid email. Please input a valid email.</small>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  if (typeof(app) == 'undefined') {
+    angular.module("signupApp", [])
+    .controller("mailChimpValidation", ['$scope', function($scope) {}]);
+    var ele = document.getElementById("signupApp");
+    angular.element(ele, ['signupApp']);
+  }
+</script>
+          <section id="sample_chapter" ng-app="ngBookApp">    <div class="content">      <h3 class="title">Download a free sample of the ng-book: The Complete Book on AngularJS</h3> <span class="image"><img src="http://www.ng-book.com/images/flatbook-ngbook-small.png" alt="book"></span><div class="desc">It's free, so just enter your email address and the PDF will be sent directly to your inbox.</div>    </div>    <div class="form" ng-init="signedup=false" ng-show="!signuped">      <form action="http://willcodeforfoo.us6.list-manage.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=7bbfaae868" method="post" id="mc-embedded-subscribe-form" name="ngBookSignup" class="validate ng-pristine ng-invalid ng-invalid-required" target="_blank" novalidate="">
+<div class="mc-field-group">          <input type="email" ng-model="ngBookSignup.email" ng-class="{error: ngBookSignup.email.$dirty &amp;&amp; ngBookSignup.email.$invalid}" value="" name="EMAIL" placeholder="Your email address" class="required email ng-pristine ng-valid ng-valid-email ng-valid-minlength" id="mce-EMAIL" ng-minlength="3">        </div>        <div id="mce-responses" class="clear">          <div class="response" id="mce-error-response" style="display:none"></div>          <div class="response" id="mce-success-response" style="display:none"></div>        </div>        <div class="clear"><input type="submit" value="Send me a free chapter" name="subscribe" id="ngBookSignupSubmit" ng-disabled="ngBookSignup.$invalid" class="button postfix" ng-click="signedup=true" disabled="disabled"></div>      </form>      <div ng-show="signedup" class="ng-hide">      <p>Sweet! We are glad to hear you're interested in learning AngularJS. Enjoy the free chapter. We put a lot of work into building the book series, so we hope you like it!      Talk soon</p>      </div>      <div class="desc">        We won't ever send you spam! You can unsubscribe at any time.      </div>    </div>  </section>
+
+          <footer>
+            <ul class="actions">
+              <li><a href="/articles"><span class="arrow">←</span> Back to articles</a></li>
+              <li><a href="http://twitter.com/home/?status=AWS JS SDK - The Canonical Angular Guide - http://ng-newsletter.com/posts/aws-js-sdk.html via @ngnewsletter" target="_blank"><img src="/img/twitter-bird-blue-on-white.png" style="width: 56px; height: 26px;" />Share on twitter</a></li>
+            </ul>
+          </footer>
+
+        </article>
+
+        <section id="comments">
+            <h2 class="gamma">Comments</h2>
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ngnewsletter'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section>
+
+        
+
+        <script type="text/javascript" src="/js/vendor/zepto.js"></script>
+<script type="text/javascript" src="/js/vendor/foundation.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+        </div>
+    </div>
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28176211-3', 'ng-newsletter.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript">
+  var $mcGoal = {'settings':{'uuid':'86d6f14c7cc955128485e3b8e','dc':'us6'}};
+  (function() {
+     var sp = document.createElement('script'); sp.type = 'text/javascript'; sp.async = true; sp.defer = true;
+    sp.src = ('https:' == document.location.protocol ? 'https://s3.amazonaws.com/downloads.mailchimp.com' : 'http://downloads.mailchimp.com') + '/js/goal.min.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sp, s);
+  })(); 
+</script>
+
+</body>
+</html>

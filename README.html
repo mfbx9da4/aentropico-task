@@ -1,0 +1,183 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+
+body{
+  color:#444;
+  font-family:Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman',
+              "Hiragino Sans GB", "STXihei", "微软雅黑", serif;
+  font-size:12px;
+  line-height:1.5em;
+  background:#fefefe;
+  width: 45em;
+  margin: 10px auto;
+  padding: 1em;
+  outline: 1300px solid #FAFAFA;
+}
+
+a{ color: #0645ad; text-decoration:none;}
+a:visited{ color: #0b0080; }
+a:hover{ color: #06e; }
+a:active{ color:#faa700; }
+a:focus{ outline: thin dotted; }
+a:hover, a:active{ outline: 0; }
+
+span.backtick {
+  border:1px solid #EAEAEA;
+  border-radius:3px;
+  background:#F8F8F8;
+  padding:0 3px 0 3px;
+}
+
+::-moz-selection{background:rgba(255,255,0,0.3);color:#000}
+::selection{background:rgba(255,255,0,0.3);color:#000}
+
+a::-moz-selection{background:rgba(255,255,0,0.3);color:#0645ad}
+a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
+
+p{
+margin:1em 0;
+}
+
+img{
+max-width:100%;
+}
+
+h1,h2,h3,h4,h5,h6{
+font-weight:normal;
+color:#111;
+line-height:1em;
+}
+h4,h5,h6{ font-weight: bold; }
+h1{ font-size:2.5em; }
+h2{ font-size:2em; border-bottom:1px solid silver; padding-bottom: 5px; }
+h3{ font-size:1.5em; }
+h4{ font-size:1.2em; }
+h5{ font-size:1em; }
+h6{ font-size:0.9em; }
+
+blockquote{
+color:#666666;
+margin:0;
+padding-left: 3em;
+border-left: 0.5em #EEE solid;
+}
+hr { display: block; height: 2px; border: 0; border-top: 1px solid #aaa;border-bottom: 1px solid #eee; margin: 1em 0; padding: 0; }
+
+
+pre , code, kbd, samp { 
+  color: #000; 
+  font-family: monospace; 
+  font-size: 0.88em; 
+  border-radius:3px;
+  background-color: #F8F8F8;
+  border: 1px solid #CCC; 
+}
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; padding: 5px 12px;}
+pre code { border: 0px !important; padding: 0;}
+code { padding: 0 3px 0 3px; }
+
+b, strong { font-weight: bold; }
+
+dfn { font-style: italic; }
+
+ins { background: #ff9; color: #000; text-decoration: none; }
+
+mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+ul, ol { margin: 1em 0; padding: 0 0 0 2em; }
+li p:last-child { margin:0 }
+dd { margin: 0 0 0 2em; }
+
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+td { vertical-align: top; }
+
+@media only screen and (min-width: 480px) {
+body{font-size:14px;}
+}
+
+@media only screen and (min-width: 768px) {
+body{font-size:16px;}
+}
+
+@media print {
+  * { background: transparent !important; color: black !important; filter:none !important; -ms-filter: none !important; }
+  body{font-size:12pt; max-width:100%; outline:none;}
+  a, a:visited { text-decoration: underline; }
+  hr { height: 1px; border:0; border-bottom:1px solid black; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
+  pre, blockquote { border: 1px solid #999; padding-right: 1em; page-break-inside: avoid; }
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page :left { margin: 15mm 20mm 15mm 10mm; }
+  @page :right { margin: 15mm 10mm 15mm 20mm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3 { page-break-after: avoid; }
+}
+</style><title>README</title></head><body><p>PART 1</p>
+<p>Create a simple API using Node.js. 
+When we make a post request with a url of some csv data (eg http://aedata-tmp.s3.amazonaws.com/seriesA080328.csv), the server should return a JobId.
+When we make a get request with the JobId previously returned we will get the results of the computation in a json file. The computation should be done however you want and it will make a dummy prediction for the next 20 values of the y variable. The api should then return an html file with the original data, the calculation, and some graph in d3.js (e.g. http://bl.ocks.org/mbostock/3883245) that represents the prediction.</p>
+<p>Example</p>
+<p>Post request to run Algorithm "000000"</p>
+<pre><code>curl -v -H "Content-Type: application/json" -X POST --data '{"url":"http://aedata-tmp.s3.amazonaws.com/seriesA080328.csv"}' http://myserver/algorithms/000000:
+</code></pre>
+<p>Response Body: </p>
+<pre><code>{"jobId": "99db77396f152e113e9b94a915055e6e73a5a40f}
+</code></pre>
+<p>Get request</p>
+<pre><code>myserver/jobs/99db77396f152e113e9b94a915055e6e73a5a40f
+</code></pre>
+<p>Response Body</p>
+<pre><code>{
+    "id": "",
+    "result": {
+
+
+      "htmlreport":{"url to report"}
+       },
+    "status": ""
+
+}
+</code></pre>
+<p>2.
+Create a frontend in Angular.js for users to upload their own link to a csv file and get back an html report with the prediction on the values.</p>
+<p>BONUS: Please enhance backend API above to have all the data uploaded by the users to be uploaded directly to an Amazon S3 bucket, make the data upload bypass the api server by getting a policy from the server and using the policy to upload directly the files to S3 from the client. Find attached some examples of an angular api that does that (sierpinski.zip)</p>
+<p>BONUS: Enhance the visualization by making it reusable. http://bost.ocks.org/mike/chart/
+We don't mean simply using some of the many d3 based visualization libraries, but instead try to develop a roadmap to transform many of the available examples ( http://bost.ocks.org/mike/ , 
+http://christopheviau.com/d3list/gallery.html ) into reusable charts. Find attached one book that explains in detail how to do this with Angular.</p>
+<p>Feel free to improve or simplify whatever you want.</p>
+<p>Here are some resources for you.
+Angular:
+http://www.ng-newsletter.com/posts/beginner2expert-how_to_start.html
+Node.js
+http://www.hacksparrow.com/express-js-tutorial.html
+http://javascriptissexy.com/learn-node-js-completely-and-with-confidence/</p>
+<p>We suggest you to use MongoDB as your database, maintain the code using Github.com and make the deployment using Heroku.</p>
+<p>Let us know if you have any questions at any time. We would be glad to help you and guide you through this task if you find it interesting enough.</p>
+<p>We know this might be a lot of work but just take your time and let us know your advances, as soon as we hear from you we can set up another skype chat.</p>
+<p>PART 2</p>
+<p>Suppose you have a Retailer Data Table with the following information fields:</p>
+<pre><code>“cust_id” : Customer ID
+“trans_id” : Transaction ID
+“date” : Date of transaction
+“Code” : Product Code
+</code></pre>
+<p>These will help us identify who bought what, when, and in which transaction.</p>
+<p>Write down 10 specific questions that can be answered with this data set and suggest some computations to build next in the API you created so we can sell this report to a Store Manager.</p>
+<p>Example: 
+What is the pair of products that will be bought together every monday so I can put them in promotion? - COMP: Analyze correlations of products bought together, or build a recommendation engine for products.
+This is just a brainstorming exercise, feel free to throw any ideas that come to your mind.</p>
+<ol>
+<li>Customer clustering into groups</li>
+<li>Associating dates with products</li>
+<li>Patterns of customer buying</li>
+<li>Do people buy same product several times</li>
+<li>Which products are only bought once and never again.</li>
+</ol></body></html>

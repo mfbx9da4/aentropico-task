@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+
+<title>Rapid chrome app development with angular | ng-newsletter</title>
+
+<meta name="author" content="Ari Lerner">
+<meta name="description" content="Build a solid chrome application using AngularJS. In this tutorial, we'll show you exactly how to create a chrome app with AngularJS. We'll be creating a clone of the fantastic currently application angularjs angularjs tutorial angular">
+<meta name="keywords" content="angularjs getting started with angularjs how to configure angularjs chrome apps chrome webapps on angular angular and chrome chrome angular chromeapp chrome extension angular chrome app tutorial chrome extension tutorial angular tutorial angularjs tutorial angularjs angularjs tutorial angular realtime firebase angularfire">
+
+<meta name="msvalidate.01" content="BE7DA3BEF0F11153F6E4B5585C12DB20" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ng-newsletter" />
+<meta property="og:url" content="http://ng-newsletter.com" />
+<meta property="og:image" content="http://ng-newsletter.com/img/" />
+<meta property="og:description" content="Build a solid chrome application using AngularJS. In this tutorial, we'll show you exactly how to create a chrome app with AngularJS. We'll be creating a clone of the fantastic currently application" />
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:creator" value="@auser" />
+<meta name="twitter:title" value="ng-newsletter" />
+<meta name="twitter:description" value="Build a solid chrome application using AngularJS. In this tutorial, we'll show you exactly how to create a chrome app with AngularJS. We'll be creating a clone of the fantastic currently application" />
+<meta name="twitter:image" value="http://ng-newsletter.com/img/" />
+
+<link rel="alternate" type="application/rss+xml" href="feed.rss" title="Sitewide RSS 2.0 Feed">
+<link rel="alternate" type="application/atom+xml" href="atom.xml" title="Sitewide ATOM Feed">
+<link rel="alternate" type="application/atom+json" href="atom.json" title="Sitewide JSON Feed">
+
+<link href="/favicon.ico" rel="icon" type="image/ico" />
+<link href="/css/site.css" media="screen" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Roboto:400italic,700italic,400,700|Open+Sans:r,i,b,bi|Bitter:r,i,b" media="screen" rel="stylesheet" type="text/css" />
+<script src="/js/vendor/custom.modernizr.js"></script>
+<script src="/js/vendor/d3.v3.min.js"></script>
+<script src="/js/vendor/angular/angular.min.js"></script>
+<script src="/js/vendor/angular-route/angular-route.min.js"></script>
+<script src="/js/vendor/angular-animate.min.js"></script>
+<script src="/js/vendor/angular-translate.min.js"></script>
+<script src="/js/vendor/angular-cookies/angular-cookies.min.js"></script>
+
+
+</head>
+<body>
+
+    
+    <div id="header">
+  <div id="topNav">
+    <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">ng-newsletter</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <ul class="right">
+      		<li><a href="/posts">Articles</a></li>
+          <li><a href="/advent2013/">25 days of Angular</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/sponsor">Sponsorship</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+  <div class="headerContent">
+  </div>
+</div>
+
+    <div class="container">
+      <div id="article">
+        <article class="post">
+          <header>
+            <h1 class="mega">Rapid chrome app development with angular</h1>
+          </header>
+          
+          <p>The <a href="https://www.google.com/intl/en/chrome/browser/">Chrome</a> web browser is Google&rsquo;s custom browser. Not only is it incredibly speedy and on the bleeding edge of web development, it is at the forefront of delivering web experiences both on and off the web.</p>
+
+<p>Chrome Apps are embedded applications that run within the web browser, but are intended on delivering a native app feel. Since they run within Chrome itself, they are written in HTML5, javascript, CSS3, and have access to native-like capabilities that true web applications do not.</p>
+
+<p>Chrome apps have access to the Chrome API and services and can provide a integrated desktop-like experiences to the user.</p>
+
+<p>One more interesting differentiation between Chrome apps and webapps is that they always load locally, so they show up immediately, rather than waiting for the network to fully download the components. This greatly improves the performance and our user&rsquo;s experience with running our apps.</p>
+
+<p>In this article, we&rsquo;ll walk through how to create an advanced Chrome application using Angular. We&rsquo;re going to create a clone of the <em>fantastic</em> chrome webapp <em>Currently</em> by the team at <a href="http://blog.rainfalldesign.com/">Rainfall</a>.</p>
+
+<p><img alt="Currently" src="/images/chromeapp/currently.png" /></p>
+
+<p>We&rsquo;ll be building a clone that we&rsquo;ll call <em>Presently</em>: </p>
+
+<p><img alt="Presently" src="/images/chromeapp/presently.png" /></p>
+
+<h2>Understanding the Chrome apps</h2>
+
+<p>Let&rsquo;s dive into looking at how Chrome apps actually work and how we can start building our own.</p>
+
+<p>Every Chrome application has three core files:</p>
+
+<h3>manifest.json</h3>
+
+<p>The <code>manifest.json</code> file that describes the meta-data about the application, such as the name, description, version, and how to launch our application.</p>
+
+<h3>A background script</h3>
+
+<p>The background script that sets up how our application responds to system-level events, such as a user installing our app or launching it, etc.</p>
+
+<h3>A view</h3>
+
+<p>Most Chrome applications have a view. This component is optional, but will most generally always be used for our applications.</p>
+
+<h3>Architecting Presently</h3>
+
+<p>When we&rsquo;re building Presently, we&rsquo;ll need to take into account the application architecture. This will give us insight into how we&rsquo;ll build the app when we get to code.</p>
+
+<p>Like <em>Currently</em>, <em>Presently</em> will be a &ldquo;newtab&rdquo; app. This means that it will launch every time we open a new tab.</p>
+
+<p><em>Presently</em> has two main screens:</p>
+
+<h4>The home screen</h4>
+
+<p>This is the screen that features the current time and the current weather. It also features several weather icons beside the weather.</p>
+
+<h4>The settings screen</h4>
+
+<p>This screen will allow our users to change their location within the app.</p>
+
+<p>In order to support the home screen, we&rsquo;ll need to be able to show a properly formatted date and time as well as fetch weather from a remote API service.</p>
+
+<p>To support the settings screen, we&rsquo;ll integrate with a remote API service to auto-suggest potential locations for an input box.</p>
+
+<p>Finally, we&rsquo;ll use the basic localstorage (session storage) to persist our settings across the app.</p>
+
+<h2>Building the skeleton</h2>
+
+<p>Building our app, we&rsquo;ll set up a file structure like so:</p>
+
+<p><img alt="File structure" src="/images/chromeapp/tree.png" /></p>
+
+<p>We&rsquo;ll place our css files in <code>css/</code>, our custom fonts in <code>fonts/</code>, and our javascript files in <code>js/</code>. The main javascript file will be set in the <code>js/app.js</code> file and the HTML for our app will be placed in <code>tab.html</code> at the root.</p>
+
+<blockquote>
+<p>There are great tools to help bootstrap Chrome app extensions such as <a href="http://yeoman.io">yeoman</a>. </p>
+</blockquote>
+
+<p>Before we can start up our Chrome extension, we&rsquo;ll need to grab a few dependencies.</p>
+
+<p>We&rsquo;ll grab the <em>latest</em> version of <a href="http://code.angularjs.org/snapshot/angular.min.js">angular.min.js</a> (snapshot version) as well as <a href="http://code.angularjs.org/snapshot/angular-route.min.js">angular-route.min.js</a> from <a href="http://angularjs.org/">angularjs.org</a> and save them to the <code>js/vendor/</code> directory. </p>
+
+<blockquote>
+<p>Note that these versions are the snapshot versions of angular, not the release candidates.</p>
+</blockquote>
+
+<p>Lastly, we&rsquo;ll use twitter&rsquo;s bootstrap 3 framework to style our app, so we&rsquo;ll need to get the <code>bootstrap.min.css</code> and save it to <code>css/</code> from <a href="http://getbootstrap.com/">getbootstrap.com</a>.</p>
+
+<blockquote>
+<p>In production, it&rsquo;s often more efficient when working with multiple developers to use a tool like <a href="http://bower.io/">Bower</a> to manage dependencies. Since we&rsquo;re building a newtab app, however it&rsquo;s important we keep our app lightweight so it launches quickly.</p>
+</blockquote>
+
+<h2>manifest.json</h2>
+
+<p>With every Chrome app we&rsquo;ll write, we&rsquo;ll need to set up a <code>manifest.json</code>. This manifest tells Chrome how the application should run, what files it should use, what permissions it has, etc. etc.</p>
+
+<p>Our <code>manifest.json</code> will need to describe our app as <em>newtab</em> app as well as describing the <code>content_security_policy</code> (the policies that describe what our application can and cannot do) and the background script (needed by Chrome).</p>
+<pre class="highlight javascript"><span class="p">{</span>
+  <span class="s2">&quot;manifest_version&quot;</span><span class="err">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span><span class="err">:</span> <span class="s2">&quot;Presently&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;description&quot;</span><span class="err">:</span> <span class="s2">&quot;A currently clone&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;version&quot;</span><span class="err">:</span> <span class="s2">&quot;0.1&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;permissions&quot;</span><span class="err">:</span> <span class="p">[</span>
+    <span class="s2">&quot;http://api.wunderground.com/api/&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;http://autocomplete.wunderground.com/api&quot;</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;background&quot;</span><span class="err">:</span> <span class="p">{</span>
+    <span class="s2">&quot;scripts&quot;</span><span class="err">:</span> <span class="p">[</span><span class="s2">&quot;js/vendor/angular.min.js&quot;</span><span class="p">]</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;content_security_policy&quot;</span><span class="err">:</span> <span class="s2">&quot;script-src 'self'; object-src 'self'&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;chrome_url_overrides&quot;</span> <span class="err">:</span> <span class="p">{</span>
+    <span class="s2">&quot;newtab&quot;</span><span class="err">:</span> <span class="s2">&quot;tab.html&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+<p>The <code>manifest.json</code> is relatively straightforward with the name, the manifest version, the version, etc. In order to tell Chrome to launch our app as a <code>newtab</code> app, we set the app to <em>override</em> the <code>newtab</code> page. </p>
+
+<h2>tab.html</h2>
+
+<p>The main HTML file for our application is the <code>tab.html</code> file. This is the file that will be loaded when we open a new tab in Chrome.</p>
+
+<p>We&rsquo;ll set up the basic angular app inside of the <code>tab.html</code> file:</p>
+<pre class="highlight html"><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">data-ng-app=</span><span class="s">&quot;myApp&quot;</span> <span class="na">data-ng-csp=</span><span class="s">&quot;&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Presently<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;css/bootstrap.min.css&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href=</span><span class="s">&quot;css/main.css&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;./js/vendor/angular.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;./js/vendor/angular-route.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;./js/app.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre>
+<p>This very basic structure of an angular application looks almost identical to any angular app, with one exception: <code>data-ng-csp=&quot;&quot;</code>. </p>
+
+<p>The <code>ngCsp</code> directive enables Content Security Policy (or CSP) support for our angular app. Since Chrome apps prevent the browser from using <code>eval</code> or <code>function(string)</code> generated functions and Angular uses the <code>function(string)</code> generated function for speed, <code>ngCsp</code> will cause Angular to evaluate all expressions.</p>
+
+<p>This compatibility mode comes as a cost of performance, however as it will execute operations much slower, but will not throw any security violations in the process. </p>
+
+<p>CSP also forbids javascript files from inlining stylesheet rules, so we&rsquo;ll need to include <code>angular-csp.css</code> manually. </p>
+
+<p>The <code>angular-csp.css</code> file can be found at <a href="http://code.angularjs.org/snapshot/angular-csp.css">http://code.angularjs.org/snapshot/angular-csp.css</a>.</p>
+
+<p>Lastly, <code>ngCsp</code> must be placed alongside the root of our angular apps:</p>
+<pre class="highlight javascript"><span class="o">&lt;</span><span class="nx">html</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">app</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">csp</span><span class="o">&gt;</span>
+</pre>
+<blockquote>
+<p>Without the <code>ng-csp</code> directive, our Chrome app will <strong>not</strong> run as it will throw a security exception. If you see a security exception being thrown, make sure you check the root element for the directive.</p>
+</blockquote>
+
+<h2>Loading the app in Chrome</h2>
+
+<p>With our app in progress, let&rsquo;s load it into Chrome so we can follow our progress along in the browser. To load our app in Chrome, navigate to the url: <code>chrome://extensions/</code>.</p>
+
+<p>Once there, click on the button &ldquo;Load unpackged extension&hellip;&rdquo; and find the root directory (the directory that contains our <code>manifest.json</code> file from above). </p>
+
+<p><img alt="Load unpacked extension" src="/images/chromeapp/load_unpacked.png" /></p>
+
+<p>Once the application has been <em>loaded</em> into the Chrome browser, open a new tab and we should see our empty app with one error (don&rsquo;t worry, we&rsquo;ll fix this shortly):</p>
+
+<p><img alt="Load unpacked extension" src="/images/chromeapp/first_run.png" /></p>
+
+<blockquote>
+<p>Anytime that we update or modify our <code>manifest.json</code> file, we&rsquo;ll need to click on the <code>Reload</code> link underneath our Chrome app in <code>chrome://extensions</code>.</p>
+</blockquote>
+
+<h2>The main module</h2>
+
+<p>Our entire angular application will be built in the <code>js/app.js</code> file. For production versions of our app, we may want to split this functionality into multiple files or use a tool like <a href="http://gruntjs.com/">grunt</a> to compress and concatenate them for us. </p>
+
+<p>Our app is called <code>myApp</code>, so we&rsquo;ll create an angular module with the same name:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[])</span>
+</pre>
+<p>With this, our app will run in the browser without any issues.</p>
+
+<h2>Building the homepage</h2>
+
+<p>We&rsquo;ll start by building the home section in our app. In this section, we&rsquo;ll work on putting together components of our app that will make the application run. In the next section, we&rsquo;ll set up the multi-route application.</p>
+
+<h3>Building the clock</h3>
+
+<p>The main feature of <em>Presently</em> is the large clock that sits right at the top of the application and updates every second. In Angular, we can set this up pretty simply.</p>
+
+<p>We&rsquo;ll first start by building a <code>MainCtrl</code> will be responsible for managing the home screen. Inside this <code>MainCtrl</code> controller, we&rsquo;ll set up a timeout that will tick every second and update a local scope variable.</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[])</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'MainCtrl'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$timeout</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Build the date object
+</span>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">date</span> <span class="o">=</span> <span class="p">{};</span>
+
+  <span class="c1">// Update function
+</span>  <span class="kd">var</span> <span class="nx">updateTime</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">date</span><span class="p">.</span><span class="nx">raw</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+    <span class="nx">$timeout</span><span class="p">(</span><span class="nx">updateTime</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Kick off the update function
+</span>  <span class="nx">updateTime</span><span class="p">();</span>
+<span class="p">});</span>
+</pre>
+<p>Every second that our <code>MainCtrl</code> is visible, the <code>updateTime()</code> function will be ran to update the <code>$scope.date.raw</code> timestamp and our view will be updated. </p>
+
+<p>In order for us to see anything in the view load in our Chrome app, we&rsquo;ll need to bind this data to the document. We can set up this binding using the normal <code>{{ }}</code> template syntax:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;MainCtrl&quot;</span><span class="nt">&gt;</span>
+    {{ date.raw }}
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>When we go back to the browser and refresh, we&rsquo;ll see an unformatted Date object ticking in the view:</p>
+
+<p><img alt="Unformatted date" src="/images/chromeapp/unformatted_date.png" /></p>
+
+<p>The date is very ugly in the browser as it stands now. We can utilize Angular&rsquo;s built-in filters to format our date in a much more elegant manner.</p>
+
+<p>Following along with how <em>Currently</em> formats the date in their homescreen, we&rsquo;ll format ours similarly. Updating the view, we will move our date into it&rsquo;s own nested div and add formatting to display the date:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;MainCtrl&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;datetime&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;h1&gt;</span>{{ date.raw | date:'hh mm ss' }}<span class="nt">&lt;/h1&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>With a little CSS and help from bootstrap, our dates will appear on the screen in a much more human-friendly format.</p>
+
+<p><img alt="First screen" src="/images/chromeapp/first_screen.png" /></p>
+
+<p>We&rsquo;re using the CSS rules to align the date and times to the center of the screen and increasing the font-size to be prominently displayed on-screen.</p>
+<pre class="highlight css"><span class="nf">#datetime</span> <span class="p">{</span>
+  <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nf">#datetime</span> <span class="nt">h1</span> <span class="p">{</span>
+  <span class="nl">font-size</span><span class="p">:</span> <span class="m">6.1em</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p>We can add a second date in our view that simply shows our date with a human-friendly display. This is simply a matter of adding a second formatted date:</p>
+<pre class="highlight html"><span class="c">&lt;!-- ... --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;datetime&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>{{ date.raw | date:'hh mm ss' }}<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;h2&gt;</span>{{ date.raw | date:'EEEE, MMMM yyyy' }}<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="c">&lt;!-- ... --&gt;</span>
+</pre>
+<p>Our CSS for the <code>#datetime h2</code> tag simply increases the size of the <code>&lt;h2&gt;</code> tag:</p>
+<pre class="highlight css"><span class="nf">#datetime</span> <span class="nt">h2</span> <span class="p">{</span>
+  <span class="nl">font-size</span><span class="p">:</span> <span class="m">1.0em</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p><img alt="Full dates" src="/images/chromeapp/full_dates.png" /></p>
+
+<h2>Sign up for wunderground&rsquo;s weather API</h2>
+
+<p>Our app will need to reach out to foreign sources to fetch the current weather for the location we&rsquo;re interested in. In this application, we&rsquo;re using the <a href="http://www.wunderground.com/">wunderground</a> api. </p>
+
+<p>In order to use the wunderground api, we&rsquo;ll need to get an access api key.</p>
+
+<p>To get an access api key, we&rsquo;ll need to sign up first. Head to the weather api wunderground page at <a href="http://www.wunderground.com/weather/api/">http://www.wunderground.com/weather/api/</a> and click &ldquo;Sign Up for Free!&rdquo;.</p>
+
+<p><img alt="Sign up for wunderground" src="/images/chromeapp/wunderground_page.png" /></p>
+
+<p>Fill out the relevant details on the following page and we&rsquo;ll click through until we reach the detail page that shows our API key.</p>
+
+<p><img alt="Fill out details" src="/images/chromeapp/wunderground_signup.png" /></p>
+
+<p>Once we&rsquo;re set, locate the wunderground api key and save it. We&rsquo;ll be using it shortly.</p>
+
+<h3>Building the angular service</h3>
+
+<p>We won&rsquo;t place our logic into the Controller to fetch the weather as it is both inefficient (as the controller will be blown away when we navigate to another page and we&rsquo;ll need to re-call the api every time the controller is loaded) and poor design to mix in business logic details with implementation details.</p>
+
+<p>Instead, we&rsquo;ll use a <a href="#service">service</a>. A service persists across controllers, for the duration of the application&rsquo;s lifetime and is the appropriate place for us to hide business logic away from the controller.</p>
+
+<p>As we&rsquo;ll need to <em>configure</em> our app when it boots up, we&rsquo;ll use the <code>.provider()</code> method of creating a service. This is the <strong>only</strong> method for creating services that can be injected into <code>.config()</code> functions. </p>
+
+<p>To build the service, we&rsquo;ll use the <code>.provider()</code> api method that takes both a name of the service as well as a function that defines the actual provider. </p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[])</span>
+<span class="p">.</span><span class="nx">provider</span><span class="p">(</span><span class="s1">'Weather'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">})</span>
+</pre>
+<p>Inside here, we&rsquo;ll need to define a <code>$get()</code> function that returns the methods available to the service. To configure this service, we&rsquo;ll need to allow a method for the api key to be set on configuration. These methods will live outside of the scope of the <code>$get()</code> function.</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">provider</span><span class="p">(</span><span class="s1">'Weather'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">apiKey</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">setApiKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">apiKey</span> <span class="o">=</span> <span class="nx">key</span><span class="p">;</span>
+  <span class="p">};</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">$get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="c1">// Service object
+</span>    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</pre>
+<p>With this minimal amount of code, we can now <em>inject</em> the <code>Weather</code> service into our <code>.config()</code> function and configure the service with our wunderground api key.</p>
+
+<p>When angular encounters a provider created with the <code>.provider()</code> api method, it creates a <code>[Name]Provider</code> injectable object. This is what we&rsquo;ll inject into our config function:</p>
+<pre class="highlight javascript"><span class="c1">// .provider('Weather', function() {
+//  ...
+// })
+</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">WeatherProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">WeatherProvider</span><span class="p">.</span><span class="nx">setApiKey</span><span class="p">(</span><span class="s1">'YOUR_API_KEY'</span><span class="p">);</span>
+<span class="p">})</span>
+<span class="c1">// .controller('MainCtrl', function($scope, $timeout) {
+// ...
+</span></pre>
+<p>The wunderground API requires that we pass the API key with our request in the URL. In order to pass our api key in with every request, we&rsquo;ll create a function that will generate the url.</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">apiKey</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+<span class="c1">// ...
+</span><span class="k">this</span><span class="p">.</span><span class="nx">getUrl</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">ext</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s2">&quot;http://api.wunderground.com/api/&quot;</span> <span class="o">+</span> 
+    <span class="k">this</span><span class="p">.</span><span class="nx">apiKey</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nx">type</span> <span class="o">+</span> <span class="s2">&quot;/q/&quot;</span> <span class="o">+</span>
+    <span class="nx">ext</span> <span class="o">+</span> <span class="s1">'.json'</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+<p>Now, we can create our API call for the <code>Weather</code> service to get us the latest forecast data from the wunderground API.</p>
+
+<p>We&rsquo;ll create our own promises that we can use to resolve in the view as we&rsquo;ll want to return only the relevant results from our API call:</p>
+<pre class="highlight javascript"><span class="k">this</span><span class="p">.</span><span class="nx">$get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$q</span><span class="p">,</span> <span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">getWeatherForecast</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">city</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+      <span class="nx">$http</span><span class="p">({</span>
+        <span class="na">method</span><span class="p">:</span> <span class="s1">'GET'</span><span class="p">,</span>
+        <span class="na">url</span><span class="p">:</span> <span class="nx">self</span><span class="p">.</span><span class="nx">getUrl</span><span class="p">(</span><span class="s2">&quot;forecast&quot;</span><span class="p">,</span> <span class="nx">city</span><span class="p">),</span>
+        <span class="na">cache</span><span class="p">:</span> <span class="kc">true</span>
+      <span class="p">}).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// The wunderground API returns the 
+</span>        <span class="c1">// object that nests the forecasts inside
+</span>        <span class="c1">// the forecast.simpleforecast key
+</span>        <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">forecast</span><span class="p">.</span><span class="nx">simpleforecast</span><span class="p">);</span>
+      <span class="p">}).</span><span class="nx">error</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+      <span class="p">});</span>
+      <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+<p>Now, we can inject the <code>Weather</code> service into our controller and simply call the method <code>getWeatherForecast()</code> and respond to the promise instead of dealing with the complexity of the API in our controller.</p>
+
+<p>Back to our <code>MainCtrl</code>, we can inject the <code>Weather</code> service and set the result on our scope:</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'MainCtrl'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$timeout</span><span class="p">,</span> <span class="nx">Weather</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...
+</span>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">weather</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1">// Hardcode San_Francisco for now
+</span>    <span class="nx">Weather</span><span class="p">.</span><span class="nx">getWeatherForecast</span><span class="p">(</span><span class="s2">&quot;CA/San_Francisco&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">weather</span><span class="p">.</span><span class="nx">forecast</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+    <span class="p">});</span>
+    <span class="c1">// ...
+</span></pre>
+<p>To view the result of the API call in our view, we&rsquo;ll need to update our <code>tab.html</code>. For debugging purposes, we like to use the <code>json</code> filter inside a <code>&lt;pre&gt;</code> tag:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;forecast&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;pre&gt;</span>{{ weather.forecast | json }}<span class="nt">&lt;/pre&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p><img alt="Weather API debugging call" src="/images/chromeapp/wunderground_api_debug.png" /></p>
+
+<p>We can see that the view is updated with the latest weather and now we&rsquo;re good to go to create a more polished view.</p>
+
+<p>The view itself will iterate over the <code>forecast.forecastday</code> collection. For each element, we&rsquo;ll create a view that displays the weather icon given to us by the wunderground api as well as the human-readable date and high.</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;forecast&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;row list-unstyled&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">&quot;day in weather.forecast.forecastday&quot;</span> <span class="na">class=</span><span class="s">&quot;col-md-3&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">ng-class=</span><span class="s">&quot;{today: $index == 0}&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">&quot;{{ day.icon }}&quot;</span> <span class="na">ng-src=</span><span class="s">&quot;{{ day.icon_url }}&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;h3&gt;</span>{{ day.high.fahrenheit }}<span class="nt">&lt;/h3&gt;</span>
+        <span class="nt">&lt;h4</span> <span class="na">ng-if=</span><span class="s">&quot;$index == 0&quot;</span><span class="nt">&gt;</span>Now<span class="nt">&lt;/h4&gt;</span>
+        <span class="nt">&lt;h4</span> <span class="na">ng-if=</span><span class="s">&quot;$index != 0&quot;</span><span class="nt">&gt;</span>{{ day.date.weekday }}<span class="nt">&lt;/h4&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/li&gt;</span>
+  <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p><img alt="Clean HTML weather view" src="/images/chromeapp/clean_html_view.png" /></p>
+
+<p>The style we&rsquo;ve set in the view is set as:</p>
+<pre class="highlight css"><span class="nf">#forecast</span> <span class="nt">ul</span> <span class="nt">li</span> <span class="p">{</span>
+  <span class="nl">font-size</span><span class="p">:</span> <span class="m">4.5em</span><span class="p">;</span>
+  <span class="nl">text-align</span><span class="p">:</span> <span class="nb">center</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nf">#forecast</span> <span class="nt">ul</span> <span class="nt">li</span> <span class="nt">h3</span> <span class="p">{</span>
+  <span class="nl">font-size</span><span class="p">:</span> <span class="m">1.4em</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nf">#forecast</span> <span class="nt">ul</span> <span class="nt">li</span> <span class="nc">.today</span> <span class="nt">h3</span> <span class="p">{</span>
+  <span class="nl">font-size</span><span class="p">:</span> <span class="m">1.8em</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<h2>A settings screen</h2>
+
+<p>Currently our app only has one view, with a hard-coded city that fetched for every browser. Although this works for all of us here in San Francisco, it does <strong>not</strong> work for anyone outside of it.</p>
+
+<p>In order to allow our users the ability to customize their experience with <em>Presently</em>, we&rsquo;ll need to add a second screen: a setting screen.</p>
+
+<p>To introduce a second screen (and multiple views), we&rsquo;ll need to add the <code>ngRoute</code> module as a dependency of our app module.</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'ngRoute'</span><span class="p">])</span>
+</pre>
+<p>Now we can define our separate views and routes as well as pull our home screen view out of the main <code>tab.html</code> view.</p>
+
+<p>In defining our routes, note that we&rsquo;ll need two; one for each of the two different screens of our app.</p>
+<pre class="highlight javascript"><span class="c1">// angular.module(...)
+// ...
+</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$routeProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$routeProvider</span>
+    <span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'templates/home.html'</span><span class="p">,</span> 
+      <span class="na">controller</span><span class="p">:</span> <span class="s1">'MainCtrl'</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="s1">'/settings'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'templates/settings.html'</span><span class="p">,</span>
+      <span class="na">controller</span><span class="p">:</span> <span class="s1">'SettingsCtrl'</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">otherwise</span><span class="p">({</span><span class="na">redirectTo</span><span class="p">:</span> <span class="s1">'/'</span><span class="p">});</span>
+<span class="p">})</span>
+</pre>
+<p>Now we can take our entire <code>tab.html</code> html between the <code>.container</code> div, move it into the file <code>templates/home.html</code>, and replace it with <code>&lt;div ng-view&gt;&lt;/div&gt;</code>. </p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">ng-view</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>When we refresh the page, we&rsquo;ll see that nothing has appeared to have <em>changed</em>, but our html is no longer loaded inside the <code>tab.html</code>, but from the <code>templates/home.html</code> template.</p>
+
+<p>Currently, we have no way of navigating between our two screens. We can add some footer-based navigation that we can allow our users to navigate between the pages. We&rsquo;ll simply add two links at the bottom of the page to navigate between pages, like so:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;actionbar&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;list-inline&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">class=</span><span class="s">&quot;glyphicon glyphicon-home&quot;</span> <span class="na">href=</span><span class="s">&quot;#/&quot;</span><span class="nt">&gt;&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">class=</span><span class="s">&quot;glyphicon glyphicon-cog&quot;</span> <span class="na">href=</span><span class="s">&quot;#/settings&quot;</span><span class="nt">&gt;&lt;/a&gt;&lt;/li&gt;</span>
+  <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>In order to add them to the the bottom right-hand corner of the screen, we&rsquo;ll apply a bit of CSS to absolutely position them:</p>
+<pre class="highlight css"><span class="nf">#actionbar</span> <span class="p">{</span>
+  <span class="nl">position</span><span class="p">:</span> <span class="nb">absolute</span><span class="p">;</span>
+  <span class="nl">bottom</span><span class="p">:</span> <span class="m">0.5em</span><span class="p">;</span>
+  <span class="nl">right</span><span class="p">:</span> <span class="m">1.0em</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nf">#actionbar</span> <span class="nt">a</span> <span class="p">{</span>
+  <span class="nl">font-size</span><span class="p">:</span> <span class="m">2</span><span class="p">.</span><span class="n">2rem</span><span class="p">;</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="m">#000</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p>Now, if we navigate to our settings page by clicking on the cog button, we&rsquo;ll see that nothing is rendered. We need to define our <code>SettingsCtrl</code> so we can start manipulating the view and working with our user.</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'SettingsCtrl'</span><span class="p">,</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Our controller will go here
+</span><span class="p">})</span>
+</pre>
+<p>The settings screen itself will feature a single form that will be responsible for allowing the user to change cities that they are interested in. The HTML itself will look similar to this (with a few features we have yet to implement):</p>
+<pre class="highlight html"><span class="nt">&lt;h2&gt;</span>Settings<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;form</span> <span class="na">ng-submit=</span><span class="s">&quot;save()&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span>
+          <span class="na">ng-model=</span><span class="s">&quot;user.location&quot;</span>
+          <span class="na">placeholder=</span><span class="s">&quot;Enter a location&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">&quot;btn btn-primary&quot;</span> 
+        <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">value=</span><span class="s">&quot;Save&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</pre>
+<h2>Implementing a User service</h2>
+
+<p>For the same reasons that we are hiding away the complexity of the wunderground API, we&rsquo;ll also hide away our User api. This will enable us to use localstorage as well as communicate across our controllers about the user settings at any part of the app.</p>
+
+<p>The <code>UserService</code> itself is straightforward and does not need to be configured in our app. Without the use of localstorage, our <code>UserService</code> will simply be:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'UserService'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">defaults</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">location</span><span class="p">:</span> <span class="s1">'autoip'</span>
+  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">user</span><span class="p">:</span> <span class="nx">defaults</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="nx">service</span><span class="p">;</span>
+<span class="p">})</span>
+</pre>
+<p>This service will hold on to our user object for the lifetime of the application. That is to say, while the browser window is open, the settings of the application will remain constant to the user&rsquo;s settings. However, if our user opens a new tab in chrome, these settings disappear, which is not ideal.</p>
+
+<p>We can persist our settings across our app by using Chrome&rsquo;s sessionStorage capabilities. Luckily, this api is straightforward and simple.</p>
+
+<p>We&rsquo;ll add two functions to the <code>UserService</code>:</p>
+
+<ul>
+<li>save</li>
+<li>restore</li>
+</ul>
+
+<p>Even with these capabilities, the <code>UserService</code> has not grown </p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'UserService'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">defaults</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">location</span><span class="p">:</span> <span class="s1">'autoip'</span>
+  <span class="p">};</span>
+
+  <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">user</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="na">save</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">sessionStorage</span><span class="p">.</span><span class="nx">presently</span> <span class="o">=</span>
+        <span class="nx">angular</span><span class="p">.</span><span class="nx">toJson</span><span class="p">(</span><span class="nx">service</span><span class="p">.</span><span class="nx">user</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="na">restore</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="c1">// Pull from sessionStorage
+</span>      <span class="nx">service</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> 
+        <span class="nx">angular</span><span class="p">.</span><span class="nx">fromJson</span><span class="p">(</span><span class="nx">sessionStorage</span><span class="p">.</span><span class="nx">presently</span><span class="p">)</span> <span class="o">||</span> <span class="nx">defaults</span>
+
+      <span class="k">return</span> <span class="nx">service</span><span class="p">.</span><span class="nx">user</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="c1">// Immediately call restore from the session storage
+</span>  <span class="c1">// so we have our user data available immediately
+</span>  <span class="nx">service</span><span class="p">.</span><span class="nx">restore</span><span class="p">();</span>
+  <span class="k">return</span> <span class="nx">service</span><span class="p">;</span>
+<span class="p">})</span>
+<span class="c1">// ...
+</span></pre>
+<p>Now, we can inject this <code>UserService</code> across our Chrome app and have access to the same user data. Heading back to our <code>SettingsCtrl</code>, we can now set up a user object to define settings with the new service:</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'SettingsCtrl'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">UserService</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="nx">UserService</span><span class="p">.</span><span class="nx">user</span><span class="p">;</span>
+<span class="p">});</span>
+</pre>
+<p>If we refresh the browser, we&rsquo;ll now see that we have a default set for the user as <code>&#39;autoip&#39;</code>, which is the default we set up in the <code>UserService</code> definition.</p>
+
+<p><img alt="Settings page" src="/images/chromeapp/settings_one.png" /></p>
+
+<p>Now, we only need a way for our user to save their data into their session storage so we can use it across the app. In our <code>templates/settings.html</code>, we defined the form as having a <code>ng-submit=&quot;save()&quot;</code> action, thus when our user submits the form, the <code>save()</code> function will be called.</p>
+
+<p>Inside our <code>SettingsCtrl</code>, we&rsquo;ll implement the <code>save()</code> function that will call save on the <code>UserService</code> and persist the user&rsquo;s data into their sessionStorage.</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'SettingsCtrl'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">UserService</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="nx">UserService</span><span class="p">.</span><span class="nx">user</span><span class="p">;</span>
+
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">save</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">UserService</span><span class="p">.</span><span class="nx">save</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>Now, with the single input field bound to <code>user.location</code>, if we change the value and press save, our user&rsquo;s <code>sessionStorage</code> will be updated:</p>
+
+<p><img alt="sessionStorage" src="/images/chromeapp/sessionStorage.png" /></p>
+
+<p>By using the <code>UserService</code> in our <code>HomeCtrl</code>, we can now remove the hardcoded value of &lsquo;&ldquo;CA/San_Francisco&rdquo;&rsquo; and replace it with our new <code>UserService</code> object&rsquo;s location.</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'MainCtrl'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$timeout</span><span class="p">,</span> <span class="nx">Weather</span><span class="p">,</span> <span class="nx">UserService</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...
+</span>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="nx">UserService</span><span class="p">.</span><span class="nx">user</span><span class="p">;</span>
+    <span class="nx">Weather</span><span class="p">.</span><span class="nx">getWeatherForecast</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">location</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">weather</span><span class="p">.</span><span class="nx">forecast</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+    <span class="p">});</span>
+    <span class="c1">// ...
+</span><span class="p">})</span>
+</pre>
+<p>As we can see, if we flip back and forth from the settings view and input &ldquo;NY/New_York&rdquo;, for instance we can see the weather changing based upon the location we place in the settings page.</p>
+
+<p><img alt="New york location" src="/images/chromeapp/newyork.png" /></p>
+
+<h2>City autofill/autocomplete</h2>
+
+<p>It&rsquo;s pretty inconvenient to need to type a city that conforms to the wunderground API formats (lat/long, city and state, country codes, etc). Luckily, the wunderground api also provides us an <a href="http://www.wunderground.com/weather/api/d/docs?d=autocomplete-api">autocomplete API</a>.</p>
+
+<p>Instead of requiring our users to <em>know</em> the specific city format, we&rsquo;ll provide a list of them for our user&rsquo;s to select.</p>
+
+<blockquote>
+<p>For simplicity and flexibility purposes, we&rsquo;re only going to create a raw javascript-based autocomplete, rather than use a plugin library, such as the <code>typeahead.js</code> or <code>jQuery</code> plugin libraries. </p>
+</blockquote>
+
+<p>To do this, we&rsquo;ll create a directive that we&rsquo;ll place on the <code>&lt;input&gt;</code> element that will append a <code>&lt;ul&gt;</code> element with a list of suggested places.</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'autoFill'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$timeout</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'EA'</span><span class="p">,</span>
+    <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">autoFill</span><span class="p">:</span> <span class="s1">'&amp;'</span><span class="p">,</span>
+      <span class="na">ngModel</span><span class="p">:</span> <span class="s1">'='</span>
+    <span class="p">},</span>
+    <span class="na">compile</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">tEle</span><span class="p">,</span> <span class="nx">tAttrs</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Our compile function
+</span>      <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">ele</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">ctrl</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Our link function
+</span>      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</pre>
+<p>As we will be creating a new element, we&rsquo;ll need to use the <code>compile</code> function, rather than just the link function and a template, since our <code>&lt;ul&gt;</code> element cannot be nested underneath an <code>&lt;input&gt;</code> element.</p>
+
+<p>Without diving too deeply into how the <code>compile</code> function works, we&rsquo;re going to create a new element and we&rsquo;ll set up the bindings on our new element:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">compile</span><span class="err">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">tEle</span><span class="p">,</span> <span class="nx">tAttrs</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">tplEl</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">element</span><span class="p">(</span><span class="s1">'&lt;div class=&quot;typeahead&quot;&gt;'</span> <span class="o">+</span>
+  <span class="s1">'&lt;input type=&quot;text&quot; autocomplete=&quot;off&quot; /&gt;'</span> <span class="o">+</span>
+  <span class="s1">'&lt;ul id=&quot;autolist&quot; ng-show=&quot;reslist&quot;&gt;'</span> <span class="o">+</span>
+    <span class="s1">'&lt;li ng-repeat=&quot;res in reslist&quot; '</span> <span class="o">+</span>
+      <span class="s1">'&gt;{{res.name}}&lt;/li&gt;'</span> <span class="o">+</span>
+  <span class="s1">'&lt;/ul&gt;'</span> <span class="o">+</span>
+  <span class="s1">'&lt;/div&gt;'</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">input</span> <span class="o">=</span> <span class="nx">tplEl</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'input'</span><span class="p">);</span>
+  <span class="nx">input</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="nx">tAttrs</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
+  <span class="nx">input</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'ng-model'</span><span class="p">,</span> <span class="nx">tAttrs</span><span class="p">.</span><span class="nx">ngModel</span><span class="p">);</span>
+  <span class="nx">tEle</span><span class="p">.</span><span class="nx">replaceWith</span><span class="p">(</span><span class="nx">tplEl</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">ele</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">ctrl</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...
+</span></pre>
+<p>Inside of our link function, we&rsquo;ll bind on a <code>keyup</code> event and check that we have at least a minimum number of characters in our input field. Once there are a minimum number of characters, we&rsquo;ll run a function set by the use of the directive to fetch the auto-suggested values.</p>
+
+<h3>auto-complete api</h3>
+
+<p>Examining how we invoke this directive, we call it by passing a function to the <code>auto-fill</code> directive call as well as binding the location to the <code>user.location</code> value:</p>
+<pre class="highlight html"><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span>
+  <span class="na">ng-model=</span><span class="s">&quot;user.location&quot;</span>
+  <span class="na">auto-fill=</span><span class="s">&quot;fetchCities&quot;</span>
+  <span class="na">autocomplete=</span><span class="s">&quot;off&quot;</span>
+  <span class="na">placeholder=</span><span class="s">&quot;Location&quot;</span> <span class="nt">/&gt;</span>
+</pre>
+<p>In our <code>Weather</code> service, we&rsquo;ll create another function that specifically calls the <code>autocomplete</code> api and resolves a promise with a list of suggestions completions for a query term.</p>
+<pre class="highlight javascript"><span class="nx">getWeatherForecast</span><span class="err">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">city</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ...
+</span><span class="p">},</span>
+<span class="nx">getCityDetails</span><span class="err">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">query</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+  <span class="nx">$http</span><span class="p">({</span>
+    <span class="na">method</span><span class="p">:</span> <span class="s1">'GET'</span><span class="p">,</span>
+    <span class="na">url</span><span class="p">:</span> <span class="s2">&quot;http://autocomplete.wunderground.com/' +
+          'aq?query=&quot;</span> <span class="o">+</span>
+          <span class="nx">query</span>
+  <span class="p">}).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">RESULTS</span><span class="p">);</span>
+  <span class="p">}).</span><span class="nx">error</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p>Back in our <code>SettingsCtrl</code>, we can simply reference this function as the function that retrieves the list of suggested values. Remember, we&rsquo;ll need to inject the <code>Weather</code> service in the controller to reference it.</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'SettingsCtrl'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">UserService</span><span class="p">,</span> <span class="nx">Weather</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...
+</span>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">fetchCities</span> <span class="o">=</span> <span class="nx">Weather</span><span class="p">.</span><span class="nx">getCityDetails</span><span class="p">;</span>
+<span class="p">});</span>
+</pre>
+<p>In the directive, we can now call this function that we&rsquo;ll reference when we create. </p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">tEle</span><span class="p">.</span><span class="nx">replaceWith</span><span class="p">(</span><span class="nx">tplEl</span><span class="p">);</span>
+<span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">ele</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">ctrl</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">minKeyCount</span> <span class="o">=</span> <span class="nx">attrs</span><span class="p">.</span><span class="nx">minKeyCount</span> <span class="o">||</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="nx">timer</span><span class="p">,</span>
+      <span class="nx">input</span> <span class="o">=</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'input'</span><span class="p">);</span>
+
+  <span class="nx">input</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'keyup'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">val</span> <span class="o">=</span> <span class="nx">ele</span><span class="p">.</span><span class="nx">val</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">val</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="nx">minKeyCount</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">timer</span><span class="p">)</span> <span class="nx">$timeout</span><span class="p">.</span><span class="nx">cancel</span><span class="p">(</span><span class="nx">timer</span><span class="p">);</span>
+      <span class="nx">scope</span><span class="p">.</span><span class="nx">reslist</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">timer</span><span class="p">)</span> <span class="nx">$timeout</span><span class="p">.</span><span class="nx">cancel</span><span class="p">(</span><span class="nx">timer</span><span class="p">);</span>
+      <span class="nx">timer</span> <span class="o">=</span> <span class="nx">$timeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">scope</span><span class="p">.</span><span class="nx">autoFill</span><span class="p">()(</span><span class="nx">val</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">data</span> <span class="o">&amp;&amp;</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">reslist</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">ngModel</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">zmw</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+      <span class="p">},</span> <span class="mi">300</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="c1">// Hide the reslist on blur
+</span>  <span class="nx">input</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">'blur'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">scope</span><span class="p">.</span><span class="nx">reslist</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="nx">scope</span><span class="p">.</span><span class="nx">$digest</span><span class="p">();</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</pre>
+<p>We&rsquo;re using a <em>timeout</em> so that we only call the function once we are done typing. This is a simple way to prevent the function from being called repeatedly while we&rsquo;re really only interested in the first call to the suggestion API.</p>
+
+<p><img alt="Autofill in the browser" src="/images/chromeapp/autofill.png" /></p>
+
+<h2>Sprinkling in timezone support</h2>
+
+<p>Finally, we also want our clock to update and reflect the new location that the user has set in their settings. Updating the clock to include timezone support is easy to add as we&rsquo;ve implemented the most difficult part already through the autocomplete API.</p>
+
+<p>First, we&rsquo;ll add one more attribute to our directive usage as <code>timezone</code>:</p>
+<pre class="highlight html"><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span>
+    <span class="na">ng-model=</span><span class="s">&quot;user.location&quot;</span>
+    <span class="na">timezone=</span><span class="s">&quot;user.timezone&quot;</span>
+    <span class="na">auto-fill=</span><span class="s">&quot;fetchCities&quot;</span>
+    <span class="na">autocomplete=</span><span class="s">&quot;off&quot;</span>
+    <span class="na">placeholder=</span><span class="s">&quot;Location&quot;</span> <span class="nt">/&gt;</span>
+</pre>
+<p>Next, we&rsquo;ll need to add the timezone attribute on to our generated <code>&lt;input&gt;</code> field in our directive&rsquo;s compile function:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">input</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="nx">tAttrs</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
+<span class="nx">input</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'ng-model'</span><span class="p">,</span> <span class="nx">tAttrs</span><span class="p">.</span><span class="nx">ngModel</span><span class="p">);</span>
+<span class="nx">input</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'timezone'</span><span class="p">,</span> <span class="nx">tAttrs</span><span class="p">.</span><span class="nx">timezone</span><span class="p">);</span>
+<span class="nx">tEle</span><span class="p">.</span><span class="nx">replaceWith</span><span class="p">(</span><span class="nx">tplEl</span><span class="p">);</span>
+<span class="c1">// ...
+</span></pre>
+<p>Last, but not least, we&rsquo;ll simply save the user&rsquo;s timezone when we save the topmost value for the user&rsquo;s location in the autocomplete link function:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="nx">scope</span><span class="p">.</span><span class="nx">reslist</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+<span class="nx">scope</span><span class="p">.</span><span class="nx">ngModel</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">zmw</span><span class="p">;</span>
+<span class="nx">scope</span><span class="p">.</span><span class="nx">timezone</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">tz</span><span class="p">;</span>
+<span class="c1">// ...
+</span></pre>
+<p>Back in the browser, when we type our city we&rsquo;ll also save the timezone along with the new value of the city as well:</p>
+
+<p><img alt="Timezone support" src="/images/chromeapp/timezone.png" /></p>
+
+<p>Finally, we&rsquo;ll need to update the time and date in our <code>MainCtrl</code> to take into account the new timezone.</p>
+
+<p>Previously, matching timezone names to their GMT offsets was a difficult task. The Mozilla and Chrome teams have implemented the toLocaleString with the new <code>timeZone</code> argument that enables us to remap a date according to it&rsquo;s timezone. Since we are writing a Chrome app, we can depend upon this function being available for us to use in our app.</p>
+
+<p>Back in our <code>MainCtrl</code>, we&rsquo;ll create a new Date based off the saved timezone:</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'MainCtrl'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$timeout</span><span class="p">,</span> <span class="nx">Weather</span><span class="p">,</span> <span class="nx">UserService</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">date</span> <span class="o">=</span> <span class="p">{};</span>
+
+    <span class="kd">var</span> <span class="nx">updateTime</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">date</span><span class="p">.</span><span class="nx">tz</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">toLocaleString</span><span class="p">(</span>
+          <span class="s2">&quot;en-US&quot;</span><span class="p">,</span> <span class="p">{</span><span class="na">timeZone</span><span class="p">:</span> <span class="nx">$scope</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">timezone</span><span class="p">}</span>
+        <span class="p">));</span>
+      <span class="nx">$timeout</span><span class="p">(</span><span class="nx">updateTime</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// ...
+</span></pre>
+<p>Now, instead of using the <code>$scope.date.raw</code> in our view, we&rsquo;ll switch over to using the <code>$scope.date.tz</code>. Now, the time will change along with the timezone.</p>
+
+<p>In chicago:
+<img alt="Chicago" src="/images/chromeapp/chicago.png" /></p>
+
+<p>In Hawaii:
+<img alt="Hawaii" src="/images/chromeapp/hawaii.png" /></p>
+
+<p>Our upcoming book, <a href="http://ng-book.com/">ng-book: The Complete Book on AngularJS</a> features some more techniques for how to allow our users to customize the UI along with a lot of other professional AngularJS information.</p>
+
+<p>The complete source code for this article is available <a href="http://d.pr/dSW2">here</a>. Enjoy!</p>
+
+<style type="text/css">
+#article article.post img {
+  width: 75%;
+}
+</style>
+
+
+          <div class="container" id="signupApp" ng-cloak>
+  <div id="topbar_signup_embed">
+  Get the weekly email all focused on AngularJS. <b>Sign up below</b> to receive the weekly email and exclusive content.
+  <form name="ngSignup" action="http://willcodeforfoo.us6.list-manage1.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=fa61364f13" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    
+    <div class="row collapse">
+      <div class="small-9 columns">
+        <input ng-class="{error: ngSignup.email.$dirty && ngSignup.email.$invalid}" type="email" ng-minlength=3 ng-model="ngSignup.email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address" required>
+      </div>
+      <div class="small-3 columns">
+        <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" ng-disabled="ngSignup.$invalid" class="button postfix"></div>
+      </div>
+        <div class="small-12 columns error" ng-show="ngSignup.EMAIL.$dirty && ngSignup.EMAIL.$invalid">
+          <small class="error" ng-show="ngSignup.EMAIL.$error.required">Your email is required.</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.minlength">Your email is required to be at least 3 characters</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.email">That is not a valid email. Please input a valid email.</small>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  if (typeof(app) == 'undefined') {
+    angular.module("signupApp", [])
+    .controller("mailChimpValidation", ['$scope', function($scope) {}]);
+    var ele = document.getElementById("signupApp");
+    angular.element(ele, ['signupApp']);
+  }
+</script>
+          <section id="sample_chapter" ng-app="ngBookApp">    <div class="content">      <h3 class="title">Download a free sample of the ng-book: The Complete Book on AngularJS</h3> <span class="image"><img src="http://www.ng-book.com/images/flatbook-ngbook-small.png" alt="book"></span><div class="desc">It's free, so just enter your email address and the PDF will be sent directly to your inbox.</div>    </div>    <div class="form" ng-init="signedup=false" ng-show="!signuped">      <form action="http://willcodeforfoo.us6.list-manage.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=7bbfaae868" method="post" id="mc-embedded-subscribe-form" name="ngBookSignup" class="validate ng-pristine ng-invalid ng-invalid-required" target="_blank" novalidate="">
+<div class="mc-field-group">          <input type="email" ng-model="ngBookSignup.email" ng-class="{error: ngBookSignup.email.$dirty &amp;&amp; ngBookSignup.email.$invalid}" value="" name="EMAIL" placeholder="Your email address" class="required email ng-pristine ng-valid ng-valid-email ng-valid-minlength" id="mce-EMAIL" ng-minlength="3">        </div>        <div id="mce-responses" class="clear">          <div class="response" id="mce-error-response" style="display:none"></div>          <div class="response" id="mce-success-response" style="display:none"></div>        </div>        <div class="clear"><input type="submit" value="Send me a free chapter" name="subscribe" id="ngBookSignupSubmit" ng-disabled="ngBookSignup.$invalid" class="button postfix" ng-click="signedup=true" disabled="disabled"></div>      </form>      <div ng-show="signedup" class="ng-hide">      <p>Sweet! We are glad to hear you're interested in learning AngularJS. Enjoy the free chapter. We put a lot of work into building the book series, so we hope you like it!      Talk soon</p>      </div>      <div class="desc">        We won't ever send you spam! You can unsubscribe at any time.      </div>    </div>  </section>
+
+          <footer>
+            <ul class="actions">
+              <li><a href="/articles"><span class="arrow">←</span> Back to articles</a></li>
+              <li><a href="http://twitter.com/home/?status=Rapid chrome app development with angular - http://ng-newsletter.com/posts/chrome-apps-on-angular.html via @ngnewsletter" target="_blank"><img src="/img/twitter-bird-blue-on-white.png" style="width: 56px; height: 26px;" />Share on twitter</a></li>
+            </ul>
+          </footer>
+
+        </article>
+
+        <section id="comments">
+            <h2 class="gamma">Comments</h2>
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ngnewsletter'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section>
+
+        
+
+        <script type="text/javascript" src="/js/vendor/zepto.js"></script>
+<script type="text/javascript" src="/js/vendor/foundation.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+        </div>
+    </div>
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28176211-3', 'ng-newsletter.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript">
+  var $mcGoal = {'settings':{'uuid':'86d6f14c7cc955128485e3b8e','dc':'us6'}};
+  (function() {
+     var sp = document.createElement('script'); sp.type = 'text/javascript'; sp.async = true; sp.defer = true;
+    sp.src = ('https:' == document.location.protocol ? 'https://s3.amazonaws.com/downloads.mailchimp.com' : 'http://downloads.mailchimp.com') + '/js/goal.min.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sp, s);
+  })(); 
+</script>
+
+</body>
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<title>Express.js Custom Error Pages &#8211; 404 and 500</title>
+<link rel="stylesheet" type="text/css" href="http://www.hacksparrow.com/wp-content/themes/hacksparrow/style.css"></style>
+<script type="text/javascript" src="http://www.hacksparrow.com/wp-content/themes/hacksparrow/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="http://www.hacksparrow.com/wp-content/themes/hacksparrow/main.js"></script>
+<link rel="shortcut icon" href="http://www.hacksparrow.com/wp-content/themes/hacksparrow/favicon.ico" />
+<link href="http://www.hacksparrow.com/wp-content/themes/hacksparrow/prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="http://www.hacksparrow.com/wp-content/themes/hacksparrow/prettify/prettify.js"></script>
+
+<link rel="alternate" type="application/rss+xml" title="Hack Sparrow &raquo; Express.js Custom Error Pages &#8211; 404 and 500 Comments Feed" href="http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html/feed" />
+<link rel='stylesheet' id='antispam-extra.style.plugin-css'  href='http://www.hacksparrow.com/wp-content/plugins/antispam-extra/style.plugin.css?ver=3.8.1' type='text/css' media='all' />
+<script type='text/javascript' src='http://www.hacksparrow.com/wp-includes/js/jquery/jquery.js?ver=1.10.2'></script>
+<script type='text/javascript' src='http://www.hacksparrow.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<script type='text/javascript' src='http://www.hacksparrow.com/wp-content/plugins/antispam-extra/script.js?ver=3.8.1'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.hacksparrow.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.hacksparrow.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='How to serve static HTML files in Express.js' href='http://www.hacksparrow.com/how-to-server-static-html-files-in-express-js.html' />
+<link rel='next' title='My book on Express.js is published' href='http://www.hacksparrow.com/my-book-on-express-js-is-published.html' />
+
+<link rel='shortlink' href='http://www.hacksparrow.com/?p=2122' />
+
+<!-- Bad Behavior 2.2.15 run time: 9.249 ms -->
+<script type="text/javascript">
+<!--
+function bb2_addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			oldonload();
+			func();
+		}
+	}
+}
+
+bb2_addLoadEvent(function() {
+	for ( i=0; i < document.forms.length; i++ ) {
+		if (document.forms[i].method == 'post') {
+			var myElement = document.createElement('input');
+			myElement.setAttribute('type', 'hidden');
+			myElement.name = 'bb2_screener_';
+			myElement.value = '1391278423 201.27.185.22';
+			document.forms[i].appendChild(myElement);
+		}
+	}
+});
+// --></script>
+		<script type="text/javascript"><!--
+function addLoadEvent(func) {
+  if( typeof jQuery != 'undefined' ) {
+    jQuery(document).ready( func );
+  } else if( typeof Prototype != 'undefined' ) {
+    Event.observe( window, 'load', func );
+  } else {
+    var oldonload = window.onload;
+    if (typeof window.onload != 'function') {
+      window.onload = func;
+    } else {
+      window.onload = function() {
+        if (oldonload)
+          oldonload();
+        
+        func();
+      }
+    }
+  }
+}
+function wphc(){
+	var wphc_data = [1565152450,1347111120,1448367748,1363640007,1246843337,1158482369,508969170,1565282771,1178944763,470031492,252973204,236195988,253038997,236261525,253038741,236261524,236261780,471142549,1599209887,1314062806,1534804684,50616774,505352580,508969170,1565282771,1179075835,235150468,1448280479,373378509,1565282771,1179075835,1225006468,1632061908,274481345,1498039496,1158498768,373442692,1565282771,1178944763,1598833290,374366422,1565282771,1179075835,51970445,471139204,509542797,1565282771,1179010299,504957572,1448100073,1229672842,503845772,1565282771,1179075835,1124342413,1448367748,1564573383,84871900,1275354244,1280398785,1314062794,1534804684,1126128070,1448367748,1363640007,1246843337,84740545]; 
+
+	for (var i=0; i<wphc_data.length; i++){
+		wphc_data[i]=wphc_data[i]^1042555300;
+	}
+
+	var a = new Array(wphc_data.length); 
+	for (var i=0; i<wphc_data.length; i++) { 
+		a[i] = String.fromCharCode(wphc_data[i] & 0xFF, wphc_data[i]>>>8 & 0xFF, wphc_data[i]>>>16 & 0xFF, wphc_data[i]>>>24 & 0xFF);
+	}
+
+	return eval(a.join('')); 
+}
+addLoadEvent(function(){var el=document.getElementById('wphc_value');if(el)el.value=wphc();});
+//--></script>
+	<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+
+<!-- All in One SEO Pack 2.1.3 by Michael Torbert of Semper Fi Web Design[141,242] -->
+<meta name="description" content="Express does a good job of handling 404 and 500 errors by default. However, many a times, the error is page is now what we would like it to look like. Is there" />
+
+<meta name="keywords" content="404,500,errors,express.js,node.js" />
+
+<link rel="canonical" href="http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html" />
+<!-- /all in one seo pack -->
+<!-- Vipers Video Quicktags v6.4.5 | http://www.viper007bond.com/wordpress-plugins/vipers-video-quicktags/ -->
+<style type="text/css">
+.vvqbox { display: block; max-width: 100%; visibility: visible !important; margin: 10px auto; } .vvqbox img { max-width: 100%; height: 100%; } .vvqbox object { max-width: 100%; } 
+</style>
+<script type="text/javascript">
+// <![CDATA[
+	var vvqflashvars = {};
+	var vvqparams = { wmode: "opaque", allowfullscreen: "true", allowscriptaccess: "always" };
+	var vvqattributes = {};
+	var vvqexpressinstall = "http://www.hacksparrow.com/wp-content/plugins/vipers-video-quicktags/resources/expressinstall.swf";
+// ]]>
+</script>
+</head>
+<body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<!--
+<div id="debug"><span></span></div>
+-->
+
+<div id="top-bar">
+
+	<div id="top-bar-left" class="top-bar fl">
+		<a id="logo"  href="http://www.hacksparrow.com" title="Node.js and JavaScript Tutor">
+			<img src="http://www.hacksparrow.com/wp-content/themes/hacksparrow/images/logo.png"/>
+		</a>
+		<ul id="top-menu">
+			<li id="about-menu"></li>
+			<li id="categories-menu"></li>
+			<li id="archive-menu"></li>
+			<li id="contact-menu"></li>
+		</ul>
+	</div>
+	<div id="search-box" class="fl">
+		<form id="search-form" action="/">
+			<input type="text" id="search-input" name="s" value="">
+			<div id="search-submit"></div>
+		</form>
+	</div>	
+	<div id="top-bar-right" class="top-bar fl" style="position:relative">
+		<div id="feedburner-link"><a href="http://feeds.feedburner.com/hacksparrow" title="Subscribe to my RSS feeds"></a></div>
+		<div id="twitter-link"><a href="http://twitter.com/hacksparrow/" title="Follow me on Twitter">@hacksparrow</a></div>
+	</div>
+</div>
+
+<div id="wrapper">
+
+	<div id="top-dialog">
+	<div id="top-dialog-pointer"></div>
+	<span id="top-dialod-html">I am Hack Sparrow<br/>Captain of the Internets.</span>
+	</div>
+
+	<div id="content-column">
+
+		<div id="content-mid">
+
+  				
+		<div class="post">
+			<h1 id="post-2122"><a href="http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html" rel="bookmark" title="Permanent Link: Express.js Custom Error Pages &#8211; 404 and 500">Express.js Custom Error Pages &#8211; 404 and 500</a></h1>
+				<div class="post-meta">
+					<i>Posted on March 2nd, 2013 under <a href="http://www.hacksparrow.com/category/express-js" title="View all posts in Express.js" rel="category tag">Express.js</a>, <a href="http://www.hacksparrow.com/category/node-js-2" title="View all posts in Node.js" rel="category tag">Node.js</a></i><br/>
+					<i>Tags: <a href="http://www.hacksparrow.com/tag/404" rel="tag">404</a>, <a href="http://www.hacksparrow.com/tag/500" rel="tag">500</a>, <a href="http://www.hacksparrow.com/tag/errors" rel="tag">Errors</a>, <a href="http://www.hacksparrow.com/tag/express-js" rel="tag">Express.js</a></i>
+				</div>
+			<p>Express does a good job of handling 404 and 500 errors by default. However, many a times, the error is page is now what we would like it to look like. Is there a way to customize it? Yes there is.</p><p>Online, you will come across many ways of implementing custom error pages for Express, but   a lot of them do not use the correct approach, and those who do, do not explain properly how to do it, or what is going on. In this post I will show you how to create custom 404 and 500 error pages the right way, and explain how and why it works.</p><p>If you are asking this question, I will assume that you already have a working Express application and you are familiar with the application code, at least somewhat. I will also assume that you created the skeleton of your app using the <span class="object">express</span> command (if you did not, start using it - type <code>express -h</code> at the command line).</p><p>To get some context, open <span class="object">app.js</span> and find these lines:</p><pre class="prettyprint codeblock">  ...<br>  app.use(app.router);<br>  app.use(require('stylus').middleware(__dirname + '/public'));<br>  app.use(express.static(path.join(__dirname, 'public')));<br>  ...<br></pre><p>In the first line, we have added the <span class="object">router</span> middleware, which makes defining routes in Express possible.</p><p>In the second line, we are adding Stylus to pre-process our CSS files.</p><p>In the third line, we are setting up our static directory for serving CSS, JavaScript, images etc.</p><p>You may come across some suggestions like the following to handle 404 errors:</p><pre class="prettyprint codeblock">app.get('*', function(req, res) ...<br></pre><p>This approach is wrong, it is using a route to handle 404 error. Because the <span class="object">router</span> middleware is added before the <span class="object">static</span> middleware, it will intercept the requests for static file like CSS, JavaScript etc. You could make it work somehow, but it would a dirty hack job, we need to use the right approach, so abandon this method.</p><p>So what's the right method?</p><p>We need to create two middleware to handle 404 and 500 errors. Add these two right below <code>app.use(express.static(path.join(__dirname, 'public')));</code>:</p><pre class="prettyprint codeblock">  // Handle 404<br>  app.use(function(req, res) {<br> &nbsp;&nbsp;&nbsp;&nbsp;res.send('404: Page not Found', 404);<br>  });<br>  <br>  // Handle 500<br>  app.use(function(error, req, res, next) {<br> &nbsp;&nbsp;&nbsp;&nbsp;res.send('500: Internal Server Error', 500);<br>  });<br></pre><p>Try loading a non-existent page on your website now or generate an error by calling an undefined function in one of your route handlers. You will see your custom error pages now.</p><p>Hey, but aren't we looking to create cool looking custom error pages?</p><p>Ah yes! Go ahead create these two files in the <span class="object">views</span> directory.</p><p><code>File: 404.jade</code></p><pre class="prettyprint codeblock">extends layout<br>block content<br>  h1= title<br>  p Dude, where is my page?<br>  a(href='/') Take me to the homepage!<br></pre><p><code>File: 500.jade</code></p><pre class="prettyprint codeblock">extends layout<br>block content<br>  h1= title<br>  p #{title}<br>  p #{error}<br></pre><p>Now, update the error handling middleware.</p><pre class="prettyprint codeblock">  // Handle 404<br>  app.use(function(req, res) {<br>  &nbsp;&nbsp;&nbsp;&nbsp;res.status(400);<br> &nbsp;&nbsp;&nbsp;&nbsp;res.render('404.jade', {title: '404: File Not Found'});<br>  });<br>  <br>  // Handle 500<br>  app.use(function(error, req, res, next) {<br>  &nbsp;&nbsp;&nbsp;&nbsp;res.status(500);<br> &nbsp;&nbsp;&nbsp;&nbsp;res.render('500.jade', {title:'500: Internal Server Error', error: error});<br>  });<br></pre><p>An important point to note is that, these two middleware must go at the very end of the Express middleware stack, else you will get unexpected results. Also, the 500 error handling middleware has an arity of 4, if you define it with anything lesser, it will fall back on the default Express 500 error handler.</p><p>Now restart you app, load the error-prone pages, and get ready to admire your witty looking, customized 404 and 500 error pages.</p>	
+		</div>
+		
+		
+<div id="interest">
+	<div id="similar" class="fl">
+		<b>Related to this post</b>
+		<ul><li><a href="http://www.hacksparrow.com/vhost-in-express-js.html" rel="bookmark" title="December 26, 2012">vhost in Express.js</a></li>
+
+<li><a href="http://www.hacksparrow.com/express-js-jade-partials-how-to-use-them.html" rel="bookmark" title="November 23, 2011">Express.js Jade Partials &#8211; How to use them</a></li>
+
+<li><a href="http://www.hacksparrow.com/how-to-server-static-html-files-in-express-js.html" rel="bookmark" title="February 14, 2013">How to serve static HTML files in Express.js</a></li>
+
+<li><a href="http://www.hacksparrow.com/express-js-logging-access-and-errors.html" rel="bookmark" title="February 16, 2012">Express.js &#8211; Logging Access and Errors</a></li>
+
+<li><a href="http://www.hacksparrow.com/how-to-write-midddleware-for-connect-express-js.html" rel="bookmark" title="April 16, 2012">How to Write Middleware for Connect / Express.js</a></li>
+
+<li><a href="http://www.hacksparrow.com/express-js-tutorial.html" rel="bookmark" title="March 25, 2012">Express.js Tutorial</a></li>
+
+<li><a href="http://www.hacksparrow.com/handle-file-uploads-in-express-node-js.html" rel="bookmark" title="January 3, 2012">Handle File Uploads in Express (Node.js)</a></li>
+
+<li><a href="http://www.hacksparrow.com/mobile-web-development-in-express-js-node-js.html" rel="bookmark" title="February 19, 2012">Mobile Web Development in Express.js (Node.js)</a></li>
+
+<li><a href="http://www.hacksparrow.com/form-handling-processing-in-express-js.html" rel="bookmark" title="November 29, 2011">Form Handling / Processing in Express.js</a></li>
+
+<li><a href="http://www.hacksparrow.com/node-js-compilation-error-on-ubuntu-install-using-apt-get.html" rel="bookmark" title="April 18, 2012">Node.js compilation error on Ubuntu &#8211; Install using apt-get</a></li>
+</ul><!-- Similar Posts took 58.072 ms -->	</div>
+	<div id="bcon" class="fl">
+		<script type="text/javascript"><!--
+		google_ad_client = "ca-pub-0762366973631369";
+		/* KBBOX */
+		google_ad_slot = "5126443953";
+		google_ad_width = 300;
+		google_ad_height = 250;
+		//-->
+		</script>
+		<script type="text/javascript"
+		src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+		</script>
+	</div>
+	<div style="clear:both"></div>
+</div>
+
+
+<div id="social">
+				
+	<div style="float:left"><!-- Place this tag in your head or just before your close body tag -->
+	<script type="text/javascript" src="http://apis.google.com/js/plusone.js"></script>
+	<!-- Place this tag where you want the +1 button to render -->
+	<g:plusone size="medium"></g:plusone>
+	</div>			
+	<div style="width:120px;float:left"><iframe src="http://www.facebook.com/plugins/like.php?href=http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html&amp;layout=button_count&amp;show_faces=false&amp;width=450&amp;action=recommend&amp;font&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true"></iframe></div>
+	<div style="width:90px;float:right"><a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="hacksparrow">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div>
+	<div style="clear:both"></div>
+</div>
+
+
+<div id="comment-section">
+	
+<!-- You can start editing here. -->
+
+	<h3 id="comments">6 Responses to &#8220;Express.js Custom Error Pages &#8211; 404 and 500&#8221;</h3> 
+
+ <ol class="commentlist">
+  		<li class="comment even thread-even depth-1" id="comment-8836">
+				<div id="div-comment-8836" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='http://1.gravatar.com/avatar/d7e16726457065105bc91057f367ee0b?s=32&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D32&amp;r=G' class='avatar avatar-32 photo' height='32' width='32' />			<cite class="fn">Arun</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html/comment-page-1#comment-8836">
+			September 1, 2013 at 12:33 am</a>		</div>
+
+		<p>Thanks for sharing. It helped me understand things better <img src="http://www.hacksparrow.com/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley" /> </p>
+
+		<div class="reply">
+					</div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-8914">
+				<div id="div-comment-8914" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/ee13c1447f7254fbfd4710b5496358fb?s=32&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D32&amp;r=G' class='avatar avatar-32 photo' height='32' width='32' />			<cite class="fn">Shaun</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html/comment-page-1#comment-8914">
+			October 31, 2013 at 11:43 am</a>		</div>
+
+		<p>Just wanted to say thanks! Been looking around on stackoverflow all morning and couldn&#8217;t find exactly the right way to intercept the 404. Your suggestion for the 2 arity function at the end of the middleware was perfect. The other ways kept intercepting my static files.</p>
+<p>I&#8217;m going to share this on my blog as well and link back to your page on it. Thanks again!</p>
+
+		<div class="reply">
+					</div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-8918">
+				<div id="div-comment-8918" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='http://0.gravatar.com/avatar/039bea1970b3cd0dfc3de67b895dc81c?s=32&amp;d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D32&amp;r=G' class='avatar avatar-32 photo' height='32' width='32' />			<cite class="fn">MxLandry</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html/comment-page-1#comment-8918">
+			November 10, 2013 at 10:39 am</a>		</div>
+
+		<p>Thanks for that post. I searched a good way to set the status and have a custom page and it&#8217;s exactly what I found here.</p>
+
+		<div class="reply">
+					</div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-9120">
+				<div id="div-comment-9120" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='http://1.gravatar.com/avatar/f0ea17dd6cff9fbdc516433dec11cb3e?s=32&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D32&amp;r=G' class='avatar avatar-32 photo' height='32' width='32' />			<cite class="fn">Ludovic</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html/comment-page-1#comment-9120">
+			December 5, 2013 at 8:59 am</a>		</div>
+
+		<p>Thanks a lot ! <img src="http://www.hacksparrow.com/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley" /> </p>
+
+		<div class="reply">
+					</div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-9151">
+				<div id="div-comment-9151" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='http://1.gravatar.com/avatar/529c6b23772af8da093d76c0bdfb8148?s=32&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D32&amp;r=G' class='avatar avatar-32 photo' height='32' width='32' />			<cite class="fn">Ted Husted</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html/comment-page-1#comment-9151">
+			January 17, 2014 at 6:52 pm</a>		</div>
+
+		<p>Perfect! Much needed!</p>
+
+		<div class="reply">
+					</div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-9152">
+				<div id="div-comment-9152" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='http://1.gravatar.com/avatar/78f75a36d204cd65b8bb5798a271e793?s=32&amp;d=http%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D32&amp;r=G' class='avatar avatar-32 photo' height='32' width='32' />			<cite class="fn">ravi</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html/comment-page-1#comment-9152">
+			January 20, 2014 at 10:26 pm</a>		</div>
+
+		<p>Thanks very much!! helps a lot!!</p>
+
+		<div class="reply">
+					</div>
+				</div>
+		</li><!-- #comment-## -->
+ </ol>
+ 
+ <div class="navigation">
+   
+ </div>
+
+ 
+
+
+<h3 id="respond">Make a Comment</h3>
+
+
+<form action="http://www.hacksparrow.com/wp-comments-post.php" method="post" id="commentform">
+
+
+<p>
+<label for="author">Your Name</label>
+<input type="text" name="author" id="author" value="" size="22" tabindex="1" />
+</p>
+
+<p>
+<label for="email">Your E-Mail</label>
+<input type="text" name="email" id="email" value="" size="22" tabindex="2" />
+</p>
+
+
+<!--<p><small><strong>XHTML:</strong> You can use these tags: &lt;a href=&quot;&quot; title=&quot;&quot;&gt; &lt;abbr title=&quot;&quot;&gt; &lt;acronym title=&quot;&quot;&gt; &lt;b&gt; &lt;blockquote cite=&quot;&quot;&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=&quot;&quot;&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=&quot;&quot;&gt; &lt;strike&gt; &lt;strong&gt; </small></p>-->
+
+<p><textarea name="comment" id="comment" cols="90%" rows="10" tabindex="4"></textarea></p>
+
+<p><input name="submit" type="submit" id="submit" tabindex="5" value="Submit Comment" />
+<input type="hidden" name="comment_post_ID" value="2122" />
+</p>
+<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="befc6a5c7b" /></p><div><input type="hidden" id="wphc_value" name="wphc_value" value=""/></div><noscript><div><small>Wordpress Hashcash needs javascript to work, but your browser has javascript disabled. Your comment will be queued in Akismet!</small></div></noscript>
+</form>
+
+
+	
+	
+</div>
+</div>
+<!-- /blog content goes here -->
+	
+		<div id="navigator">
+					</div>		
+	</div>
+
+<ul id="sidebar">
+
+<li id="text-3" class="widget widget_text">			<div class="textwidget"><a href="http://link.packtpub.com/C9DhUZ">
+<img src="http://www.hacksparrow.com/wp-content/themes/hacksparrow/images/ewad-small.png"/>
+</a></div>
+		</li>
+<li id="twitter" class="widget widget_Twidget"><a class="twitter-timeline" data-dnt=true href="https://twitter.com/hacksparrow" data-widget-id="264737018905493504"><h2 class="widgettitle"></h2>
+</a>
+		      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></li>
+
+<li class="no-border">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-0762366973631369";
+/* HSBIG */
+google_ad_slot = "6478678335";
+google_ad_width = 336;
+google_ad_height = 280;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</li>
+
+<li class="no-border" style="background:#fff">
+<div class="fb-like-box" data-href="http://www.facebook.com/pages/Hack-Sparrow/337334869653076" data-width="328" data-height="360" data-show-faces="true" data-stream="false" data-header="false"></div>
+</li>
+
+</ul>
+<div style="clear:both"></div>
+</div>
+
+
+
+<div id="footer">
+	<div id="footer-wrapper">
+
+
+		<div id="bottom-twitter">
+		<a href="https://twitter.com/hacksparrow" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @hacksparrow</a>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+		</div>
+
+
+		<div id="footer-widgets">
+			<ul id="sidebar2">
+<li id="categories-3" class="widget widget_categories"><h2 class="widgettitle">Categories</h2>
+		<ul>
+	<li class="cat-item cat-item-209"><a href="http://www.hacksparrow.com/category/database" title="View all posts filed under Database">Database</a>
+</li>
+	<li class="cat-item cat-item-265"><a href="http://www.hacksparrow.com/category/express-js" title="View all posts filed under Express.js">Express.js</a>
+</li>
+	<li class="cat-item cat-item-1"><a href="http://www.hacksparrow.com/category/general" title="View all posts filed under General">General</a>
+</li>
+	<li class="cat-item cat-item-6"><a href="http://www.hacksparrow.com/category/javascript" title="View all posts filed under JavaScript">JavaScript</a>
+</li>
+	<li class="cat-item cat-item-57"><a href="http://www.hacksparrow.com/category/linux" title="View all posts filed under Linux">Linux</a>
+</li>
+	<li class="cat-item cat-item-208"><a href="http://www.hacksparrow.com/category/node-js-2" title="View all posts filed under Node.js">Node.js</a>
+</li>
+	<li class="cat-item cat-item-9"><a href="http://www.hacksparrow.com/category/python" title="View all posts filed under Python">Python</a>
+</li>
+	<li class="cat-item cat-item-14"><a href="http://www.hacksparrow.com/category/rants" title="View all posts filed under Rants">Rants</a>
+</li>
+	<li class="cat-item cat-item-3"><a href="http://www.hacksparrow.com/category/wordpress" title="View all posts filed under Wordpress">Wordpress</a>
+</li>
+		</ul>
+</li>
+<li id="archives-3" class="widget widget_archive"><h2 class="widgettitle">Archives</h2>
+		<ul>
+			<li><a href='http://www.hacksparrow.com/2013/07'>July 2013</a></li>
+	<li><a href='http://www.hacksparrow.com/2013/03'>March 2013</a></li>
+	<li><a href='http://www.hacksparrow.com/2013/02'>February 2013</a></li>
+	<li><a href='http://www.hacksparrow.com/2013/01'>January 2013</a></li>
+	<li><a href='http://www.hacksparrow.com/2012/12'>December 2012</a></li>
+	<li><a href='http://www.hacksparrow.com/2012/11'>November 2012</a></li>
+	<li><a href='http://www.hacksparrow.com/2012/09'>September 2012</a></li>
+	<li><a href='http://www.hacksparrow.com/2012/07'>July 2012</a></li>
+	<li><a href='http://www.hacksparrow.com/2012/06'>June 2012</a></li>
+	<li><a href='http://www.hacksparrow.com/2012/04'>April 2012</a></li>
+	<li><a href='http://www.hacksparrow.com/2012/03'>March 2012</a></li>
+	<li><a href='http://www.hacksparrow.com/2012/02'>February 2012</a></li>
+	<li><a href='http://www.hacksparrow.com/2012/01'>January 2012</a></li>
+	<li><a href='http://www.hacksparrow.com/2011/12'>December 2011</a></li>
+	<li><a href='http://www.hacksparrow.com/2011/11'>November 2011</a></li>
+	<li><a href='http://www.hacksparrow.com/2011/10'>October 2011</a></li>
+	<li><a href='http://www.hacksparrow.com/2011/09'>September 2011</a></li>
+	<li><a href='http://www.hacksparrow.com/2011/08'>August 2011</a></li>
+	<li><a href='http://www.hacksparrow.com/2011/07'>July 2011</a></li>
+	<li><a href='http://www.hacksparrow.com/2011/06'>June 2011</a></li>
+	<li><a href='http://www.hacksparrow.com/2011/05'>May 2011</a></li>
+	<li><a href='http://www.hacksparrow.com/2011/04'>April 2011</a></li>
+	<li><a href='http://www.hacksparrow.com/2011/03'>March 2011</a></li>
+	<li><a href='http://www.hacksparrow.com/2011/02'>February 2011</a></li>
+	<li><a href='http://www.hacksparrow.com/2010/09'>September 2010</a></li>
+	<li><a href='http://www.hacksparrow.com/2010/08'>August 2010</a></li>
+	<li><a href='http://www.hacksparrow.com/2010/07'>July 2010</a></li>
+	<li><a href='http://www.hacksparrow.com/2010/06'>June 2010</a></li>
+	<li><a href='http://www.hacksparrow.com/2010/05'>May 2010</a></li>
+	<li><a href='http://www.hacksparrow.com/2010/03'>March 2010</a></li>
+	<li><a href='http://www.hacksparrow.com/2010/02'>February 2010</a></li>
+		</ul>
+</li>
+</ul><div><h2 class="widgettitle">Recent Comments</h2><ul id="recentcomments"><li class="recentcomments">Sandeep on <a href="http://www.hacksparrow.com/xml-sitemap-generator-in-node-js-sitemap-xml-gz.html/comment-page-1#comment-9154">XML Sitemap Generator in Node.js &#8211; sitemap.xml.gz</a></li><li class="recentcomments">Alex on <a href="http://www.hacksparrow.com/node-js-udp-server-and-client-example.html/comment-page-1#comment-9153">Node.js UDP Server and Client Example</a></li><li class="recentcomments">ravi on <a href="http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html/comment-page-1#comment-9152">Express.js Custom Error Pages &#8211; 404 and 500</a></li><li class="recentcomments">Ted Husted on <a href="http://www.hacksparrow.com/express-js-custom-error-pages-404-and-500.html/comment-page-1#comment-9151">Express.js Custom Error Pages &#8211; 404 and 500</a></li><li class="recentcomments">Mau on <a href="http://www.hacksparrow.com/node-js-async-programming.html/comment-page-1#comment-9140">Node.js Async Programming</a></li><li class="recentcomments">Mau on <a href="http://www.hacksparrow.com/node-js-async-programming.html/comment-page-1#comment-9139">Node.js Async Programming</a></li><li class="recentcomments">Rick on <a href="http://www.hacksparrow.com/dlinksearch-hijacks-browser-disable-dlinksearch-com-search.html/comment-page-4#comment-9129">dlinksearch Hijacks Browser &#8211; Disable dlinksearch.com Search</a></li><li class="recentcomments">balaphp on <a href="http://www.hacksparrow.com/global-variables-in-node-js.html/comment-page-1#comment-9127">Global Variables in Node.js</a></li><li class="recentcomments">Captain on <a href="http://www.hacksparrow.com/running-express-js-in-production-mode.html/comment-page-2#comment-9126">Running Express.js in Production Mode</a></li><li class="recentcomments">student on <a href="http://www.hacksparrow.com/running-express-js-in-production-mode.html/comment-page-1#comment-9125">Running Express.js in Production Mode</a></li></ul></div><div><h2 class="widgettitle">Tags</h2><div class="tagcloud"><a href='http://www.hacksparrow.com/tag/aptana' class='tag-link-228' title='2 topics' style='font-size: 8pt;'>Aptana</a>
+<a href='http://www.hacksparrow.com/tag/array' class='tag-link-202' title='6 topics' style='font-size: 11.954198473282pt;'>array</a>
+<a href='http://www.hacksparrow.com/tag/curl' class='tag-link-150' title='3 topics' style='font-size: 9.2824427480916pt;'>CURL</a>
+<a href='http://www.hacksparrow.com/tag/database-2' class='tag-link-216' title='3 topics' style='font-size: 9.2824427480916pt;'>database</a>
+<a href='http://www.hacksparrow.com/tag/express' class='tag-link-255' title='5 topics' style='font-size: 11.206106870229pt;'>Express</a>
+<a href='http://www.hacksparrow.com/tag/express-js' class='tag-link-265' title='16 topics' style='font-size: 16.015267175573pt;'>Express.js</a>
+<a href='http://www.hacksparrow.com/tag/firefox' class='tag-link-130' title='4 topics' style='font-size: 10.351145038168pt;'>Firefox</a>
+<a href='http://www.hacksparrow.com/tag/git' class='tag-link-243' title='3 topics' style='font-size: 9.2824427480916pt;'>git</a>
+<a href='http://www.hacksparrow.com/tag/github' class='tag-link-259' title='3 topics' style='font-size: 9.2824427480916pt;'>GitHub</a>
+<a href='http://www.hacksparrow.com/tag/google' class='tag-link-129' title='4 topics' style='font-size: 10.351145038168pt;'>Google</a>
+<a href='http://www.hacksparrow.com/tag/google-chrome' class='tag-link-133' title='2 topics' style='font-size: 8pt;'>Google Chrome</a>
+<a href='http://www.hacksparrow.com/tag/gzip' class='tag-link-117' title='2 topics' style='font-size: 8pt;'>Gzip</a>
+<a href='http://www.hacksparrow.com/tag/homebrew' class='tag-link-231' title='2 topics' style='font-size: 8pt;'>Homebrew</a>
+<a href='http://www.hacksparrow.com/tag/html' class='tag-link-13' title='3 topics' style='font-size: 9.2824427480916pt;'>HTML</a>
+<a href='http://www.hacksparrow.com/tag/http' class='tag-link-245' title='3 topics' style='font-size: 9.2824427480916pt;'>HTTP</a>
+<a href='http://www.hacksparrow.com/tag/https' class='tag-link-341' title='3 topics' style='font-size: 9.2824427480916pt;'>HTTPS</a>
+<a href='http://www.hacksparrow.com/tag/javascript' class='tag-link-6' title='24 topics' style='font-size: 17.832061068702pt;'>JavaScript</a>
+<a href='http://www.hacksparrow.com/tag/javascript-array' class='tag-link-33' title='3 topics' style='font-size: 9.2824427480916pt;'>javascript array</a>
+<a href='http://www.hacksparrow.com/tag/javascript-for-loop' class='tag-link-20' title='2 topics' style='font-size: 8pt;'>javascript for loop</a>
+<a href='http://www.hacksparrow.com/tag/linux' class='tag-link-57' title='10 topics' style='font-size: 13.984732824427pt;'>Linux</a>
+<a href='http://www.hacksparrow.com/tag/list' class='tag-link-200' title='3 topics' style='font-size: 9.2824427480916pt;'>list</a>
+<a href='http://www.hacksparrow.com/tag/lol' class='tag-link-102' title='2 topics' style='font-size: 8pt;'>lol</a>
+<a href='http://www.hacksparrow.com/tag/mac' class='tag-link-182' title='8 topics' style='font-size: 13.022900763359pt;'>Mac</a>
+<a href='http://www.hacksparrow.com/tag/microsoft' class='tag-link-136' title='4 topics' style='font-size: 10.351145038168pt;'>Microsoft</a>
+<a href='http://www.hacksparrow.com/tag/mongodb' class='tag-link-210' title='12 topics' style='font-size: 14.732824427481pt;'>MongoDB</a>
+<a href='http://www.hacksparrow.com/tag/mozilla' class='tag-link-126' title='6 topics' style='font-size: 11.954198473282pt;'>Mozilla</a>
+<a href='http://www.hacksparrow.com/tag/mozilla-firefox' class='tag-link-132' title='2 topics' style='font-size: 8pt;'>Mozilla Firefox</a>
+<a href='http://www.hacksparrow.com/tag/mysql' class='tag-link-8' title='6 topics' style='font-size: 11.954198473282pt;'>MySQL</a>
+<a href='http://www.hacksparrow.com/tag/mysqldump' class='tag-link-55' title='2 topics' style='font-size: 8pt;'>mysqldump</a>
+<a href='http://www.hacksparrow.com/tag/node-js' class='tag-link-205' title='61 topics' style='font-size: 22pt;'>node.js</a>
+<a href='http://www.hacksparrow.com/tag/nosql' class='tag-link-222' title='3 topics' style='font-size: 9.2824427480916pt;'>NoSQL</a>
+<a href='http://www.hacksparrow.com/tag/npm' class='tag-link-207' title='4 topics' style='font-size: 10.351145038168pt;'>npm</a>
+<a href='http://www.hacksparrow.com/tag/object' class='tag-link-232' title='5 topics' style='font-size: 11.206106870229pt;'>Object</a>
+<a href='http://www.hacksparrow.com/tag/pagination' class='tag-link-268' title='3 topics' style='font-size: 9.2824427480916pt;'>pagination</a>
+<a href='http://www.hacksparrow.com/tag/php' class='tag-link-7' title='11 topics' style='font-size: 14.412213740458pt;'>PHP</a>
+<a href='http://www.hacksparrow.com/tag/python' class='tag-link-9' title='7 topics' style='font-size: 12.488549618321pt;'>Python</a>
+<a href='http://www.hacksparrow.com/tag/redis' class='tag-link-221' title='4 topics' style='font-size: 10.351145038168pt;'>Redis</a>
+<a href='http://www.hacksparrow.com/tag/regex' class='tag-link-235' title='2 topics' style='font-size: 8pt;'>Regex</a>
+<a href='http://www.hacksparrow.com/tag/sitemap' class='tag-link-115' title='2 topics' style='font-size: 8pt;'>Sitemap</a>
+<a href='http://www.hacksparrow.com/tag/sitemap-xml-gz' class='tag-link-119' title='2 topics' style='font-size: 8pt;'>sitemap.xml.gz</a>
+<a href='http://www.hacksparrow.com/tag/string' class='tag-link-197' title='3 topics' style='font-size: 9.2824427480916pt;'>string</a>
+<a href='http://www.hacksparrow.com/tag/thunderbird' class='tag-link-125' title='2 topics' style='font-size: 8pt;'>Thunderbird</a>
+<a href='http://www.hacksparrow.com/tag/tuple' class='tag-link-201' title='3 topics' style='font-size: 9.2824427480916pt;'>tuple</a>
+<a href='http://www.hacksparrow.com/tag/ubuntu' class='tag-link-212' title='5 topics' style='font-size: 11.206106870229pt;'>Ubuntu</a>
+<a href='http://www.hacksparrow.com/tag/wordpress' class='tag-link-3' title='5 topics' style='font-size: 11.206106870229pt;'>Wordpress</a></div>
+</div>			
+			<p style="clear:both"></p>
+			
+		</div>
+
+		<div id="footer-copyright">
+			Copyright &copy; 2014 <a rel="author" href="https://plus.google.com/103752924219473791252" target="_blank" title="Google +">Hage Yaapa</a>
+		</div>
+		
+		
+		
+
+	</div>
+</div>
+
+<script type='text/javascript' src='http://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201405'></script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-28435166-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</body>
+</html>

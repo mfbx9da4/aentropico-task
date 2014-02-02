@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+      <meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+
+<title>Sponsored links on ng-newsletter | ng-newsletter</title>
+
+<meta name="author" content="Ari Lerner">
+<meta name="description" content=" angularjs angularjs tutorial angular">
+<meta name="keywords" content=" angularjs angularjs tutorial angular realtime firebase angularfire">
+
+<meta name="msvalidate.01" content="BE7DA3BEF0F11153F6E4B5585C12DB20" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ng-newsletter" />
+<meta property="og:url" content="http://ng-newsletter.com" />
+<meta property="og:image" content="http://ng-newsletter.com/img/" />
+<meta property="og:description" content="" />
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:creator" value="@auser" />
+<meta name="twitter:title" value="ng-newsletter" />
+<meta name="twitter:description" value="" />
+<meta name="twitter:image" value="http://ng-newsletter.com/img/" />
+
+<link rel="alternate" type="application/rss+xml" href="feed.rss" title="Sitewide RSS 2.0 Feed">
+<link rel="alternate" type="application/atom+xml" href="atom.xml" title="Sitewide ATOM Feed">
+<link rel="alternate" type="application/atom+json" href="atom.json" title="Sitewide JSON Feed">
+
+<link href="/favicon.ico" rel="icon" type="image/ico" />
+<link href="/css/site.css" media="screen" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Roboto:400italic,700italic,400,700|Open+Sans:r,i,b,bi|Bitter:r,i,b" media="screen" rel="stylesheet" type="text/css" />
+<script src="/js/vendor/custom.modernizr.js"></script>
+<script src="/js/vendor/d3.v3.min.js"></script>
+<script src="/js/vendor/angular/angular.min.js"></script>
+<script src="/js/vendor/angular-route/angular-route.min.js"></script>
+<script src="/js/vendor/angular-animate.min.js"></script>
+<script src="/js/vendor/angular-translate.min.js"></script>
+<script src="/js/vendor/angular-cookies/angular-cookies.min.js"></script>
+
+
+    </head>
+    <body ng-app="sponsoredApp">
+        <div id="main">
+          <div id="header">
+  <div id="topNav">
+    <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">ng-newsletter</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <ul class="right">
+      		<li><a href="/posts">Articles</a></li>
+          <li><a href="/advent2013/">25 days of Angular</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/sponsor">Sponsorship</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+  <div class="headerContent">
+  </div>
+</div>
+          <div class="container" ng-controller="FrameController">
+            <div class="row">
+              <div class="large-12 small-12 columns">
+                <h2>Sponsored links in ng-newsletter</h2>
+
+<h3>ng-newsletter brings AngularJS news to you</h3>
+
+<p>Every week, thousands of people receive ng-newsletter and instantaneously enjoy access to the best new articles the AngularJS community has to offer.</p>
+
+<p>Have a product or service you&rsquo;d like to share with the AngularJS community? Perhaps you&rsquo;re looking for full-time work or you need an AngularJS expert? ng-newsletter is the perfect place to get the word out.</p>
+
+<h3>What we&rsquo;ll give you</h3>
+
+<p>Promote your product with a sponsored link on ng-newsletter, and we&rsquo;ll make it easy to get your message out to your Angular audience and track the traffic you get from the newsletter. We feature one clearly marked and highly visible sponsored link per weekly email, and we&rsquo;ll work with you to ensure that your copy effectively grabs our readers&#39; attention. Your link will appear in as many issues as you reserve and in our archived newsletter.</p>
+
+<h3>All we need from you</h3>
+
+<p>It&rsquo;s easy! Submit the URL and a brief, clearly written description of your link, purchase the issues you want to reserve, and we&rsquo;ll take care of the rest. We will review and edit your submission and work with you to ensure it&rsquo;s well suited to our audience.</p>
+
+<p>We only include links that are highly relevant to AngularJS development; if your link does not meet a certain expectation of relevance, we may opt not to include it.</p>
+
+<h3>Pricing</h3>
+
+<p>We offer single-week and multiple-week purchase options:</p>
+
+<table class="pricing" ng-controller='PricingController'>
+    <tbody>
+        <tr>
+            <th>Duration</th>
+            <th>Price</th>
+        </tr>
+        <tr ng-repeat="n in range">
+            <td>{{ n | weekName }}</td>
+            <td>{{ calculatePrice(n) | currency }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Deadlines and payment</h3>
+
+<p>We accept payments through Stripe and PayPal and will reserve your spot upon payment in full. 
+As we distribute ng-newsletter on Tuesday mornings, please submit your link and copy by the end of the day on the <em>Friday before</em> the release of your sponsored link. </p>
+
+<h3>Availability</h3>
+
+<p>Contact us to learn about our upcoming availability:<br/>
+<a href="http://www.cloudflare.com/email-protection#0f676a6363604f697a63637c7b6e6c64216660">Inquire about booking a sponsored link now</a></p>
+
+<h3>How to write and format your copy effectively</h3>
+
+<p>Send us: 
+<li>Your link&rsquo;s URL</li>
+<li>Your link&rsquo;s description: Anywhere between one sentence and one paragraph of text</li></p>
+
+<p>Tips: 
+<li>Know your audience</li>
+<li>Draw your audience in &ndash; make them curious</li>
+<li>Be clear</li>
+<li>Be concise</li>
+<li>Don&rsquo;t trigger spam filters!</li>
+<li>Remember: We&rsquo;re here to help you, so feel free to reach out and <a href="http://www.cloudflare.com/email-protection#c5a4b7ac85a3b0a9a9b6b1a4a6aeebacaa">ask us</a></li></p>
+
+<script type="text/javascript">
+    var app = angular.module('sponsoredApp', []);
+
+    app.controller('FrameController', ['$scope', function($scope) {
+
+    }])
+    .filter('weekName', function() {
+        return function(input) {
+            var n = "week";
+            if (input > 1) n = "weeks";
+            return input + " " + n;
+        }
+    })
+
+    app.controller('PricingController', ['$scope', function($scope) {
+        $scope.price_per_week = 90;
+        $scope.discount_per_week = 0;
+        $scope.customerWeeks = 1;
+
+        $scope.range = [1,2,3,4];
+
+        $scope.calculatePrice = function(weeks) {
+            var weeks = weeks - 1;
+            return $scope.price_per_week + 
+                (weeks * $scope.price_per_week);
+        }
+
+        $scope.calculateDiscount = function(weeks) {
+            var weeks = weeks - 1;
+
+            if (weeks > 0)
+                return Math.abs((1 - (weeks * $scope.discount_per_week)) * 100)*100/((weeks+1)*$scope.price_per_week);
+            else
+                return 0;
+        }
+        $scope.calculateDollardiscount = function(weeks) {
+            var weeks = weeks - 1;
+
+            if (weeks > 0)
+                return Math.abs(1 - (weeks * $scope.discount_per_week)) * 100;
+            else
+                return 0;
+        }
+    }]);
+</script>
+
+              </div>
+            </div>
+          </div>
+          <script type="text/javascript" src="/js/vendor/zepto.js"></script>
+<script type="text/javascript" src="/js/vendor/foundation.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+        </div>
+        <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28176211-3', 'ng-newsletter.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript">
+  var $mcGoal = {'settings':{'uuid':'86d6f14c7cc955128485e3b8e','dc':'us6'}};
+  (function() {
+     var sp = document.createElement('script'); sp.type = 'text/javascript'; sp.async = true; sp.defer = true;
+    sp.src = ('https:' == document.location.protocol ? 'https://s3.amazonaws.com/downloads.mailchimp.com' : 'http://downloads.mailchimp.com') + '/js/goal.min.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sp, s);
+  })(); 
+</script>
+
+    <script type="text/javascript">
+/* <![CDATA[ */
+(function(){try{var s,a,i,j,r,c,l=document.getElementsByTagName("a"),t=document.createElement("textarea");for(i=0;l.length-i;i++){try{a=l[i].getAttribute("href");if(a&&"www.cloudflare.com/email-protection"==a.substr(7 ,35)){s='';j=43;r=parseInt(a.substr(j,2),16);for(j+=2;a.length-j&&a.substr(j,1)!='X';j+=2){c=parseInt(a.substr(j,2),16)^r;s+=String.fromCharCode(c);}j+=1;s+=a.substr(j,a.length-j);t.innerHTML=s.replace(/</g,"&lt;").replace(/>/g,"&gt;");l[i].setAttribute("href","mailto:"+t.value);}}catch(e){}}}catch(e){}})();
+/* ]]> */
+</script>
+</body>
+</html>
+<!-- 
+  All content and design is 
+  Copyright (c) 2014 FullStack.io, all rights reserved
+-->

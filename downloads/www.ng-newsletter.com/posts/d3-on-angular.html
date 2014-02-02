@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+
+<title>D3 on AngularJS | ng-newsletter</title>
+
+<meta name="author" content="Ari Lerner">
+<meta name="description" content=" angularjs angularjs tutorial angular">
+<meta name="keywords" content="angularjs angularjs d3 d3 angularjs angular tutorial angularjs tutorial angularjs angularjs tutorial angular realtime firebase angularfire">
+
+<meta name="msvalidate.01" content="BE7DA3BEF0F11153F6E4B5585C12DB20" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ng-newsletter" />
+<meta property="og:url" content="http://ng-newsletter.com" />
+<meta property="og:image" content="http://ng-newsletter.com/img/" />
+<meta property="og:description" content="" />
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:creator" value="@auser" />
+<meta name="twitter:title" value="ng-newsletter" />
+<meta name="twitter:description" value="" />
+<meta name="twitter:image" value="http://ng-newsletter.com/img/" />
+
+<link rel="alternate" type="application/rss+xml" href="feed.rss" title="Sitewide RSS 2.0 Feed">
+<link rel="alternate" type="application/atom+xml" href="atom.xml" title="Sitewide ATOM Feed">
+<link rel="alternate" type="application/atom+json" href="atom.json" title="Sitewide JSON Feed">
+
+<link href="/favicon.ico" rel="icon" type="image/ico" />
+<link href="/css/site.css" media="screen" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Roboto:400italic,700italic,400,700|Open+Sans:r,i,b,bi|Bitter:r,i,b" media="screen" rel="stylesheet" type="text/css" />
+<script src="/js/vendor/custom.modernizr.js"></script>
+<script src="/js/vendor/d3.v3.min.js"></script>
+<script src="/js/vendor/angular/angular.min.js"></script>
+<script src="/js/vendor/angular-route/angular-route.min.js"></script>
+<script src="/js/vendor/angular-animate.min.js"></script>
+<script src="/js/vendor/angular-translate.min.js"></script>
+<script src="/js/vendor/angular-cookies/angular-cookies.min.js"></script>
+
+
+</head>
+<body ng-app="d3AngularApp">
+
+    
+    <div id="header">
+  <div id="topNav">
+    <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">ng-newsletter</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <ul class="right">
+      		<li><a href="/posts">Articles</a></li>
+          <li><a href="/advent2013/">25 days of Angular</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/sponsor">Sponsorship</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+  <div class="headerContent">
+  </div>
+</div>
+
+    <div class="container">
+      <div id="article">
+        <article class="post">
+          <header>
+            <h1 class="mega">D3 on AngularJS</h1>
+          </header>
+          
+          <p>D3, the javascript library for manipulating document-based data is insanely expressive and helps bring data to life through HTML, SVG, and CSS. It has a large, growing community and there are tons of <a href="https://github.com/mbostock/d3/wiki/Gallery">examples</a> for what can be done with it. </p>
+
+<p><a href="http://d3js.org/">D3</a> stands for Data-Driven Documents, and is described by the authors as follows:</p>
+
+<blockquote>
+<p>&ldquo;D3.js is a JavaScript library for manipulating documents based on data. D3 helps you bring data to life using HTML, SVG and CSS. D3’s emphasis on web standards gives you the full capabilities of modern browsers without tying yourself to a proprietary framework, combining powerful visualization components and a data-driven approach to DOM manipulation.&rdquo;</p>
+</blockquote>
+
+<p>Combining the power of D3 and Angular can be challenging and confusing. We constantly get asked how to integrate the two in our classes. In this post, we aim to clear the confusion and bring you the best documentation on how to integrate AngularJS and D3.</p>
+
+<h2>Examples of using D3 with angular</h2>
+
+<div class="large-12 columns" ng-controller="MainCtrl">
+  <div d3-bars data="data" class="large-6 small-6 columns"></div>
+  <div d3-arc class="large-6 small-6 columns"></div>
+</div>
+
+<p>The <em>Angular</em> way of integrating D3 into AngularJS is by using a directive. If you&rsquo;re not familiar with directives, they are Angular&rsquo;s way of extending the functionality of HTML. They are, at their core <em>functions</em> that are executed on a DOM element that give the element functionality. All tags in AngularJS are directives. For more information, see our post about how to <a href="http://www.ng-newsletter.com/posts/directives.html">Build custom directives with AngularJS</a>.</p>
+
+<h2>We&rsquo;ve released a book called D3 on AngularJS</h2>
+
+<p>We&rsquo;ve released a book called <a href="https://leanpub.com/d3angularjs">D3 on AngularJS</a>. It&rsquo;s available now on leanpub. Check it out!</p>
+
+<h2>Using d3 with dependency injection</h2>
+
+<p>This step is <em>somewhat</em> optional. If you want do not want to use dependency injection you can add d3.js to your index.html file as normal and skip this section, but we <strong>highly</strong> recommend you don&rsquo;t.</p>
+
+<p>By using dependecy injection, we can keep our global namespace clean and can <em>inject</em> our dependencies like normal. </p>
+
+<p>All the work that we&rsquo;ll do with our <em>d3</em> library, we&rsquo;ll do on a new module with the name <code>d3</code>. </p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'d3'</span><span class="p">,</span> <span class="p">[])</span>
+  <span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'d3Service'</span><span class="p">,</span> <span class="p">[</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">d3</span><span class="p">;</span>
+    <span class="c1">// insert d3 code here
+</span>    <span class="k">return</span> <span class="nx">d3</span><span class="p">;</span>
+  <span class="p">}];</span>
+</pre>
+<p>With this factory, we can add our custom code to our <code>d3</code> element. With this in place, we can <em>inject</em> our <code>d3</code> service into our code by adding it as a dependency to our <code>app</code> module, like normal.</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'app'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'d3'</span><span class="p">]);</span>
+</pre>
+<p>We&rsquo;ll <em>inject</em> our <code>d3Service</code> into our directive to use it. For instance:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp.directives'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'d3'</span><span class="p">])</span>
+  <span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'barChart'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'d3Service'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d3Service</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">restrict</span><span class="p">:</span> <span class="s1">'EA'</span><span class="p">,</span>
+      <span class="c1">// directive code
+</span>    <span class="p">}</span>
+  <span class="p">}]);</span>
+</pre>
+<p>In order to actually use our <code>d3</code> library, we&rsquo;ll need to include it on the page. We can either do this by copy-and-pasting the d3 code in our factory (as it shows above), or you can inject it on the page in the factory. </p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'d3'</span><span class="p">,</span> <span class="p">[])</span>
+  <span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'d3Service'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$document'</span><span class="p">,</span> <span class="s1">'$q'</span><span class="p">,</span> <span class="s1">'$rootScope'</span><span class="p">,</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">$document</span><span class="p">,</span> <span class="nx">$q</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+      <span class="kd">function</span> <span class="nx">onScriptLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Load client in the browser
+</span>        <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">d</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">d3</span><span class="p">);</span> <span class="p">});</span>
+      <span class="p">}</span>
+      <span class="c1">// Create a script tag with d3 as the source
+</span>      <span class="c1">// and call our onScriptLoad callback when it
+</span>      <span class="c1">// has been loaded
+</span>      <span class="kd">var</span> <span class="nx">scriptTag</span> <span class="o">=</span> <span class="nx">$document</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'script'</span><span class="p">);</span>
+      <span class="nx">scriptTag</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s1">'text/javascript'</span><span class="p">;</span> 
+      <span class="nx">scriptTag</span><span class="p">.</span><span class="nx">async</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="nx">scriptTag</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="s1">'http://d3js.org/d3.v3.min.js'</span><span class="p">;</span>
+      <span class="nx">scriptTag</span><span class="p">.</span><span class="nx">onreadystatechange</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">==</span> <span class="s1">'complete'</span><span class="p">)</span> <span class="nx">onScriptLoad</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">scriptTag</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="nx">onScriptLoad</span><span class="p">;</span>
+
+      <span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">$document</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">'body'</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+      <span class="nx">s</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">scriptTag</span><span class="p">);</span>
+
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="na">d3</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span> <span class="p">}</span>
+      <span class="p">};</span>
+<span class="p">}]);</span>
+</pre>
+<p>If you choose to use this method, when we use the <code>d3Service</code>, we&rsquo;ll need to wait on the resolution of the promise to return by using the <code>.then</code> method on the <code>d3Service</code>. For example:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp.directives'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'d3'</span><span class="p">])</span>
+  <span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'barChart'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'d3Service'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d3Service</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">d3Service</span><span class="p">.</span><span class="nx">d3</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d3</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// d3 is the raw d3 object
+</span>        <span class="p">});</span>
+      <span class="p">}}</span>
+  <span class="p">}]);</span>
+</pre>
+<h2>Creating our first basic d3 directive</h2>
+
+<p>In this section we will learn how to create a basic d3 directive that will automatically size to the width of parent element.  In addition, we&rsquo;ll set watchers to redraw the d3 when the parent element size changes.</p>
+
+<p>This is advantageous when you want to make an your d3 responsive based on different layouts such as mobile or tablet. Additionally the d3 will re-render on a window re-size so it will never be out of scale with your design.</p>
+
+<blockquote>
+<p>Note: we won&rsquo;t be diving too much into details about our d3 source (there are <a href="http://alignedleft.com/tutorials/d3">many</a> <a href="http://christopheviau.com/d3_tutorial/">great</a> <a href="http://mbostock.github.io/d3/tutorial/circle.html">tutorials</a> on <a href="http://www.janwillemtulp.com/category/d3/">d3</a> available on the web), we&rsquo;ll look at a few of the particulars for working with AngularJS in our code.</p>
+</blockquote>
+
+<p>In order to set this up we need to divide our d3 code into two sections. </p>
+
+<ul>
+<li>Static code, the code that does <strong>not</strong> change on render, such as the parent d3 element, watcher functions, and other helper functions</li>
+<li>Dynamic code, the code that will update during a render, such as height, width, data, and scales.</li>
+</ul>
+
+<p>We&rsquo;ll create a simple bar chart with hardcoded data that we&rsquo;ll later pull out as a dynamic source. </p>
+
+<p>Assuming we are injecting our <code>d3</code> service, as we did above, we&rsquo;ll create the skeleton of our directive:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'appApp.directives'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'d3Bars'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'d3Service'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d3Service</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+    <span class="p">};</span>
+  <span class="p">}]);</span>
+</pre>
+<p>Now, it&rsquo;s debatable where we want to add our d3 code, in either the <code>link</code> property or the <code>compile</code> property. If you&rsquo;re not familiar with the difference, check out <a href="http://www.ng-newsletter.com/posts/directives.html">our in-depth directive post</a>. For simplicity, we&rsquo;ll use the <code>link</code> function to house our d3 code. </p>
+
+<p>In this example, we&rsquo;re restricting our directive to either be an element (E) or an attribute (A). </p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'appApp.directives'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'d3Bars'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'d3Service'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d3Service</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">restrict</span><span class="p">:</span> <span class="s1">'EA'</span><span class="p">,</span>
+      <span class="na">scope</span><span class="p">:</span> <span class="p">{},</span>
+      <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">d3Service</span><span class="p">.</span><span class="nx">d3</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d3</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// our d3 code will go here
+</span>        <span class="p">});</span>
+      <span class="p">}};</span>
+  <span class="p">}]);</span>
+</pre>
+<p>At this point, we have access to our <code>d3</code> object and can start to build our svg. Appending the svg to the element where the directives is called is fairly trivial. We&rsquo;ll select the raw element and append the <code>svg</code> element to it. </p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">svg</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="nx">element</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">);</span>
+</pre>
+<p>In order to make this responsive, we&rsquo;ll need to set the style of the the element to have a width of 100%. This will force the svg to be contained in the entire containing element.</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">svg</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="nx">element</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s1">'width'</span><span class="p">,</span> <span class="s1">'100%'</span><span class="p">);</span>
+</pre>
+<p>Next, we&rsquo;ll set up two watchers. The first watcher will check if the div has been resized using the <code>window.onresize</code> event. When this browser event is fired, we want to apply the change to the angular <code>$scope</code>. We&rsquo;ll also need to check the size of the parent element to see if the d3 svg element needs to be re-rendered.</p>
+
+<p>We can find the width of the parent element with a bit of DOM-dancing with the following: <code>d3.select(ele[0]).node().offsetWidth</code> (thanks to <a href="http://www.ng-newsletter.com/posts/d3-on-angular.html#comment-1038971606">Adam Pearce</a>) for pointing this out). As of now, we our directive looks like this:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'appApp.directives'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'d3Bars'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'d3Service'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d3Service</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">restrict</span><span class="p">:</span> <span class="s1">'EA'</span><span class="p">,</span>
+      <span class="na">scope</span><span class="p">:</span> <span class="p">{},</span>
+      <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">d3Service</span><span class="p">.</span><span class="nx">d3</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d3</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">svg</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="nx">ele</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">'svg'</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">style</span><span class="p">(</span><span class="s1">'width'</span><span class="p">,</span> <span class="s1">'100%'</span><span class="p">);</span>
+
+          <span class="c1">// Browser onresize event
+</span>          <span class="nb">window</span><span class="p">.</span><span class="nx">onresize</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">();</span>
+          <span class="p">};</span>
+
+          <span class="c1">// hard-code data
+</span>          <span class="nx">scope</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="s2">&quot;Greg&quot;</span><span class="p">,</span> <span class="na">score</span><span class="p">:</span> <span class="mi">98</span><span class="p">},</span>
+            <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="s2">&quot;Ari&quot;</span><span class="p">,</span> <span class="na">score</span><span class="p">:</span> <span class="mi">96</span><span class="p">},</span>
+            <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="s1">'Q'</span><span class="p">,</span> <span class="na">score</span><span class="p">:</span> <span class="mi">75</span><span class="p">},</span>
+            <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="s2">&quot;Loser&quot;</span><span class="p">,</span> <span class="na">score</span><span class="p">:</span> <span class="mi">48</span><span class="p">}</span>
+          <span class="p">];</span>
+
+          <span class="c1">// Watch for resize event
+</span>          <span class="nx">scope</span><span class="p">.</span><span class="nx">$watch</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">element</span><span class="p">(</span><span class="nx">$window</span><span class="p">)[</span><span class="mi">0</span><span class="p">].</span><span class="nx">innerWidth</span><span class="p">;</span>
+          <span class="p">},</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">scope</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+          <span class="p">});</span>
+
+          <span class="nx">scope</span><span class="p">.</span><span class="nx">render</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// our custom d3 code
+</span>          <span class="p">}</span>
+        <span class="p">});</span>
+      <span class="p">}};</span>
+  <span class="p">}]);</span>
+</pre>
+<p>Now we can define our d3 just as we would without angular. We can use the directive to customize the properties of our svg element. We&rsquo;ll allow the user of our directive to define a margin, a bar-height, and bar-padding. </p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span>  <span class="nx">link</span><span class="err">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">ele</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">d3Service</span><span class="p">.</span><span class="nx">d3</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d3</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">margin</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">attrs</span><span class="p">.</span><span class="nx">margin</span><span class="p">)</span> <span class="o">||</span> <span class="mi">20</span><span class="p">,</span>
+          <span class="nx">barHeight</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">attrs</span><span class="p">.</span><span class="nx">barHeight</span><span class="p">)</span> <span class="o">||</span> <span class="mi">20</span><span class="p">,</span>
+          <span class="nx">barPadding</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">attrs</span><span class="p">.</span><span class="nx">barPadding</span><span class="p">)</span> <span class="o">||</span> <span class="mi">5</span><span class="p">;</span>
+      <span class="c1">// ...
+</span></pre>
+<p>Before we render our new data, we&rsquo;ll need to make sure that we remove all of our svg elements from the svg first. If we don&rsquo;t do this, we&rsquo;ll have remnants of previously rendered svg elements dirtying up our <code>d3</code> svg.</p>
+
+<p>Picking up from our directive source, we&rsquo;ll modify our <code>render</code> function:</p>
+<pre class="highlight javascript">  <span class="c1">// ...
+</span>  <span class="nx">scope</span><span class="p">.</span><span class="nx">render</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// remove all previous items before render
+</span>    <span class="nx">svg</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s1">'*'</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
+
+    <span class="c1">// If we don't pass any data, return out of the element
+</span>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">data</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+    <span class="c1">// setup variables
+</span>    <span class="kd">var</span> <span class="nx">width</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="nx">ele</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="nx">node</span><span class="p">().</span><span class="nx">offsetWidth</span> <span class="o">-</span> <span class="nx">margin</span><span class="p">,</span>
+        <span class="c1">// calculate the height
+</span>        <span class="nx">height</span> <span class="o">=</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">*</span> <span class="p">(</span><span class="nx">barHeight</span> <span class="o">+</span> <span class="nx">barPadding</span><span class="p">),</span>
+        <span class="c1">// Use the category20() scale function for multicolor support
+</span>        <span class="nx">color</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">category20</span><span class="p">(),</span>
+        <span class="c1">// our xScale
+</span>        <span class="nx">xScale</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">domain</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">d</span><span class="p">.</span><span class="nx">score</span><span class="p">;</span>
+          <span class="p">})])</span>
+          <span class="p">.</span><span class="nx">range</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nx">width</span><span class="p">]);</span>
+
+    <span class="c1">// set the height based on the calculations above
+</span>    <span class="nx">svg</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'height'</span><span class="p">,</span> <span class="nx">height</span><span class="p">);</span>
+
+    <span class="c1">//create the rectangles for the bar chart
+</span>    <span class="nx">svg</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s1">'rect'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">enter</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">'rect'</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'height'</span><span class="p">,</span> <span class="nx">barHeight</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'width'</span><span class="p">,</span> <span class="mi">140</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'x'</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">margin</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'y'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">i</span> <span class="o">*</span> <span class="p">(</span><span class="nx">barHeight</span> <span class="o">+</span> <span class="nx">barPadding</span><span class="p">);</span>
+        <span class="p">})</span>
+        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'fill'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">color</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">score</span><span class="p">);</span> <span class="p">})</span>
+        <span class="p">.</span><span class="nx">transition</span><span class="p">()</span>
+          <span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'width'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">xScale</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">score</span><span class="p">);</span>
+          <span class="p">});</span>
+    <span class="c1">// ...
+</span></pre>
+<p>Our directive is complete! Now we just need to add it to the html. </p>
+
+<p><a href="https://gist.github.com/auser/6506865#file-d3-example1-js" target="_blank">Show full source</a></p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">d3-bars</span> <span class="na">bar-height=</span><span class="s">&quot;20&quot;</span> <span class="na">bar-padding=</span><span class="s">&quot;5&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre>
+<h2>See it</h2>
+
+<div class="row">
+  <div class="columns large-12" ng-controller="MainCtrl2">
+    <h3>Resize the page to see the re-rendering</h3>
+    <div d3-bars bar-height="20" bar-padding="3" data="data"></div>
+  </div>
+</div>
+
+<h2>Data binding to the svg</h2>
+
+<p>Directives can be written to take advantage of Angular&rsquo;s html functionality. We can pass data from the current scope through an html attribute into the d3 directive, rather than hardcoding it in the directive. This allows us to reuse the directive across multiple controllers.</p>
+
+<p>In this example we will move the dummy data from the directive to the controller.</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp.controllers'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'MainCtrl'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">){</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">greeting</span> <span class="o">=</span> <span class="s2">&quot;Resize the page to see the re-rendering&quot;</span><span class="p">;</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="s2">&quot;Greg&quot;</span><span class="p">,</span> <span class="na">score</span><span class="p">:</span> <span class="mi">98</span><span class="p">},</span>
+      <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="s2">&quot;Ari&quot;</span><span class="p">,</span> <span class="na">score</span><span class="p">:</span> <span class="mi">96</span><span class="p">},</span>
+      <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="s1">'Q'</span><span class="p">,</span> <span class="na">score</span><span class="p">:</span> <span class="mi">75</span><span class="p">},</span>
+      <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="s2">&quot;Loser&quot;</span><span class="p">,</span> <span class="na">score</span><span class="p">:</span> <span class="mi">48</span><span class="p">}</span>
+    <span class="p">];</span>
+  <span class="p">}]);</span>
+</pre>
+<p>Now, we can then add the data attribute as the data from our controller into the html directive element:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;MainCtrl&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;d3</span><span class="na">-bars</span> <span class="na">data=</span><span class="s">&quot;d3Data&quot;</span><span class="nt">&gt;</span><span class="err">&lt;</span>/d3-bars&gt;
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>Now, we&rsquo;ll need to modify our directive source to support this bi-directional databinding that we get for free with AngularJS. Obviously we&rsquo;ll need to remove the hardcoding of data in the directive, but we&rsquo;ll also need to create our isolate scope object.</p>
+
+<p>Why an <code>isolate</code> scope object? If we use our d3 objective in several places on the same page, every single one will be working with the same data because they&rsquo;ll all be sharing the same data binding. We can get around this by creating the <code>isolate</code> scope in the directive.</p>
+
+<p>To create this isolate scope, we&rsquo;ll only need to add the <code>scope:</code> object property to our directive:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'appApp.directives'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'d3Bars'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'d3Service'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d3Service</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">restrict</span><span class="p">:</span> <span class="s1">'EA'</span><span class="p">,</span>
+      <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">data</span><span class="p">:</span> <span class="s1">'='</span> <span class="c1">// bi-directional data-binding
+</span>      <span class="p">},</span>
+      <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// ...
+</span></pre>
+<p>This will allow the svg to be rendered based on data in the controller. </p>
+
+<p>What if we expect this data to change? We&rsquo;ll need it to also re-render it on the data being changed. This is where our second watcher comes into play. </p>
+
+<p>We&rsquo;ll set up a watcher to monitor the &lsquo;bound&rsquo; data. We will need to watch the data for objectEquality instead of the default (reference) so that the d3 will re-render when a property in the d3Data object changes, so we&rsquo;ll set the second parameter as <code>true</code>:</p>
+<pre class="highlight javascript"><span class="c1">// watch for data changes and re-render
+</span><span class="nx">scope</span><span class="p">.</span><span class="nx">$watch</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newVals</span><span class="p">,</span> <span class="nx">oldVals</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">newVals</span><span class="p">);</span>
+<span class="p">},</span> <span class="kc">true</span><span class="p">);</span>
+</pre>
+<h2>See it</h2>
+
+<div class="row">
+  <div class="columns large-12" ng-controller="MainCtrl3">
+    <h3>Resize the page to see the re-rendering</h3>
+    <div d3-bars bar-height="20" bar-padding="3" data="data"></div>
+
+    <table>
+      <thead>
+        <tr><th colspan="4">Try editing the values of the data attribute</th></tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="obj in data">
+          <td>Name:</td><td><input ng-model="data[$index].name" type="text" placeholder="Name" /></td>
+          <td>Score</td><td><input ng-model="data[$index].score" type="number" min="1" placeholder="Score" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <small>What happens if one of the scores is an order of magnitude higher than the rest? What if one is zero? Try it</small>
+</div>
+
+<p>Try removing the <code>true</code> from the watch function above and see what happens. Why does this happen? To learn more read about the <a href="http://docs.angularjs.org/api/ng.$rootScope.Scope#$watch">objectEquality</a> parameter of the <code>$watch</code> function.</p>
+
+<h2>Handling click events</h2>
+
+<p>Now that we have our <code>data</code> being watched and drawn based on screen width and it&rsquo;s set using scope variables, let&rsquo;s add some interaction handling. Let&rsquo;s say that we want to trigger an action, such as showing a detailed view of the data in a separate panel when an item is clicked on. We can handle this user action by adding an <code>on-click</code> function to our directive.</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'appApp.directives'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'d3Bars'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'d3Service'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d3Service</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">restrict</span><span class="p">:</span> <span class="s1">'EA'</span><span class="p">,</span>
+      <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">data</span><span class="p">:</span> <span class="s1">'='</span><span class="p">,</span>
+        <span class="na">onClick</span><span class="p">:</span> <span class="s1">'&amp;'</span>  <span class="c1">// parent execution binding
+</span>      <span class="p">},</span>
+      <span class="c1">// ...
+</span></pre>
+<p>With this binding in place, we can call up to our parent and execute a function in that context using the method: <code>scope.onClick()</code> in an <code>onClick</code> handler. The only tricky part of this set up is passing the local variables up to the parent scope.</p>
+
+<p>In order to pass data through to the scope function <strong>an object with a matching parameter key must be used.</strong> </p>
+
+<p>For instance, when we set an onClick handler when we call the directive:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">d3-bars</span> <span class="na">on-click=</span><span class="s">&quot;showDetailPanel(item)&quot;</span> <span class="na">data=</span><span class="s">&quot;data&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre>
+<p>We must call the <code>onClick</code> handler with an object that has the key of <code>item</code> in our directive:</p>
+<pre class="highlight javascript">  <span class="nx">scope</span><span class="p">.</span><span class="nx">onClick</span><span class="p">({</span><span class="na">item</span><span class="p">:</span> <span class="p">[</span><span class="nx">stuff</span> <span class="nx">to</span> <span class="nx">pass</span> <span class="nx">here</span><span class="p">]})</span> <span class="c1">// notice item
+</span>                                              <span class="c1">// matches the call in
+</span>                                              <span class="c1">// the on-click handler 
+</span>                                              <span class="c1">// above
+</span></pre>
+<p>Now, let&rsquo;s create the function on the controller scope that we&rsquo;ll call into.</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'MainCtrl4'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">onClick</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">showDetailPanel</span><span class="p">)</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">showDetailPanel</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">detailItem</span> <span class="o">=</span> <span class="nx">item</span><span class="p">;</span>
+    <span class="p">});</span>
+  <span class="p">};</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="c1">// ...
+</span></pre>
+<blockquote>
+<p>Notice that we need to use <code>$scope.$apply()</code> here. This is because the onClick event happens outside the current angular context.</p>
+</blockquote>
+
+<p>Then, we&rsquo;ll need to set the <code>on-click</code> attribute in the HTML where we call the directive:</p>
+<pre class="highlight html"><span class="nt">&lt;d3</span><span class="na">-bars</span> <span class="na">data=</span><span class="s">&quot;d3Data&quot;</span> <span class="na">label=</span><span class="s">&quot;d3Label&quot;</span> <span class="na">on-click=</span><span class="s">&quot;d3OnClick(item)&quot;</span><span class="nt">&gt;</span><span class="err">&lt;</span>/d3-bars&gt;
+</pre>
+<p>Now, all we need to do is create the onClick handler in our d3 code:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'appApp.directives'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'d3Bars'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'d3Service'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d3Service</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">restrict</span><span class="p">:</span> <span class="s1">'EA'</span><span class="p">,</span>
+      <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">data</span><span class="p">:</span> <span class="s1">'='</span><span class="p">,</span>
+        <span class="na">onClick</span><span class="p">:</span> <span class="s1">'&amp;'</span>  <span class="c1">// parent execution binding
+</span>      <span class="p">},</span>
+      <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// ...
+</span>        <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'fill'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">color</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">score</span><span class="p">);</span>
+        <span class="p">})</span>
+        <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">onClick</span><span class="p">({</span><span class="na">item</span><span class="p">:</span> <span class="nx">d</span><span class="p">});</span>
+        <span class="p">})</span>
+        <span class="c1">// ...
+</span></pre>
+<h2>See it</h2>
+
+<div class="row" ng-controller="MainCtrl4">
+  <div class="columns large-12">
+    <div d3-bars on-click="onClick(item)" data="data"></div>
+  </div>
+  <div class="columns large-12 small-12" ng-show="showDetailPanel">
+    <h3>Details</h3>
+    <h4>Item: {{ detailItem.name }}</h4>
+    <a ng-click="showDetailPanel=false">Hide</a>
+  </div>
+</div>
+
+<h2>Dynamic data over XHR</h2>
+
+<p>How about fetching data over XHR? Both AngularJS and D3 can support fetching data across the wire. By using the AngularJS method of fetching data, we get the power of the auto-resolving promises. That is to say, we don&rsquo;t need to modify our workflow at all, other than setting our data in our controller to be fetched over XHR.</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'MainCtrl5'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'$http'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$http</span><span class="p">({</span>
+      <span class="na">method</span><span class="p">:</span> <span class="s1">'JSONP'</span><span class="p">,</span>
+      <span class="na">url</span><span class="p">:</span> <span class="s1">'http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&amp;callback=JSON_CALLBACK&amp;num=10&amp;q='</span> <span class="o">+</span>
+        <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="s1">'http://sports.espn.go.com/espn/rss/espnu/news'</span><span class="p">)</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">entries</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">responseData</span><span class="p">.</span><span class="nx">feed</span><span class="p">.</span><span class="nx">entries</span><span class="p">,</span>
+          <span class="nx">wordFreq</span> <span class="o">=</span> <span class="p">{},</span>
+          <span class="nx">data</span> <span class="o">=</span> <span class="p">[];</span>
+
+      <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">entries</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">article</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">article</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">word</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">word</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">wordFreq</span><span class="p">[</span><span class="nx">word</span><span class="p">])</span> <span class="p">{</span> 
+              <span class="nx">wordFreq</span><span class="p">[</span><span class="nx">word</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="na">score</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">link</span><span class="p">:</span> <span class="nx">article</span><span class="p">.</span><span class="nx">link</span><span class="p">};</span> 
+            <span class="p">}</span>
+            <span class="nx">wordFreq</span><span class="p">[</span><span class="nx">word</span><span class="p">].</span><span class="nx">score</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+      <span class="p">});</span>
+      <span class="k">for</span> <span class="p">(</span><span class="nx">key</span> <span class="k">in</span> <span class="nx">wordFreq</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">data</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+          <span class="na">name</span><span class="p">:</span> <span class="nx">key</span><span class="p">,</span> 
+          <span class="na">score</span><span class="p">:</span> <span class="nx">wordFreq</span><span class="p">[</span><span class="nx">key</span><span class="p">].</span><span class="nx">score</span><span class="p">,</span>
+          <span class="na">link</span><span class="p">:</span> <span class="nx">wordFreq</span><span class="p">[</span><span class="nx">key</span><span class="p">].</span><span class="nx">link</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+      <span class="nx">data</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">score</span> <span class="o">-</span> <span class="nx">a</span><span class="p">.</span><span class="nx">score</span><span class="p">;</span> <span class="p">})</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}])</span>
+</pre>
+<h2>See it</h2>
+
+<div class="row" ng-controller="MainCtrl5">
+  <div class="columns large-12">
+    <h3>Word frequency counts in the latest ESPN headlines</h3>
+    <div d3-bars on-click="onClick(item)" data="data"></div>
+  </div>
+  <div class="columns large-12 small-12" ng-show="showDetailPanel">
+    <h3>Details</h3>
+    <h4>Item: {{ detailItem.name }} appeared {{ detailItem.score}} times in the latest ESPN articles</h4>
+    <a ng-click="showDetailPanel=false">Hide</a>
+  </div>
+</div>
+
+<h2>Extending your own d3 directives</h2>
+
+<p>Lastly, if we&rsquo;re going to use <code>d3</code> for any longer period of time, it&rsquo;s inevitable that we&rsquo;ll want to provide easier methods of creating extensions on our d3 object.</p>
+
+<p>We can extend our own <code>d3</code> service by applying commonly used functions on to it using the <code>decorator</code> pattern. AngularJS makes this easy to do using the <code>$provide</code> service.</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'d3'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s1">'$provide'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$provide</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">customDecorator</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$delegate</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">d3Service</span> <span class="o">=</span> <span class="nx">$delegate</span><span class="p">;</span>
+    <span class="nx">d3Service</span><span class="p">.</span><span class="nx">d3</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d3</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// build our custom functions on the d3
+</span>      <span class="c1">// object here
+</span>    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">d3Service</span><span class="p">;</span> <span class="c1">// important to return the service
+</span>  <span class="p">};</span>
+
+  <span class="nx">$provide</span><span class="p">.</span><span class="nx">decorator</span><span class="p">(</span><span class="s1">'d3Service'</span><span class="p">,</span> <span class="nx">customDecorator</span><span class="p">);</span>
+<span class="p">}])</span>
+</pre>
+<h2>Moar!</h2>
+
+<p>There are way more interesting ways to integrate d3 and Angular together. We have created a repo that follows this along with this tutorial. The repo is available at: <a href="http://github.com/EpiphanyMachine/d3AngularIntegration">github.com/EpiphanyMachine/d3AngularIntegration</a></p>
+
+<h2>About this post</h2>
+
+<p><img class="profile" src="https://farm8.staticflickr.com/7306/9681841116_96c25447bc_q.jpg" /></p>
+
+<p>This is a guest post authored by the brilliant <a href="http://blog.ideahaven.co">Gregory Hilkert</a> and edited by the team at <a href="http://ng-newsletter.com">ng-newsletter.com</a>. </p>
+
+<p>Gregory Hilkert is a fullstack software engineer with experience in JavaScript and CoffeeScript whose most recent projects have focused specifically on Angular among other technologies. </p>
+
+<p>His github profile is <a href="https://github.com/EpiphanyMachine">github.com/EpiphanyMachine</a> and his writing can be found at <a href="http://blog.ideahaven.co">blog.ideahaven.co</a>.</p>
+
+<script type="text/javascript" src="/js/posts/d3.js"></script>
+
+<style type="text/css">
+  .tick text {
+    fill: #999;
+  }
+  .axis path, .axis line {
+    fill: none;
+    stroke: #b6b6b6;
+    shape-rendering: crispEdges;
+  }
+  .axis {
+    font-size: 10px;
+  }
+</style>
+
+
+          <div class="container" id="signupApp" ng-cloak>
+  <div id="topbar_signup_embed">
+  Get the weekly email all focused on AngularJS. <b>Sign up below</b> to receive the weekly email and exclusive content.
+  <form name="ngSignup" action="http://willcodeforfoo.us6.list-manage1.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=fa61364f13" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    
+    <div class="row collapse">
+      <div class="small-9 columns">
+        <input ng-class="{error: ngSignup.email.$dirty && ngSignup.email.$invalid}" type="email" ng-minlength=3 ng-model="ngSignup.email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address" required>
+      </div>
+      <div class="small-3 columns">
+        <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" ng-disabled="ngSignup.$invalid" class="button postfix"></div>
+      </div>
+        <div class="small-12 columns error" ng-show="ngSignup.EMAIL.$dirty && ngSignup.EMAIL.$invalid">
+          <small class="error" ng-show="ngSignup.EMAIL.$error.required">Your email is required.</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.minlength">Your email is required to be at least 3 characters</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.email">That is not a valid email. Please input a valid email.</small>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  if (typeof(app) == 'undefined') {
+    angular.module("signupApp", [])
+    .controller("mailChimpValidation", ['$scope', function($scope) {}]);
+    var ele = document.getElementById("signupApp");
+    angular.element(ele, ['signupApp']);
+  }
+</script>
+          <section id="sample_chapter" ng-app="ngBookApp">    <div class="content">      <h3 class="title">Download a free sample of the ng-book: The Complete Book on AngularJS</h3> <span class="image"><img src="http://www.ng-book.com/images/flatbook-ngbook-small.png" alt="book"></span><div class="desc">It's free, so just enter your email address and the PDF will be sent directly to your inbox.</div>    </div>    <div class="form" ng-init="signedup=false" ng-show="!signuped">      <form action="http://willcodeforfoo.us6.list-manage.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=7bbfaae868" method="post" id="mc-embedded-subscribe-form" name="ngBookSignup" class="validate ng-pristine ng-invalid ng-invalid-required" target="_blank" novalidate="">
+<div class="mc-field-group">          <input type="email" ng-model="ngBookSignup.email" ng-class="{error: ngBookSignup.email.$dirty &amp;&amp; ngBookSignup.email.$invalid}" value="" name="EMAIL" placeholder="Your email address" class="required email ng-pristine ng-valid ng-valid-email ng-valid-minlength" id="mce-EMAIL" ng-minlength="3">        </div>        <div id="mce-responses" class="clear">          <div class="response" id="mce-error-response" style="display:none"></div>          <div class="response" id="mce-success-response" style="display:none"></div>        </div>        <div class="clear"><input type="submit" value="Send me a free chapter" name="subscribe" id="ngBookSignupSubmit" ng-disabled="ngBookSignup.$invalid" class="button postfix" ng-click="signedup=true" disabled="disabled"></div>      </form>      <div ng-show="signedup" class="ng-hide">      <p>Sweet! We are glad to hear you're interested in learning AngularJS. Enjoy the free chapter. We put a lot of work into building the book series, so we hope you like it!      Talk soon</p>      </div>      <div class="desc">        We won't ever send you spam! You can unsubscribe at any time.      </div>    </div>  </section>
+
+          <footer>
+            <ul class="actions">
+              <li><a href="/articles"><span class="arrow">←</span> Back to articles</a></li>
+              <li><a href="http://twitter.com/home/?status=D3 on AngularJS - http://ng-newsletter.com/posts/d3-on-angular.html via @ngnewsletter" target="_blank"><img src="/img/twitter-bird-blue-on-white.png" style="width: 56px; height: 26px;" />Share on twitter</a></li>
+            </ul>
+          </footer>
+
+        </article>
+
+        <section id="comments">
+            <h2 class="gamma">Comments</h2>
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ngnewsletter'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section>
+
+        
+
+        <script type="text/javascript" src="/js/vendor/zepto.js"></script>
+<script type="text/javascript" src="/js/vendor/foundation.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+        </div>
+    </div>
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28176211-3', 'ng-newsletter.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript">
+  var $mcGoal = {'settings':{'uuid':'86d6f14c7cc955128485e3b8e','dc':'us6'}};
+  (function() {
+     var sp = document.createElement('script'); sp.type = 'text/javascript'; sp.async = true; sp.defer = true;
+    sp.src = ('https:' == document.location.protocol ? 'https://s3.amazonaws.com/downloads.mailchimp.com' : 'http://downloads.mailchimp.com') + '/js/goal.min.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sp, s);
+  })(); 
+</script>
+
+</body>
+</html>

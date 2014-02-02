@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+
+<title>Easily Add a Back End to Your Angular App With Firebase | ng-newsletter</title>
+
+<meta name="author" content="Ari Lerner">
+<meta name="description" content="This week, we look at how easy it is to run a production application with the latest version of AngularFire angularjs angularjs tutorial angular">
+<meta name="keywords" content="angularjs getting started with angularjs angular tutorial angularjs tutorial firebase angularFire angularjs angularjs tutorial angular realtime firebase angularfire">
+
+<meta name="msvalidate.01" content="BE7DA3BEF0F11153F6E4B5585C12DB20" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ng-newsletter" />
+<meta property="og:url" content="http://ng-newsletter.com" />
+<meta property="og:image" content="http://ng-newsletter.com/img/" />
+<meta property="og:description" content="This week, we look at how easy it is to run a production application with the latest version of AngularFire" />
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:creator" value="@auser" />
+<meta name="twitter:title" value="ng-newsletter" />
+<meta name="twitter:description" value="This week, we look at how easy it is to run a production application with the latest version of AngularFire" />
+<meta name="twitter:image" value="http://ng-newsletter.com/img/" />
+
+<link rel="alternate" type="application/rss+xml" href="feed.rss" title="Sitewide RSS 2.0 Feed">
+<link rel="alternate" type="application/atom+xml" href="atom.xml" title="Sitewide ATOM Feed">
+<link rel="alternate" type="application/atom+json" href="atom.json" title="Sitewide JSON Feed">
+
+<link href="/favicon.ico" rel="icon" type="image/ico" />
+<link href="/css/site.css" media="screen" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Roboto:400italic,700italic,400,700|Open+Sans:r,i,b,bi|Bitter:r,i,b" media="screen" rel="stylesheet" type="text/css" />
+<script src="/js/vendor/custom.modernizr.js"></script>
+<script src="/js/vendor/d3.v3.min.js"></script>
+<script src="/js/vendor/angular/angular.min.js"></script>
+<script src="/js/vendor/angular-route/angular-route.min.js"></script>
+<script src="/js/vendor/angular-animate.min.js"></script>
+<script src="/js/vendor/angular-translate.min.js"></script>
+<script src="/js/vendor/angular-cookies/angular-cookies.min.js"></script>
+
+
+</head>
+<body ng-app="firebaseApp">
+
+    
+    <div id="header">
+  <div id="topNav">
+    <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">ng-newsletter</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <ul class="right">
+      		<li><a href="/posts">Articles</a></li>
+          <li><a href="/advent2013/">25 days of Angular</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/sponsor">Sponsorship</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+  <div class="headerContent">
+  </div>
+</div>
+
+    <div class="container">
+      <div id="article">
+        <article class="post">
+          <header>
+            <h1 class="mega">Easily Add a Back End to Your Angular App With Firebase</h1>
+          </header>
+          
+          <p>As a client-side framework, Angular alone is not enough to build a full back-end webapp. Often times, it&rsquo;s difficult to know when to sync our data with the back-end, and how to handle the changes and potential conflicts of data between versions of modified content.</p>
+
+<blockquote>
+<p>Imagine we have two instances of our application running at the same time. What if both instances are trying to edit the same data? Without handling this case, we can get into trouble, especially if we&rsquo;re building the front-end for a complex web application, like a bank.</p>
+</blockquote>
+
+<p>Using Firebase we can easily add a backend to our Angular app. Featured on the Angular.js home page, Firebase is quickly becoming the standard for Angular persistence.</p>
+
+<p>Firebase is a real-time back-end for building collaborative, modern applications. Rather than requiring us to focus on building custom request-response models with a server-side component where we manually worry about data-synchronization, Firebase lets us get our app up and running in minutes. We can build a data-backed webapp entirely in Angular that can scale out-of-the-box and update all clients in real-time.</p>
+
+<p>Even more, data stored in Firebase is standard schema-less JSON, which makes it incredibly easy to save data models of any type into Firebase. If a device loses network connection, Firebase continues to allow access to locally cached data and seamlessly synchronizes changes with the cloud when the device comes back online.</p>
+
+<blockquote>
+<p>The Firebase client libraries and REST API provide easy access to that data from any platform. Although we&rsquo;re focusing specifically on Angular, this means native apps or other server-side apps can reach the data saved by Angular.</p>
+</blockquote>
+
+<h2>3-Way Data Binding With Firebase and Angular</h2>
+
+<p>With Angular, rendering content to the browser is elegant and easy. Storing and retrieving data, the other major component to production-level webapps, is handled elegantly by Firebase. This makes Firebase an excellent partner to Angular. </p>
+
+<p>Angular is great with its two-way data binding between models in JavaScript and the DOM. By syncing our Angular model with Firebase, our app’s data in the model is synchronized in real-time across all clients. That means that when data changes in one client, these updates are immediately persisted to Firebase and rendered across all connected devices.  </p>
+
+<p><img src="/images/firebase/3-way-binding.png" /></p>
+
+<p>When data is updated in any of the three places (View, Model, or Firebase), the changes propagate in real-time to the other two across <em>all</em> clients.</p>
+
+<h2>Getting Started With AngularFire</h2>
+
+<p>It&rsquo;s easy to create real-time web applications using Firebase and Angular thanks to the official Angular library: AngularFire. The AngularFire bindings were built by the Firebase team specifically for integration with Angular applications, as we&rsquo;ll see. </p>
+
+<p>There are only <strong>four</strong> steps to backing our Angular app on Firebase using AngularFire:</p>
+
+<h3>1. Sign up and Create a Firebase</h3>
+
+<p>Before we can actually save or retrieve any data from Firebase, we&rsquo;ll need an account. It&rsquo;s free to create an account, so let&rsquo;s sign up.</p>
+
+<p><img src="/images/firebase/firebase_home.png" /></p>
+
+<p>First, head to <a href="http://firebase.com">firebase.com</a> and click on the <em>Sign up</em> button (or login if you already have an account):</p>
+
+<p><img src="/images/firebase/signup.png" /></p>
+
+<p>Now that we have signed up for an account, we can create our first Firebase. The name we choose will be part of the URL we&rsquo;ll use to reference our Firebase data.</p>
+
+<p>For example, when we create a Firebase with the name of <code>ng-newsletter</code>, our Firebase URL will be available at <code>https://ng-newsletter.firebaseio.com</code>.  </p>
+<pre class="highlight shell">https://&lt;my-firebase-name&gt;.firebaseio.com/
+</pre>
+<p><img src="/images/firebase/create.png" />
+<img src="/images/firebase/complete.png" /></p>
+
+<p>The AngularFire bindings let us associate a Firebase URL with a model or collection of models. These models will represent the data that will be transparently kept in sync across all clients currently using our app. </p>
+
+<p>Angular’s two-way data binding keeps the DOM synced to JavaScript variables in memory, and Firebase stores those changes and sends them to all listening clients in real-time. </p>
+
+<blockquote>
+<p>We get this data synchronization <strong>without changing</strong> how we build our angular app. Very cool!</p>
+</blockquote>
+
+<h3>2. Include the Firebase and AngularFire libraries</h3>
+
+<p>Using AngularFire is as simple as including two JavaScript files in our HTML file, one for Firebase and another for AngularFire. </p>
+
+<p>We&rsquo;ll need to use Firebase&rsquo;s CDN, so at the top of our index.html file we&rsquo;ll add the following two lines:</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;https://cdn.firebase.com/v0/firebase.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;https://cdn.firebase.com/libs/angularfire/0.5.0-rc1/angularfire.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<h3>3. Add Firebase as a dependency</h3>
+
+<p>As usual with any application libraries, we&rsquo;ll need to set the firebase library as a dependency for our module. This tells the rest of our application that we can use the firebase bindings in our app:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">&quot;myapp&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;firebase&quot;</span><span class="p">]);</span>
+</pre>
+<h3>4. Bind a model to a Firebase URL</h3>
+
+<p>By declaring Firebase as a dependency, we now have access to the <code>$firebase</code> service, which allows us to inject it as a dependency in our controllers and services. </p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myapp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'firebase'</span><span class="p">])</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s2">&quot;MyCtrl&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;$scope&quot;</span><span class="p">,</span> <span class="s2">&quot;$firebase&quot;</span><span class="p">,</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$firebase</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Our controller definition goes here
+</span>  <span class="p">}</span>
+<span class="p">]);</span>
+</pre>
+<p>The <code>$firebase</code> service takes a single argument: a Firebase reference.</p>
+
+<h4>FirebaseRef (Firebase reference)</h4>
+
+<p>The Firebase reference tells <code>$firebase</code> where the data is stored and how to connect. The <code>$firebase</code> service handles the synchronization with Angular, and is where we&rsquo;ll call methods to save our changes.</p>
+
+<p>This object has several methods we&rsquo;ll use to interact with our remote data. These methods, detailed below are all prefixed with the <code>$</code> symbol, such as <code>$add()</code> and <code>$save()</code> and are available on this object. </p>
+
+<blockquote>
+<p>Note that <strong>no</strong> changes to the object will result in changes made to the remote data.</p>
+</blockquote>
+
+<p>To synchronize a local object model to the remote Firebase reference, we&rsquo;ll use the service method and pass it an instance of the Firebase object. For example, to synchronize the <code>$scope.items</code> model to our <code>ng-newsletter</code> items, we&rsquo;ll run the following method:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s2">&quot;MyCtrl&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$firebase</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Firebase URL
+</span>  <span class="kd">var</span> <span class="nx">URL</span> <span class="o">=</span> <span class="s2">&quot;https://ng-newsletter.firebase.com&quot;</span><span class="p">;</span>
+  <span class="c1">// Synchronizing the items on our $scope
+</span>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="nx">$firebase</span><span class="p">(</span><span class="k">new</span> <span class="nx">Firebase</span><span class="p">(</span><span class="nx">URL</span> <span class="o">+</span> <span class="s1">'/items'</span><span class="p">));</span>
+<span class="p">});</span>
+</pre>
+<p>Now, we can simply interact with the <code>$scope.items</code> object to synchronize our Angular models with Firebase. </p>
+
+<h3>Data Synchronization</h3>
+
+<p>We can synchronize our data back to Firebase by using the following methods provided by the <code>$firebase</code> object.</p>
+
+<h4>$add(value)</h4>
+
+<p>The <code>$add</code> method takes a single argument of any type. It will append this value as a member of a chronologically ordered list. We can think of this like we&rsquo;re calling <code>.push(value)</code> on to the Firebase reference <em>array</em>.</p>
+
+<blockquote>
+<p>Note that the Firebase reference object is not really an array, but we can act as though it is.</p>
+</blockquote>
+
+<p>For example, we can add the string &ldquo;bar&rdquo; to the Firebase reference located at the <code>/foo</code> endpoint:</p>
+<pre class="highlight javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">$add</span><span class="p">({</span><span class="na">foo</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">});</span>
+</pre>
+<h4>$remove([key])</h4>
+
+<p>The <code>$remove</code> method removes remote child references from Firebase. It takes a single optional argument: </p>
+
+<h5>key (optional string)</h5>
+
+<p>If a <code>key</code> argument (as a string) is provided, the <code>$remove()</code> method will remove the child referenced by that key. If no key is provided, the entire remote object will be removed.</p>
+<pre class="highlight javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">$remove</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">);</span> <span class="c1">// Remove the child named &quot;foo&quot;.
+</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">$remove</span><span class="p">();</span>      <span class="c1">// Remove the entire object.
+</span></pre>
+<h4>$save([key])</h4>
+
+<p>The <code>$save</code> method synchronizes all changes to the local elements with the Firebase data store and pushes them instantly to all listening clients. It takes a single argument:</p>
+
+<h5>key (optional string)</h5>
+
+<p>If the <code>key</code> argument (string) is provided, the <code>$save()</code> method will save changes made to the child element referenced by the key to Firebase. If no key is provided to the <code>$save()</code> method, then all local changes made to the object will be persisted to Firebase.</p>
+
+<blockquote>
+<p>The <code>$save()</code> method is most commonly used to save any local changes made to the model.</p>
+</blockquote>
+<pre class="highlight javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">foo</span> <span class="o">=</span> <span class="s2">&quot;baz&quot;</span><span class="p">;</span>
+<span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">$save</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">);</span>  <span class="c1">// new Firebase(URL + &quot;/foo&quot;) now contains &quot;baz&quot;.
+</span></pre>
+<h4>$child(key)</h4>
+
+<p>The <code>$child()</code> method creates a new <code>$firebase</code> object for a child referenced by the provided key. The method takes a single argument:</p>
+
+<h5>key (string)</h5>
+
+<p>The <code>key</code> string is used to reference the newly created child.</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">child</span> <span class="o">=</span> <span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">$child</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">);</span>
+<span class="nx">child</span><span class="p">.</span><span class="nx">$remove</span><span class="p">();</span>            <span class="c1">// Equivalent to calling $scope.items.$remove(&quot;foo&quot;);
+</span></pre>
+<h4>$set(value)</h4>
+
+<p>The <code>$set()</code> method overwrites the remote value for this object to newValue. The local object will also be subsequently updated to this new value.</p>
+
+<p>It takes a single argument:</p>
+
+<h5>value (string)</h5>
+
+<p>The <code>value</code> argument is the new value of the local object. The value will overwrite the old value, and will be subsequently updated to this new value.</p>
+<pre class="highlight javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">$set</span><span class="p">({</span><span class="na">bar</span><span class="p">:</span> <span class="s2">&quot;baz&quot;</span><span class="p">});</span>  <span class="c1">// new Firebase(URL + &quot;/foo&quot;) is now null.
+</span></pre>
+<h2>Ordering in AngularFire</h2>
+
+<p>If we want to sort our remote objects, rather than simply sorting locally with Angular&rsquo;s orderBy filter, we can set the <code>$priority</code> field on a record before calling <code>$save()</code>.</p>
+<pre class="highlight javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">foo</span><span class="p">.</span><span class="nx">$priority</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">$save</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">);</span>  <span class="c1">// new Firebase(URL + &quot;foo&quot;)'s priority is now 2.
+</span></pre>
+<p>By default, the <code>$firebase</code> service returns a simple JavaScript object. We can convert this object into an array that respects order simply by using the <code>orderByPriority</code> filter.</p>
+
+<p>This filter turns the object returned by the <code>$firebase</code> service into an array and orders by the <code>priority</code> definition defined by Firebase. Each object in the new array will get an <code>$id</code> property defined on it which references the keyname of the object.</p>
+<pre class="highlight html"><span class="nt">&lt;ul</span> <span class="na">ng-repeat=</span><span class="s">&quot;item in items | orderByPriority&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;l&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">id=</span><span class="s">&quot;{{item.$id}}&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;item.$priority&quot;</span><span class="nt">/&gt;</span>
+    {{item.name}}
+  <span class="nt">&lt;/l&gt;</span>
+<span class="nt">&lt;/ul&gt;</span>
+</pre>
+<h2>Firebase events</h2>
+
+<p>Firebase fires two types of events that we can use to handle custom logic from within our app. We can use the <code>$on()</code> method to attach event handlers for these two event types:</p>
+
+<h4>loaded</h4>
+
+<p>The <code>loaded</code> event is fired when initial data is received from Firebase. It is fired once and only once.</p>
+<pre class="highlight javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">$on</span><span class="p">(</span><span class="s1">'loaded'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Items loaded&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre>
+<h4>change</h4>
+
+<p>The <code>change</code> event is fired whenever there is a remote change in the data applied to the local object. For instance, this happens if there is a new task added by another user to our task list.</p>
+<pre class="highlight javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">$on</span><span class="p">(</span><span class="s1">'change'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;A change is afoot&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre>
+<h2>Implicit Synchronization</h2>
+
+<p>To add automatic, implicit synchronization with a $scope variable, we can call the <code>$bind()</code> method on the object returned by the <code>$firebase</code> service. </p>
+
+<p>The <code>$bind()</code> method automatically establishes a 3-way binding so we don&rsquo;t need to explicitly save data to Firebase using the <code>$add()</code> or <code>$save()</code> methods. </p>
+<pre class="highlight javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">$bind</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="s2">&quot;remoteItems&quot;</span><span class="p">);</span>
+<span class="nx">$scope</span><span class="p">.</span><span class="nx">remoteItems</span><span class="p">.</span><span class="nx">bar</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span><span class="p">;</span>  <span class="c1">// new Firebase(URL + &quot;/bar&quot;) is now &quot;foo&quot;.
+</span></pre>
+<p>The <code>$bind()</code> method returns a promise, which will be resolved when the initial data from the server has been received. The promise will be resolved with an <code>unbind</code> function, which will disassociate the 3-way binding when called.</p>
+<pre class="highlight javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">$bind</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="s2">&quot;remote&quot;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">unbind</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">unbind</span><span class="p">();</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">remote</span><span class="p">.</span><span class="nx">bar</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span><span class="p">;</span>    <span class="c1">// No changes have been made to the remote data.
+</span><span class="p">});</span>
+</pre>
+<p>The <code>$bind</code> method returns a promise, which will be resolved when the initial data from the server has been received. The promise will be resolved with an <code>unbind</code> function, which will disassociate the 3-way binding when called. This is useful for optimizing our site and removing unnecessary watches.</p>
+
+<h2>Authentication with AngularFire</h2>
+
+<p>Firebase provides a simple, client-side authentication strategy out of the box.</p>
+
+<p>Using Firebase’s Simple Login or Custom Login methods, we can easily add user authentication to our application with AngularFire. </p>
+
+<p>Custom Login is most appropriate to use if we have our own server where we want to control our own authentication, or we want to integrate existing authentication with Firebase. </p>
+
+<p>If we want to use Firebase to manage all of our authentication, we can use Simple Login, which supports Facebook, Twitter, GitHub, Persona, and Email/Password authentication.</p>
+
+<p>By defining Firebase as a dependency in our app’s module, we have access to the <code>$firebaseAuth</code> service in our controllers and services. </p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s2">&quot;MyAuthCtrl&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$firebaseAuth</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Define our controller here 
+</span><span class="p">});</span>
+</pre>
+<p>The <code>$firebaseAuth</code> service method takes two arguments: a Firebase reference, and an optional object with options. The object can contain the following properties to customize how the authentication works with Firebase:</p>
+
+<ul>
+<li>path - the <code>path</code> to which the user will be redirected if the <code>authRequired</code> property is set to true in the <code>$routeProvider</code> and the user is not logged in.</li>
+<li>simple - <code>$firebaseAuth</code> requires inclusion of the firebase-simple-login.js file by default. If this <code>simple</code> value is set to false, this requirement is waived, but only custom login functionality will be enabled and we cannot use simple auth.</li>
+<li>callback - a function that will be called when there is a change in authentication state. We can use this callback as an alternative to events fired on <code>$rootScope</code>, which is the recommended way to handle changes in auth state.</li>
+</ul>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s2">&quot;MyAuthCtrl&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$firebaseAuth</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">ref</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Firebase</span><span class="p">(</span><span class="nx">URL</span><span class="p">);</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">auth</span> <span class="o">=</span> <span class="nx">$firebaseAuth</span><span class="p">(</span><span class="nx">ref</span><span class="p">);</span>
+    <span class="c1">// $scope.auth.user is null until the user logs in.
+</span><span class="p">});</span>
+</pre>
+<p>The object returned by <code>$firebaseAuth()</code> contains a single property named <code>user</code>. <code>user</code> will be set to null if the user is logged out and will change to an object containing the user’s details once they are logged in. We&rsquo;ll cover detecting logins below. </p>
+
+<blockquote>
+<p>The contents of the user&rsquo;s detail object will vary depending upon the authentication mechanism used, but at the very least, it will contain a user <code>id</code> and <code>provider</code> name.</p>
+</blockquote>
+
+<h2>Authentication Events</h2>
+
+<p>With the AngularFire authentication, we have access to several methods for changing a user&rsquo;s authentication state. These methods are <code>$login()</code>, <code>$logout()</code>, and <code>$createUser()</code>.</p>
+
+<p>Authentication state in AngularFire is considered global and each of the authentication methods below will be broadcast on the <code>$rootScope</code>. Since nearly all scopes inherit from <code>$rootScope</code>, we can call <code>$scope.on(...)</code> from any controller.</p>
+
+<blockquote>
+<p>Global authentication means that we cannot have multiple users logged into the same instance of the application at the same time. For example, global authentication prevents two users from being logged into GMail at the same time in the same browser instance.</p>
+</blockquote>
+
+<h5>$firebaseAuth:login</h5>
+
+<p>This event is triggered when a user successfully logs in. This event fires with two arguments: an event and user object.</p>
+<pre class="highlight javascript"><span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$on</span><span class="p">(</span><span class="s2">&quot;$firebaseAuth:login&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">,</span> <span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;User &quot;</span> <span class="o">+</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s2">&quot; successfully logged in!&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre>
+<h5>$firebaseAuth:logout</h5>
+
+<p>The <code>logout</code> event is triggered when a user logs out. The event is fired with an event argument.</p>
+<pre class="highlight javascript"><span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$on</span><span class="p">(</span><span class="s2">&quot;$firebaseAuth:logout&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;User logged out!&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre>
+<h5>$firebaseAuth:error</h5>
+
+<p>The <code>error</code> event is triggered when there was error during either calling <code>$login()</code> or <code>$logout()</code>. This event will be fired with a single argument, the error.</p>
+
+<h3>$login(token, [options])</h3>
+
+<p>We&rsquo;ll use the <code>$login()</code> method to login a user. We&rsquo;ll usually use this method when a user clicks a login button, like the following:</p>
+<pre class="highlight html"><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> 
+    <span class="na">ng-hide=</span><span class="s">&quot;auth.user&quot;</span> 
+    <span class="na">ng-click=</span><span class="s">&quot;auth.$login('persona')&quot;</span><span class="nt">&gt;</span>Login<span class="nt">&lt;/a&gt;</span>
+</pre>
+<p>The <code>$login()</code> function takes up to two arguments:</p>
+
+<h5>tokenOrProvider (string/JWT token)</h5>
+
+<p>If we are using the Firebase Simple Login, we can simply pass in a provider name, such as &lsquo;facebook&rsquo;, or &lsquo;persona&rsquo;. If we want to use the Custom Login flow, then we&rsquo;ll need to pass in a valid JWT token instead.</p>
+
+<h5>options (object)</h5>
+
+<p>The <code>options</code> argument is only used with Simple Login, where the provided options will be passed as-is to the Simple Login method.</p>
+
+<p>For a &ldquo;password&rdquo; provider, we&rsquo;ll want to provide a username and password as an object. </p>
+
+<blockquote>
+<p>For more information about the user object, read the Firebase documentation on <a href="http://angularfire.com/">AngularFire.com</a>. </p>
+</blockquote>
+
+<h3>$logout()</h3>
+
+<p>The <code>$logout()</code> method will log out the current user. It takes no arguments. </p>
+
+<p>The <code>$firebaseAuth:logout</code> event will be fired, and the user property will be set to null after the logout is completed. This method is typically attached to a logout button:</p>
+<pre class="highlight html"><span class="nt">&lt;span</span> <span class="na">ng-show=</span><span class="s">&quot;auth.user&quot;</span><span class="nt">&gt;</span>
+  {{auth.user.name}} | <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">ng-click=</span><span class="s">&quot;auth.$logout()&quot;</span><span class="nt">&gt;</span>Logout<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/span&gt;</span>
+</pre>
+<h3>$createUser()</h3>
+
+<p>The <code>$createUser()</code> method is useful when we are using the &ldquo;password&rdquo; provider with Firebase Simple Login. </p>
+
+<p>The <code>$createUser()</code> method takes three arguments:</p>
+
+<h5>email (string)</h5>
+
+<p>The <code>email</code> to create the user with.</p>
+
+<h5>password (string)</h5>
+
+<p>The <code>password</code> is the password the user will be created with.</p>
+
+<h5>callback (function)</h5>
+
+<p>The <code>callback</code> method will be called after the <code>$createUser()</code> has run. It will be called with two arguments: error and user. If there was an error in the <code>$createUser()</code> method, the error will contain the error message and <code>user</code> will be null. If the error is null, then the user will be defined.</p>
+<pre class="highlight javascript"><span class="nx">auth</span><span class="p">.</span><span class="nx">createUser</span><span class="p">(</span><span class="nx">email</span><span class="p">,</span> <span class="nx">password</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'User Id: '</span> <span class="o">+</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s1">', Email: '</span> <span class="o">+</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>Firebase makes it easy to wire up a back-end to our Angular app without having to worry about setting up a server or writing a single line of back-end code. AngularFire enables us to create complex, real-time applications that synchronize immediately between our application’s model and data stored in Firebase.</p>
+
+<p>To learn more about AngularFire, the source code is available on Github: <a href="https://github.com/firebase/angularFire">https://github.com/firebase/angularFire</a>. </p>
+
+<p>To get an AngularFire app up and running in minutes, clone the <a href="https://github.com/firebase/angularFire-seed">angularFire-seed</a> repo.</p>
+
+<h2>Beyond AngularFire</h2>
+
+<p>AngularFire is a great wrapper for interacting with Firebase, but you can certainly interact directly with the Firebase SDK from Angular for more complex operations. Check out the <a href="https://www.firebase.com/tutorial/">Firebase tutorial</a> to learn more about the advanced capabilities of this sophisticated real-time platform.</p>
+
+<script src="https://cdn.firebase.com/v0/firebase.js"></script>
+
+<script src="https://cdn.firebase.com/libs/angularfire/0.5.0-rc1/angularfire.js"></script>
+
+<script type="text/javascript" src="/js/posts/firebase.js"></script>
+
+
+          <div class="container" id="signupApp" ng-cloak>
+  <div id="topbar_signup_embed">
+  Get the weekly email all focused on AngularJS. <b>Sign up below</b> to receive the weekly email and exclusive content.
+  <form name="ngSignup" action="http://willcodeforfoo.us6.list-manage1.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=fa61364f13" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    
+    <div class="row collapse">
+      <div class="small-9 columns">
+        <input ng-class="{error: ngSignup.email.$dirty && ngSignup.email.$invalid}" type="email" ng-minlength=3 ng-model="ngSignup.email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address" required>
+      </div>
+      <div class="small-3 columns">
+        <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" ng-disabled="ngSignup.$invalid" class="button postfix"></div>
+      </div>
+        <div class="small-12 columns error" ng-show="ngSignup.EMAIL.$dirty && ngSignup.EMAIL.$invalid">
+          <small class="error" ng-show="ngSignup.EMAIL.$error.required">Your email is required.</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.minlength">Your email is required to be at least 3 characters</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.email">That is not a valid email. Please input a valid email.</small>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  if (typeof(app) == 'undefined') {
+    angular.module("signupApp", [])
+    .controller("mailChimpValidation", ['$scope', function($scope) {}]);
+    var ele = document.getElementById("signupApp");
+    angular.element(ele, ['signupApp']);
+  }
+</script>
+          <section id="sample_chapter" ng-app="ngBookApp">    <div class="content">      <h3 class="title">Download a free sample of the ng-book: The Complete Book on AngularJS</h3> <span class="image"><img src="http://www.ng-book.com/images/flatbook-ngbook-small.png" alt="book"></span><div class="desc">It's free, so just enter your email address and the PDF will be sent directly to your inbox.</div>    </div>    <div class="form" ng-init="signedup=false" ng-show="!signuped">      <form action="http://willcodeforfoo.us6.list-manage.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=7bbfaae868" method="post" id="mc-embedded-subscribe-form" name="ngBookSignup" class="validate ng-pristine ng-invalid ng-invalid-required" target="_blank" novalidate="">
+<div class="mc-field-group">          <input type="email" ng-model="ngBookSignup.email" ng-class="{error: ngBookSignup.email.$dirty &amp;&amp; ngBookSignup.email.$invalid}" value="" name="EMAIL" placeholder="Your email address" class="required email ng-pristine ng-valid ng-valid-email ng-valid-minlength" id="mce-EMAIL" ng-minlength="3">        </div>        <div id="mce-responses" class="clear">          <div class="response" id="mce-error-response" style="display:none"></div>          <div class="response" id="mce-success-response" style="display:none"></div>        </div>        <div class="clear"><input type="submit" value="Send me a free chapter" name="subscribe" id="ngBookSignupSubmit" ng-disabled="ngBookSignup.$invalid" class="button postfix" ng-click="signedup=true" disabled="disabled"></div>      </form>      <div ng-show="signedup" class="ng-hide">      <p>Sweet! We are glad to hear you're interested in learning AngularJS. Enjoy the free chapter. We put a lot of work into building the book series, so we hope you like it!      Talk soon</p>      </div>      <div class="desc">        We won't ever send you spam! You can unsubscribe at any time.      </div>    </div>  </section>
+
+          <footer>
+            <ul class="actions">
+              <li><a href="/articles"><span class="arrow">←</span> Back to articles</a></li>
+              <li><a href="http://twitter.com/home/?status=Easily Add a Back End to Your Angular App With Firebase - http://ng-newsletter.com/posts/back-end-with-firebase.html via @ngnewsletter" target="_blank"><img src="/img/twitter-bird-blue-on-white.png" style="width: 56px; height: 26px;" />Share on twitter</a></li>
+            </ul>
+          </footer>
+
+        </article>
+
+        <section id="comments">
+            <h2 class="gamma">Comments</h2>
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ngnewsletter'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section>
+
+        
+
+        <script type="text/javascript" src="/js/vendor/zepto.js"></script>
+<script type="text/javascript" src="/js/vendor/foundation.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+        </div>
+    </div>
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28176211-3', 'ng-newsletter.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript">
+  var $mcGoal = {'settings':{'uuid':'86d6f14c7cc955128485e3b8e','dc':'us6'}};
+  (function() {
+     var sp = document.createElement('script'); sp.type = 'text/javascript'; sp.async = true; sp.defer = true;
+    sp.src = ('https:' == document.location.protocol ? 'https://s3.amazonaws.com/downloads.mailchimp.com' : 'http://downloads.mailchimp.com') + '/js/goal.min.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sp, s);
+  })(); 
+</script>
+
+</body>
+</html>

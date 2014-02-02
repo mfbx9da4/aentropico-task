@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+
+<title>Angular for the jQuery developer | ng-newsletter</title>
+
+<meta name="author" content="Ari Lerner">
+<meta name="description" content="In this week's post, we explore Angular from the perspective of a jQuery developer and highlight the differences of building an Angular app from the perspective of a jQuery developer. angularjs angularjs tutorial angular">
+<meta name="keywords" content="angularjs getting started with angularjs how to configure angularjs angular tutorial angularjs tutorial angularjs angularjs tutorial angular realtime firebase angularfire">
+
+<meta name="msvalidate.01" content="BE7DA3BEF0F11153F6E4B5585C12DB20" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ng-newsletter" />
+<meta property="og:url" content="http://ng-newsletter.com" />
+<meta property="og:image" content="http://ng-newsletter.com/img/" />
+<meta property="og:description" content="In this week's post, we explore Angular from the perspective of a jQuery developer and highlight the differences of building an Angular app from the perspective of a jQuery developer." />
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:creator" value="@auser" />
+<meta name="twitter:title" value="ng-newsletter" />
+<meta name="twitter:description" value="In this week's post, we explore Angular from the perspective of a jQuery developer and highlight the differences of building an Angular app from the perspective of a jQuery developer." />
+<meta name="twitter:image" value="http://ng-newsletter.com/img/" />
+
+<link rel="alternate" type="application/rss+xml" href="feed.rss" title="Sitewide RSS 2.0 Feed">
+<link rel="alternate" type="application/atom+xml" href="atom.xml" title="Sitewide ATOM Feed">
+<link rel="alternate" type="application/atom+json" href="atom.json" title="Sitewide JSON Feed">
+
+<link href="/favicon.ico" rel="icon" type="image/ico" />
+<link href="/css/site.css" media="screen" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Roboto:400italic,700italic,400,700|Open+Sans:r,i,b,bi|Bitter:r,i,b" media="screen" rel="stylesheet" type="text/css" />
+<script src="/js/vendor/custom.modernizr.js"></script>
+<script src="/js/vendor/d3.v3.min.js"></script>
+<script src="/js/vendor/angular/angular.min.js"></script>
+<script src="/js/vendor/angular-route/angular-route.min.js"></script>
+<script src="/js/vendor/angular-animate.min.js"></script>
+<script src="/js/vendor/angular-translate.min.js"></script>
+<script src="/js/vendor/angular-cookies/angular-cookies.min.js"></script>
+
+
+</head>
+<body ng-app="thinkApp">
+
+    
+    <div id="header">
+  <div id="topNav">
+    <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">ng-newsletter</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <ul class="right">
+      		<li><a href="/posts">Articles</a></li>
+          <li><a href="/advent2013/">25 days of Angular</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/sponsor">Sponsorship</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+  <div class="headerContent">
+  </div>
+</div>
+
+    <div class="container">
+      <div id="article">
+        <article class="post">
+          <header>
+            <h1 class="mega">Angular for the jQuery developer</h1>
+          </header>
+          
+          <p>One of the most commonly asked questions about learning AngularJS is how to <em>think</em> about it when coming from a jQuery background where manually manipulating the DOM tree is a requirement to adding interactivity to our web pages.</p>
+
+<p>jQuery itself is simply a DOM manipulation utility belt. It is an imperative wrapper around DOM manipulation, <strong>not</strong> a tool for building web apps. We obviously <em>can</em> use jQuery to build dynamic websites, but that&rsquo;s like using a hammer to cut through wood&hellip; Why not just buy a saw and do it right?</p>
+
+<blockquote>
+<p>This article is intended on illustrating how to think about Angular, not abandoning jQuery. jQuery, the <em>library</em> is a great tool with years of production maturity and can be used alongside Angular and we use it in our production applications as well.</p>
+</blockquote>
+
+<p>In this post, we&rsquo;ll walk through how to <em>think</em> in Angular and provide a mental model for structuring how to <em>think</em> about building better, faster, more stable web apps with AngularJS. </p>
+
+<p>Throughout this section, we&rsquo;re working through a jQuery application and demonstrating how to build it in Angular. </p>
+
+<h2>How we build web apps with jQuery</h2>
+<pre class="highlight javascript"><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#article&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#article_placeholder&quot;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s2">&quot;Angular for the jQuery developer&quot;</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</pre>
+<p>Historically, we as developers have been required to manually update DOM components to build a dynamic webpage. </p>
+
+<p>We first lay out the structure to our website and then design the components with CSS and add interactivity to the page. That is, we layer interactivity on top of our HTML as an afterthought in the build process and treat <em>interactivity</em> as a second-class citizen.</p>
+
+<h2>Why not jQuery for building webapps?</h2>
+
+<p>Throughout the source, we are binding actions to specific DOMs with specific DOM IDs. What if a team member determines that the name <code>#message</code> isn&rsquo;t specific enough, we change the DOM entirely to accompany a new design, or we are adding new functionality that includes an ID of <code>#name</code>?</p>
+
+<h3>Tight coupling</h3>
+
+<p>Our JavaScript is written to specifically correspond to our HTML. Such high cohesion often necessitates a lot more work on our part to keep our JavaScript in sync with our HTML. Whenever we change the DOM, we must be delicate and aware so that we don&rsquo;t change the functionality of our JavaScript. </p>
+
+<h3>Code disorganization</h3>
+
+<p>When using jQuery, there is no clearly encouraged organization for our web app functionality; it&rsquo;s up to us to determine how we&rsquo;ll organize it.</p>
+
+<h3>Low-level tools for high-level functionality</h3>
+
+<p>When we&rsquo;re building a web app with any level of complexity, we&rsquo;re forced to write our custom actions with low-level DOM manipulation tools rather than focusing on the functionality.</p>
+
+<p><strong>Angular</strong> takes a different approach to building web apps: It treats building interactivity as a native component to webapps and encourages working interactivity through development while we build our apps.</p>
+
+<p>The following 8 core ideas to keep in mind when we are building Angular apps are:</p>
+
+<h3>1) Declare the interactivity alongside the HTML</h3>
+
+<p>When we write Angular apps, we don&rsquo;t separate how we write our page and our interaction; instead, we define the functionality inside our HTML. If we want to run an action when we click a button, we attach the action to the button:</p>
+<pre class="highlight html"><span class="c">&lt;!-- Call the runAction() method --&gt;</span>
+<span class="nt">&lt;button</span> <span class="na">ng-click=</span><span class="s">&quot;runAction()&quot;</span><span class="nt">&gt;</span>Run action<span class="nt">&lt;/button&gt;</span>
+</pre>
+<p>Doing so allows us to be explicit and <strong>declarative</strong> with our DOM. Additionally, our DOM tells us explicitly what it will do in the browser.</p>
+
+<blockquote>
+<p>Imperative programming: telling the &ldquo;machine&rdquo; how to do something, and as a result what you want to happen will happen.
+Declarative programming: telling the &ldquo;machine&rdquo; what you would like to happen, and letting the computer figure out how to do it.</p>
+</blockquote>
+
+<h3>2) Leave the DOM alone</h3>
+
+<p>Angular very clearly lays out a strategy of building applications using the data to drive the functionality. Rather than building a page to manipulate, we interact with a data object (called <code>$scope</code>).</p>
+
+<p>When we want to change an element in our view, we change the data that is tied to it and let Angular take care of updating the DOM.</p>
+<pre class="highlight html"><span class="c">&lt;!-- Show the name in the browser --&gt;</span>
+<span class="nt">&lt;h1&gt;</span>Welcome {{ name }}<span class="nt">&lt;/h1&gt;</span>
+<span class="c">&lt;!-- Bind the input to the name --&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">ng-model=</span><span class="s">&quot;name&quot;</span> 
+      <span class="na">name=</span><span class="s">&quot;name&quot;</span> 
+      <span class="na">placeholder=</span><span class="s">&quot;Enter your name&quot;</span> <span class="nt">/&gt;</span>
+</pre>
+<div class="see_it">
+  <h4>See it</h4>
+  <h1>Welcome {{ name }}</h1>
+  <!-- Bind the input to the name -->
+  <input ng-model="name" 
+        name="name" 
+        placeholder="Enter your name" />
+</div>
+
+<p>At no point in this example have we needed to manipulate the DOM. This fact allows us to write HTML and design it at the same time.</p>
+
+<h3>3) Architecting the app</h3>
+
+<p>Writing an Angular app allows us to think in terms of building an application. We can focus on the functionality, from understanding how our app interacts with a server-side API and what actions happen when we click on a button to which routes our app supports.</p>
+
+<p>We need to think about how to divide the functionality of our app into small components that make it easy to extend and test our app.</p>
+
+<h3>4) Leave jQuery cold turkey</h3>
+
+<p>It&rsquo;s tempting to use jQuery as a crutch when we first start learning Angular. In our classes and books, we constantly recommend to not even import jQuery when first starting to build with Angular. </p>
+
+<p><strong>Everything that we do in jQuery, we can do with Angular, often with much less code.</strong></p>
+
+<p>We&rsquo;ll write more efficient, more extensible, more testable applications if we stick to using Angular and don&rsquo;t rely on tools we&rsquo;re used to as crutches. If you want to build a piece of functionality that is not included in Angular, someone in the community has likely built it.</p>
+
+<h3>5) The view is the state official record</h3>
+
+<p>Angular apps use the view as the container of interactivity and data. We use directives to attach functionality to the view, which, in turn, uses data bindings to create an explicit data-action chain inside the app. </p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">fs-modal</span> 
+      <span class="na">on-ok=</span><span class="s">&quot;proceedAsPlanned()&quot;</span>
+      <span class="na">on-cancel=</span><span class="s">&quot;abort()&quot;</span>
+      <span class="na">title=</span><span class="s">&quot;Are you sure?&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre>
+<p>The <code>fs-modal</code> directive used above very clearly demonstrates what the <code>&lt;div&gt;</code> element&rsquo;s responsibility is. The only way that we can change the view&rsquo;s responsibility is by changing the HTML, unlike the sticky situation we get into when we imperatively assign functionality to elements outside in a foreign document.</p>
+
+<h3>6) Models update the view, which updates the models</h3>
+
+<p>One of the most basic, coolest features of Angular is that we don&rsquo;t need to worry about the DOM beyond writing the HTML.</p>
+
+<p>Unlike jQuery, where we need to imperatively build elements and attach them, while maintaining the state or query the <code>document</code> at runtime, we can focus on building the functionality based on expected data.</p>
+
+<p>For instance, to show a loading indicator, we can set a boolean flag that shows or hides the element based upon a model value:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-show=</span><span class="s">&quot;isLoading&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;/images/loading.gif&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>Now, whenever we are loading new data, we can simply flip this &ldquo;switch&rdquo; on (by setting <code>isLoading</code> to true). When we are done loading data, we can flip it back to false, and the indicator will hide. </p>
+<pre class="highlight javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">loadNewData</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">isLoading</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="nx">$http</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/api/data.json'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">isLoading</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">reason</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">isLoading</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</pre>
+<div class="see_it">
+  <h4>See it</h4>
+  <small>This will change isLoading for two seconds, not actually load any real data</small>
+  <div ng-controller="LoadingCtrl">
+    <div ng-show="isLoading">
+      <img class="logo"
+            src="/images/thinking/loading.gif" />
+    </div>
+    <button ng-click="showLoadingData()">
+      Load new data
+    </button>
+  </div>
+</div>
+
+<p>If we update the model in our controllers, then the view will update. If we act upon and change the model in the view, then the model in our controllers will update and everything is kept in sync. </p>
+
+<p>The <em>magic</em> of Angular is that throughout this entire process, we don&rsquo;t need to even think about how &ndash; we can simply concern ourselves with the functionality we are building.</p>
+
+<h3>7) Dependencies, dependencies, dependencies - oh my!</h3>
+
+<p>Another task Angular handles seamlessly for us in the background is dependency injection: We simply tell Angular what we need to operate our app, and, as long as Angular can find it, Angular will handle loading it for us.</p>
+
+<h3>8) Test-driven development</h3>
+
+<p>One of the greatest components of Angular is that it was built, from the ground up, to be testable. When we write tests, we not only guarantee that our web app is working, but also that components we are using work as expected.</p>
+
+<p>Angular was built with test-driven development in mind, and thus, it is incredibly easy to write testable applications. </p>
+
+<p>We can write tests for all parts of our application &ndash; for the model layer, the service layer, the view layer, etc.</p>
+
+<p>We can test both from the perspective of the developer (and unit test each component) and from the perspective of our users (by end-to-end testing, wherein we load our app in a browser and tell the test framework to click on buttons and test that the view is showing what we expect).</p>
+
+<blockquote>
+<p>No more manually clicking buttons every time we make a minor change to <em>test</em> if a feature is working.</p>
+</blockquote>
+
+<h2>In summary</h2>
+
+<p>When we think in Angular terms, we think about:</p>
+
+<ul>
+<li>Views, not DOM elements</li>
+<li>Directives, not event bindings</li>
+<li>Models as a projection of view</li>
+<li>Functionality separation</li>
+</ul>
+
+<h2>The jQuery chat app</h2>
+
+<p>For instance, let&rsquo;s say we have a very basic chat application built in jQuery. The application is incredibly simple and has the following features:</p>
+
+<ul>
+<li>Allow users to input their username</li>
+<li>Allow users to input a message and send it to recipients of the chat window</li>
+<li>Show a list of users connected to our chat app</li>
+</ul>
+
+<p>The app that we&rsquo;ll be building has the following HTML structure (with styles removed for simplicity):</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;chatApp&quot;</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;message_placeholder&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;#&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span>
+            <span class="na">id=</span><span class="s">&quot;name&quot;</span>
+            <span class="na">placeholder=</span><span class="s">&quot;Your name&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span>
+            <span class="na">id=</span><span class="s">&quot;message&quot;</span>
+            <span class="na">placeholder=</span><span class="s">&quot;Your message...&quot;</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span>
+            <span class="na">class=</span><span class="s">&quot;button prefix&quot;</span>
+            <span class="na">value=</span><span class="s">&quot;Send&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/form&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>We have a form with several input fields and a div that will contain our list of messages.</p>
+
+<div class="see_it">
+  <h4>Live example in jQuery</h4>
+  <div id="chatApp" class="row">
+    <div class="row">
+      <div class="small-12 columns">
+        <div id="message_placeholder" class="messages_placeholder"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <form>
+          <div class="row collapse">
+            <div class="small-2 columns">
+              <input type="text"
+                  id="name"
+                  placeholder="Your name" />
+            </div>
+            <div class="small-8 columns">
+              <input type="text"
+                  id="message"
+                  placeholder="Your message..." />
+            </div>
+            <div class="small-2 columns">
+              <input type="submit"
+                  class="button prefix"
+                  value="Send" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>Building it in jQuery</h2>
+
+<p>To build this chat app in jQuery, we&rsquo;re going to need some important pieces of information. We need to know the IDs of the following input fields:</p>
+
+<ul>
+<li>The user&rsquo;s name input (#name)</li>
+<li>The message input (#message)</li>
+<li>The chat window (#message_placeholder)</li>
+</ul>
+
+<p>For these field, we&rsquo;ll attach an event listener to the <code>&lt;form&gt;</code> submit action where we&rsquo;ll handle attaching the messages to the chat window.</p>
+
+<p>Inside the chat window, we&rsquo;ll only keep a limited number of messages in the history, so we&rsquo;ll need to make sure we remove <em>old</em> messages. </p>
+
+<p>Lastly, we&rsquo;ll only be able to run this entire process after the document is ready to go, so we&rsquo;ll need to wrap it in a <code>$(document).ready(function() {})</code>. </p>
+
+<p>Since this is not a jQuery tutorial, this source is:</p>
+<pre class="highlight javascript"><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">maxMessages</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+      <span class="nx">messageBox</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#message_placeholder&quot;</span><span class="p">);</span>
+
+  <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#chatApp form&quot;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">'submit'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">from</span>  <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#name&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">||</span> <span class="s2">&quot;Anonymous&quot;</span><span class="p">,</span>
+        <span class="nx">msg</span>   <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#message&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
+
+    <span class="kd">var</span> <span class="nx">msg</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;&lt;div /&gt;&quot;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">from</span><span class="o">+</span><span class="s2">&quot;: &quot;</span><span class="o">+</span><span class="nx">msg</span><span class="p">);</span>
+    <span class="nx">messageBox</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">msg</span><span class="p">);</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#message&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">messageBox</span><span class="p">.</span><span class="nx">children</span><span class="p">().</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="nx">maxMessages</span><span class="p">)</span>
+      <span class="nx">messageBox</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">).</span><span class="nx">first</span><span class="p">().</span><span class="nx">remove</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</pre>
+<h2>Building it with Angular</h2>
+
+<p>When we build this same chat program in Angular, we don&rsquo;t need to bother with knowing the selectors for the elements that we&rsquo;re attaching interactivity to, because we&rsquo;ll write our DOM <em>to include</em> the interactivity.</p>
+
+<p>Like all Angular apps, we&rsquo;ll start by defining our app in the page. Angular apps do not have to take over the entire page; rather, they can be placed in specific elements by using the <code>ng-app</code> directive. We&rsquo;ll also want to contain our functionality inside of a controller so we don&rsquo;t <em>dirty</em> the global scope:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-app=</span><span class="s">&quot;ngChatApp&quot;</span> <span class="na">ng-controller=</span><span class="s">&quot;ChatCtrl&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<blockquote>
+<p>A <strong>directive</strong> is simply a fancy term for a <strong>function that is run on a specific DOM element</strong>. It allows us to attach functionality to HTML elements.</p>
+</blockquote>
+
+<p>Next, we&rsquo;ll create the JavaScript that we&rsquo;ll use to write our functionality:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'ngChatApp'</span><span class="p">,</span> <span class="p">[])</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'ChatCtrl'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Write our controller here
+</span><span class="p">});</span>
+</pre>
+<h3>It&rsquo;s about the data, not the DOM</h3>
+
+<p>We only need to think about what data we want to place in our HTML and where, not worry about how it gets there. With that in mind, we&rsquo;ll be keeping track of <code>messages</code> to display, not DOM elements to create.</p>
+
+<p>In our view, we can simply iterate over our messages and allow the DOM to display as it naturally will when the messages model is filled with data:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;message_placeholder&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">ng-repeat=</span><span class="s">&quot;message in messages&quot;</span><span class="nt">&gt;</span>
+    {{ message.from }}: {{ message.msg }}
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>Similarly, we can bind model values to our input fields and allow the model to be built in the background so that we can use it within our controller action. We can also bind actions, such as form submission, to the HTML. </p>
+<pre class="highlight html"><span class="nt">&lt;form</span> <span class="na">ng-submit=</span><span class="s">&quot;addMessage()&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span>
+        <span class="na">ng-model=</span><span class="s">&quot;username&quot;</span>
+        <span class="na">placeholder=</span><span class="s">&quot;Your name&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span>
+        <span class="na">ng-model=</span><span class="s">&quot;message&quot;</span>
+        <span class="na">placeholder=</span><span class="s">&quot;Your message&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span>
+        <span class="na">value=</span><span class="s">&quot;Send&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</pre>
+<p>When the form is submitted, the <code>addMessage()</code> function will be called, and we&rsquo;ll have the values of <code>username</code> and <code>message</code> available to us&hellip; but where can we get them?</p>
+
+<h2>$scope</h2>
+
+<p>The <code>$scope</code> is the glue between the view and the controller. Anything that we <em>bind</em> in the view will become available on the <code>$scope</code> of the controller and vice versa. Thus, we can simply manipulate the <code>messages</code> array on our scope, and the view will updates.</p>
+
+<p>The <code>addMessage()</code> function looks like this:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'ngChatApp'</span><span class="p">,</span> <span class="p">[])</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'ChatCtrl'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">maxMessages</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">messages</span> <span class="o">=</span> <span class="p">[];</span>
+
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">addMessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+      <span class="na">from</span><span class="p">:</span> <span class="nx">$scope</span><span class="p">.</span><span class="nx">username</span><span class="p">,</span>
+      <span class="na">msg</span><span class="p">:</span> <span class="nx">$scope</span><span class="p">.</span><span class="nx">message</span>
+    <span class="p">});</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="nx">maxMessages</span><span class="p">)</span> 
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>Yep, that&rsquo;s it! Angular will take care of loading the data model into the DOM and rendering the view. </p>
+
+<div class="see_it">
+  <h4>Live example in Angular</h4>
+  <div id="ngChatApp" class="row" ng-controller="ChatCtrl">
+    <div class="row">
+      <div class="small-12 columns">
+        <div class="messages_placeholder">
+          <div ng-repeat="message in messages">
+            {{ message.from }}: {{ message.msg }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <form ng-submit="addMessage()">
+          <div class="row collapse">
+            <div class="small-2 columns">
+              <input type="text"
+                  id="name"
+                  ng-model="username"
+                  placeholder="Your name" />
+            </div>
+            <div class="small-8 columns">
+              <input type="text"
+                  ng-model="message"
+                  placeholder="Your message..."/>
+            </div>
+            <div class="small-2 columns">
+              <input type="submit"
+                  class="button prefix"
+                  value="Send" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>We hope this article helps to clear up some confusion about how to start working with Angular if you come from a jQuery background.</p>
+
+<p>For more information about Angular, check out the rest of our <a href="/posts">posts</a> or check out our book on Angular, <a href="http://www.ng-book.com">ng-book: The Complete Book on AngularJS</a>.</p>
+
+<p>Cheers!</p>
+
+<script src="/js/vendor/jquery.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var maxMessages = 5,
+        messageBox = $("#message_placeholder");
+
+    $("#chatApp form").on('submit', function(evt) {
+      var from  = $("#name").val() || "Anonymous",
+          msg   = $("#message").val()
+
+      var msg = $("<div />").text(from+": "+msg);
+      messageBox.append(msg);
+      $("#message").val("");
+
+      if (messageBox.children().length > maxMessages)
+        messageBox.children("div").first().remove();
+
+      return false;
+    });
+  });
+</script>
+
+<script>
+  // angular.module('ngChatApp', ['ng'])
+
+  // angular.bootstrap(
+  //   document.querySelector('#ngChatApp'),
+  //   ['ng', 'ngChatApp']
+  // )
+  angular.module('thinkApp', [])
+  .controller('LoadingCtrl', function($scope, $timeout) {
+    $scope.isLoading = false;
+    var loadingTimer;
+
+    $scope.showLoadingData = function() {
+      if (loadingTimer)
+        $timeout.cancel(loadingTimer);
+
+      $scope.isLoading = true;
+
+      loadingTimer = $timeout(function() {
+        $scope.$apply(function() {
+          $scope.isLoading = false;
+        });
+      }, 2000);
+    }
+  })
+  .controller('ChatCtrl', function($scope) {
+    var maxMessages = 5;
+    $scope.messages = [];
+    $scope.addMessage = function() {
+      $scope.messages.push({
+        from: $scope.username,
+        msg: $scope.message
+      });
+
+      if ($scope.messages.length > maxMessages) 
+        $scope.messages.splice(0,1);
+
+      $scope.message = "";
+    }
+  })
+</script>
+
+<style>
+  .messages_placeholder {
+    height: 150px;
+    border: 1px solid #eee;
+    overflow: auto;
+    padding: 10px;
+  }
+  input {
+    padding: 5px;
+  }
+  #article img.logo {
+    padding: 0;
+    width: 31px !important;
+    height: 31px !important;
+  }
+  .see_it {
+    border: 1px solid #eee;
+    margin: 20px 0;
+    padding: 10px;
+  }
+</style>
+
+
+          <div class="container" id="signupApp" ng-cloak>
+  <div id="topbar_signup_embed">
+  Get the weekly email all focused on AngularJS. <b>Sign up below</b> to receive the weekly email and exclusive content.
+  <form name="ngSignup" action="http://willcodeforfoo.us6.list-manage1.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=fa61364f13" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    
+    <div class="row collapse">
+      <div class="small-9 columns">
+        <input ng-class="{error: ngSignup.email.$dirty && ngSignup.email.$invalid}" type="email" ng-minlength=3 ng-model="ngSignup.email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address" required>
+      </div>
+      <div class="small-3 columns">
+        <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" ng-disabled="ngSignup.$invalid" class="button postfix"></div>
+      </div>
+        <div class="small-12 columns error" ng-show="ngSignup.EMAIL.$dirty && ngSignup.EMAIL.$invalid">
+          <small class="error" ng-show="ngSignup.EMAIL.$error.required">Your email is required.</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.minlength">Your email is required to be at least 3 characters</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.email">That is not a valid email. Please input a valid email.</small>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  if (typeof(app) == 'undefined') {
+    angular.module("signupApp", [])
+    .controller("mailChimpValidation", ['$scope', function($scope) {}]);
+    var ele = document.getElementById("signupApp");
+    angular.element(ele, ['signupApp']);
+  }
+</script>
+          <section id="sample_chapter" ng-app="ngBookApp">    <div class="content">      <h3 class="title">Download a free sample of the ng-book: The Complete Book on AngularJS</h3> <span class="image"><img src="http://www.ng-book.com/images/flatbook-ngbook-small.png" alt="book"></span><div class="desc">It's free, so just enter your email address and the PDF will be sent directly to your inbox.</div>    </div>    <div class="form" ng-init="signedup=false" ng-show="!signuped">      <form action="http://willcodeforfoo.us6.list-manage.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=7bbfaae868" method="post" id="mc-embedded-subscribe-form" name="ngBookSignup" class="validate ng-pristine ng-invalid ng-invalid-required" target="_blank" novalidate="">
+<div class="mc-field-group">          <input type="email" ng-model="ngBookSignup.email" ng-class="{error: ngBookSignup.email.$dirty &amp;&amp; ngBookSignup.email.$invalid}" value="" name="EMAIL" placeholder="Your email address" class="required email ng-pristine ng-valid ng-valid-email ng-valid-minlength" id="mce-EMAIL" ng-minlength="3">        </div>        <div id="mce-responses" class="clear">          <div class="response" id="mce-error-response" style="display:none"></div>          <div class="response" id="mce-success-response" style="display:none"></div>        </div>        <div class="clear"><input type="submit" value="Send me a free chapter" name="subscribe" id="ngBookSignupSubmit" ng-disabled="ngBookSignup.$invalid" class="button postfix" ng-click="signedup=true" disabled="disabled"></div>      </form>      <div ng-show="signedup" class="ng-hide">      <p>Sweet! We are glad to hear you're interested in learning AngularJS. Enjoy the free chapter. We put a lot of work into building the book series, so we hope you like it!      Talk soon</p>      </div>      <div class="desc">        We won't ever send you spam! You can unsubscribe at any time.      </div>    </div>  </section>
+
+          <footer>
+            <ul class="actions">
+              <li><a href="/articles"><span class="arrow">←</span> Back to articles</a></li>
+              <li><a href="http://twitter.com/home/?status=Angular for the jQuery developer - http://ng-newsletter.com/posts/angular-for-the-jquery-developer.html via @ngnewsletter" target="_blank"><img src="/img/twitter-bird-blue-on-white.png" style="width: 56px; height: 26px;" />Share on twitter</a></li>
+            </ul>
+          </footer>
+
+        </article>
+
+        <section id="comments">
+            <h2 class="gamma">Comments</h2>
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ngnewsletter'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section>
+
+        
+
+        <script type="text/javascript" src="/js/vendor/zepto.js"></script>
+<script type="text/javascript" src="/js/vendor/foundation.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+        </div>
+    </div>
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28176211-3', 'ng-newsletter.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript">
+  var $mcGoal = {'settings':{'uuid':'86d6f14c7cc955128485e3b8e','dc':'us6'}};
+  (function() {
+     var sp = document.createElement('script'); sp.type = 'text/javascript'; sp.async = true; sp.defer = true;
+    sp.src = ('https:' == document.location.protocol ? 'https://s3.amazonaws.com/downloads.mailchimp.com' : 'http://downloads.mailchimp.com') + '/js/goal.min.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sp, s);
+  })(); 
+</script>
+
+</body>
+</html>
