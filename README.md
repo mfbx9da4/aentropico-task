@@ -8,7 +8,6 @@
 - Sort out stats/genetics module
 - Sort out uploading to amazon
 - Post form with url input
-- bootstrap docs (form)!
 - all docs from juan
 - passport for email and pwd
 - udacity algorithms docs
@@ -67,10 +66,13 @@ Feel free to improve or simplify whatever you want.
 
 Here are some resources for you.
 Angular:
-[http://www.ng-newsletter.com/posts/beginner2expert-how_to_start.html](http://www.ng-newsletter.com/posts/beginner2expert-how_to_start.html)
+
+- [http://www.ng-newsletter.com/posts/beginner2expert-how_to_start.html](http://www.ng-newsletter.com/posts/beginner2expert-how_to_start.html)
+
 Node.js
-[http://www.hacksparrow.com/express-js-tutorial.html](http://www.hacksparrow.com/express-js-tutorial.html)
-[http://javascriptissexy.com/learn-node-js-completely-and-with-confidence/](http://javascriptissexy.com/learn-node-js-completely-and-with-confidence/)
+
+- [http://www.hacksparrow.com/express-js-tutorial.html](http://www.hacksparrow.com/express-js-tutorial.html)
+- [http://javascriptissexy.com/learn-node-js-completely-and-with-confidence/](http://javascriptissexy.com/learn-node-js-completely-and-with-confidence/)
 
 We suggest you to use MongoDB as your database, maintain the code using Github.com and make the deployment using Heroku.
 

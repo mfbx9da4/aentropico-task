@@ -18,7 +18,7 @@
 <style>
 
 body {
-  font: 10px sans-serif;
+  font: sans-serif;
 }
 
 .axis path,
@@ -57,12 +57,20 @@ body {
     </div>
 <div class="row">
   <div class="col-md-3 col-md-offset-3 col-lg-3 col-lg-offset-3">
+  <!-- Form Name -->
+  <legend>Upload CSV</legend>
+  <form class="form-horizontal">
+
+
+
     <form method="POST" action="/algorithms" role="form">
       <div class="form-group">
-        <input type="text" placeholder="CSV URL" class="form-control" value="http:localhost:8000/data.csv">
+        <label for="uploadByURL">Upload by URL</label>
+        <input type="text" placeholder="CSV URL" id="uploadByURL" class="form-control" value="http:localhost:8000/data.csv">
       </div>
       <div class="form-group">
-        <input type="file" placeholder="CSV file" class="form-control">
+        <label for="uploadByFile">Upload by file</label>
+        <input type="file" id="uploadByFile" placeholder="CSV file" >
       </div>
       <button type="submit" class="btn btn-success">Upload</button>
     </form>
