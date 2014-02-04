@@ -17,11 +17,13 @@ exports.get_job = function(db) {
         console.log(req.params.id);
         var collection = db.get('csvcollection');
         collection.find({
-            _id: Number(req.params.id)
+            _id: req.params.id
         }, {}, function(e, docs) {
+            console.log(docs);
+            var doc = docs[0];
             res.send(200, {
-                'id': docs._id,
-                'data': docs.data
+                'id': doc._id,
+                'data': doc.data
             });
         });
     };
@@ -50,7 +52,6 @@ exports.post_algorithm = function(db, fs) {
 
         function add_to_db(next) {
             var collection = db.get('csvcollection');
-            console.log(file_data);
             collection.insert({
                 data: file_data
             }, next);

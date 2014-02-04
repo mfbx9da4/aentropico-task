@@ -1,23 +1,24 @@
-var AentropicApp = angular.module('AentropicApp', ['angularFileUpload']);
+var AentropicApp = angular.module('AentropicApp', ['angularFileUpload', 'ngRoute']);
 
-// AentropicApp.config(function($routeProvider) {
-//     $routeProvider
-//         .when('/upload', {
-//             templateUrl: '../html/upload.html',
-//             controller: 'uploadController'
-//         })
-//         .when('/about', {
-//             templateUrl: '../html/about.html',
-//             controller: 'aboutController'
-//         })
-//         .otherwise({
-//             redirectTo: '/upload'
-//         });
-// });
+AentropicApp.config(function($routeProvider) {
+    $routeProvider
+        .when('/upload', {
+            templateUrl: '../html/upload.html',
+            controller: 'uploadController'
+        })
+        .when('/about', {
+            templateUrl: '../README.html',
+            controller: 'aboutController'
+        })
+        .otherwise({
+            redirectTo: '/upload'
+        });
+});
 
-AentropicApp.controller('uploadController', ['$scope', '$http', '$upload',
-    function($scope, $http, $upload) {
+AentropicApp.controller('uploadController', ['$scope', '$http', '$upload', '$location',
+    function($scope, $http, $upload, $location) {
         $scope.formData = {};
+        $('input[type=file]').focus();
 
         $scope.onFileSelect = function($files) {
             //$files: an array of files selected, each file has name, size, and type.
@@ -35,10 +36,11 @@ AentropicApp.controller('uploadController', ['$scope', '$http', '$upload',
                 if (!response.data.success) {
                     throw response.data.message;
                 }
-                $http.get('/jobs/' + response.data.job_id)
+                // $location.path('/jobs/' + response.data.job_id);
+                $http.get('/jobs/' + response.data.jobId)
                     .success(function(res) {
                         console.log(res);
-                        graph(dataset_text);
+                        graph(res.data);
                     });
             }, null, function(evt) {
                 $percentComplete.width(parseInt(100.0 * evt.loaded / evt.total) + '%');
@@ -81,7 +83,7 @@ function graph(dataset_text) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        d3.csv.parseRows(dataset_text, function(error, data) {
+        var data = d3.csv.parse(dataset_text);
             x.domain(d3.extent(data, function(d) { return parseInt(d.x); }));
             y.domain(d3.extent(data, function(d) { return parseInt(d.y); }));
 
@@ -100,12 +102,9 @@ function graph(dataset_text) {
             .datum(data)
             .attr("class", "line")
             .attr("d", line);
-        });
 }
 
 AentropicApp.controller('aboutController', ['$scope',
-    function($scope) {
-    }
+    function($scope) {}
 ]);
-
 

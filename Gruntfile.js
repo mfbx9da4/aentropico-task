@@ -14,6 +14,7 @@ module.exports = function(grunt) {
                     "libs/d3.v3.min.js",
                     "libs/angular-file-upload-shim.js",
                     "libs/angular.min.js",
+                    "libs/angular-route.min.js",
                     "libs/angular-file-upload.js",
                     "style/js/bootstrap.min.js"
                 ],
