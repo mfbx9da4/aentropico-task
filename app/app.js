@@ -1,17 +1,27 @@
-var AentropicApp = angular.module('AentropicApp', [
-    'angularFileUpload',
-    'ngRoute'
-]);
+var AentropicApp = angular.module('AentropicApp', ['angularFileUpload']);
 
-var controllers = {};
+// AentropicApp.config(function($routeProvider) {
+//     $routeProvider
+//         .when('/upload', {
+//             templateUrl: '../html/upload.html',
+//             controller: 'uploadController'
+//         })
+//         .when('/about', {
+//             templateUrl: '../html/about.html',
+//             controller: 'aboutController'
+//         })
+//         .otherwise({
+//             redirectTo: '/upload'
+//         });
+// });
 
-controllers.uploadController = ['$scope', '$http', '$upload',
+AentropicApp.controller('uploadController', ['$scope', '$http', '$upload',
     function($scope, $http, $upload) {
         $scope.formData = {};
 
         $scope.onFileSelect = function($files) {
             //$files: an array of files selected, each file has name, size, and type.
-            % percentComplete = $('#percent-complete');
+            var percentComplete = $('#percent-complete');
             $percentComplete.width('0%');
             var file = $files[0];
             $scope.upload = $upload.upload({
@@ -28,53 +38,11 @@ controllers.uploadController = ['$scope', '$http', '$upload',
             });
         };
     }
-];
+]);
 
-// var aboutController = ['$scope', '$http',
-//     function($scope) {$scope}
-// ];
-
-// scotchApp.config(function($routeProvider) {
-//     $routeProvider
-
-//     // route for the home page
-//     .when('/', {
-//         templateUrl: 'html/upload.html',
-//         controller: 'uploadController'
-//     })
-
-//     // route for the about page
-//     .when('/about', {
-//         templateUrl: 'html/about.html',
-//         controller: 'aboutController'
-//     })
-//         .otherwise({
-//             redirectTo: '/'
-//         });
-// });
+AentropicApp.controller('aboutController', ['$scope', '$http',
+    function($scope) {
+    }
+]);
 
 
-
-AentropicApp.controller(controllers);
-
-// AentropicApp.config(function ($routeProvider) {
-//  $routeProvider
-//      .when('/', 
-//          {
-//              controller: 'uploadController',
-//              templateUrl: 'html/upload.html'
-//          })
-//      .when('/about', 
-//          {
-//              controller: 'uploadController',
-//              templateUrl: 'README.html'
-//          })
-//      .otherwise({redirectTo: '/'});
-// });
-
-
-// var MyCtrl = ['$scope', '$upload',
-//     function($scope, $upload) {
-
-//     }
-// ];

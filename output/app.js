@@ -1,17 +1,31 @@
 var AentropicApp = angular.module('AentropicApp', ['angularFileUpload']);
 
-var controllers = {};
+// AentropicApp.config(function($routeProvider) {
+//     $routeProvider
+//         .when('/upload', {
+//             templateUrl: '../html/upload.html',
+//             controller: 'uploadController'
+//         })
+//         .when('/about', {
+//             templateUrl: '../html/about.html',
+//             controller: 'aboutController'
+//         })
+//         .otherwise({
+//             redirectTo: '/upload'
+//         });
+// });
 
-controllers.uploadController = ['$scope', '$http', '$upload',
+AentropicApp.controller('uploadController', ['$scope', '$http', '$upload',
     function($scope, $http, $upload) {
         $scope.formData = {};
 
         $scope.onFileSelect = function($files) {
             //$files: an array of files selected, each file has name, size, and type.
-            $('#percent-complete').width('0%');
+            var percentComplete = $('#percent-complete');
+            $percentComplete.width('0%');
             var file = $files[0];
             $scope.upload = $upload.upload({
-                url: '/algorithms', 
+                url: '/algorithms',
                 method: 'POST',
                 data: {
                     myObj: $scope.formData.url
@@ -20,34 +34,15 @@ controllers.uploadController = ['$scope', '$http', '$upload',
             }).then(function(response) {
                 console.log(response.data);
             }, null, function(evt) {
-                $('#percent-complete').width(parseInt(100.0 * evt.loaded / evt.total) + '%');
+                $percentComplete.width(parseInt(100.0 * evt.loaded / evt.total) + '%');
             });
         };
     }
-];
+]);
+
+AentropicApp.controller('aboutController', ['$scope', '$http',
+    function($scope) {
+    }
+]);
 
 
-
-AentropicApp.controller(controllers);
-
-// AentropicApp.config(function ($routeProvider) {
-//  $routeProvider
-//      .when('/', 
-//          {
-//              controller: 'uploadController',
-//              templateUrl: 'html/upload.html'
-//          })
-//      .when('/about', 
-//          {
-//              controller: 'uploadController',
-//              templateUrl: 'README.html'
-//          })
-//      .otherwise({redirectTo: '/'});
-// });
-
-
-// var MyCtrl = ['$scope', '$upload',
-//     function($scope, $upload) {
-
-//     }
-// ];
