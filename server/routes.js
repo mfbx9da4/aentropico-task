@@ -12,14 +12,16 @@ exports.get_job = function(db) {
         },
         "status": ""
     };
-
     return function(req, res) {
-        var collection = db.get('algorithmcollection');
+
+        console.log(req.params.id);
+        var collection = db.get('csvcollection');
         collection.find({
             _id: Number(req.params.id)
         }, {}, function(e, docs) {
             res.send(200, {
-                'id': docs._id
+                'id': docs._id,
+                'data': docs.data
             });
         });
     };
