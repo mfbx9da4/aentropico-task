@@ -27,7 +27,6 @@ exports.get_job = function(db) {
 
 exports.post_algorithm = function(db, fs) {
     return function(req, res) {
-        var data = {}; // for the response
 
         // get the temporary location of the file
         var tmp_path = req.files.file.path;
