@@ -21,7 +21,7 @@ AentropicApp.controller('uploadController', ['$scope', '$http', '$upload',
 
         $scope.onFileSelect = function($files) {
             //$files: an array of files selected, each file has name, size, and type.
-            var percentComplete = $('#percent-complete');
+            var $percentComplete = $('#percent-complete');
             $percentComplete.width('0%');
             var file = $files[0];
             $scope.upload = $upload.upload({
@@ -40,7 +40,7 @@ AentropicApp.controller('uploadController', ['$scope', '$http', '$upload',
     }
 ]);
 
-AentropicApp.controller('aboutController', ['$scope', '$http',
+AentropicApp.controller('aboutController', ['$scope',
     function($scope) {
     }
 ]);
