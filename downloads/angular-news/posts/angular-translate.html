@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+
+<title>Easy global i18n angularJS language translations for your Angular app | ng-newsletter</title>
+
+<meta name="author" content="Ari Lerner">
+<meta name="description" content=" angularjs angularjs tutorial angular">
+<meta name="keywords" content="angularjs quickstart angularjs translations i18n angularjs angularjs global globalization localization i18n angular i18n angularjs angularjs translate translate angularjs apps localize angular local angularjs angular translate angular tutorial angularjs tutorial angularjs angularjs tutorial angular realtime firebase angularfire">
+
+<meta name="msvalidate.01" content="BE7DA3BEF0F11153F6E4B5585C12DB20" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ng-newsletter" />
+<meta property="og:url" content="http://ng-newsletter.com" />
+<meta property="og:image" content="http://ng-newsletter.com/img/" />
+<meta property="og:description" content="" />
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:creator" value="@auser" />
+<meta name="twitter:title" value="ng-newsletter" />
+<meta name="twitter:description" value="" />
+<meta name="twitter:image" value="http://ng-newsletter.com/img/" />
+
+<link rel="alternate" type="application/rss+xml" href="feed.rss" title="Sitewide RSS 2.0 Feed">
+<link rel="alternate" type="application/atom+xml" href="atom.xml" title="Sitewide ATOM Feed">
+<link rel="alternate" type="application/atom+json" href="atom.json" title="Sitewide JSON Feed">
+
+<link href="/favicon.ico" rel="icon" type="image/ico" />
+<link href="/css/site.css" media="screen" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Roboto:400italic,700italic,400,700|Open+Sans:r,i,b,bi|Bitter:r,i,b" media="screen" rel="stylesheet" type="text/css" />
+<script src="/js/vendor/custom.modernizr.js"></script>
+<script src="/js/vendor/d3.v3.min.js"></script>
+<script src="/js/vendor/angular/angular.min.js"></script>
+<script src="/js/vendor/angular-route/angular-route.min.js"></script>
+<script src="/js/vendor/angular-animate.min.js"></script>
+<script src="/js/vendor/angular-translate.min.js"></script>
+<script src="/js/vendor/angular-cookies/angular-cookies.min.js"></script>
+
+
+</head>
+<body ng-app="angularTranslateApp">
+
+    
+    <div id="header">
+  <div id="topNav">
+    <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">ng-newsletter</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <ul class="right">
+      		<li><a href="/posts">Articles</a></li>
+          <li><a href="/advent2013/">25 days of Angular</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/sponsor">Sponsorship</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+  <div class="headerContent">
+  </div>
+</div>
+
+    <div class="container">
+      <div id="article">
+        <article class="post">
+          <header>
+            <h1 class="mega">Easy global i18n angularJS language translations for your Angular app</h1>
+          </header>
+          
+          <p>As worldwide access to the web increases, we as developers are constantly pressed to make our apps internationally and locally accessible. When a user visits our apps, he or she should be able to switch languages on the fly at runtime.</p>
+
+<p>Given that we are building AngularJS client-side apps, we don&rsquo;t particularly want the user to have to refresh the page or visit an entirely different URL. Of course, AngularJS could easily accommodate your international audience natively, perhaps by generating different templates for different languages and serving those within the app.</p>
+
+<p>This process can become cumbersome, and what happens when you want to change the layout of the app? Every single template needs to be rebuilt and redeployed. This process should just be <em>easy</em>.</p>
+
+<p>Instead of creating new templates, we&rsquo;ll use <strong>angular-translate</strong>, an AngularJS module that brings i18n (internationalization) to your Angular app. <strong>angularjs-translate</strong> requires us to create a JSON file that represents translation data per language. It lazy-loads the language-specific translation data from the server only when necessary.</p>
+
+<p>The library <code>angular-translate</code> comes with built-in directives and filters that make the process of internationalizing apps simple. Let&rsquo;s get started.</p>
+
+<h2>Installation</h2>
+
+<p>To use <strong>angular-translate</strong>, we need to load the angular-translate library. We can install it in several different ways, but we prefer using Bower. </p>
+
+<p>Bower is a front-end package manager. It handles not only JavaScript libraries, but also HTML, CSS, and image packages. A package is simply encapsulated, third-party code that is typically publicly accessible in a repository. </p>
+
+<ul>
+<li>Using Bower</li>
+</ul>
+
+<p>We install angular-translate using the normal Bower process:</p>
+<pre class="highlight shell"><span class="gp">$ </span>bower install angular-translate
+</pre>
+<blockquote>
+<p>Alternatively, we can download the minified version of angular-translate from github.</p>
+</blockquote>
+
+<p>Once we&rsquo;ve installed the latest stable version of angular-translate, we can simply embed it in our HTML document. Just make sure it&rsquo;s embedded after Angular itself, as it depends on the core <code>angular</code> library.</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;path/to/angular.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;path/to/angular-translate.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>Last but not least, our app has to declare angular-translate as a load dependency:</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'pascalprecht.translate'</span><span class="p">]);</span>
+</pre>
+<p>Great, we&rsquo;re now ready to use angular-translate&rsquo;s components to translate our app!</p>
+
+<h2>See it</h2>
+
+<div ng-controller="DemoController">
+<div class="row box">
+  <h3>Current language: {{ currentLanguage }}</h3>
+    <ul class="inline-list">
+      <li>Change language: </li>
+      <li ng-repeat="(lang, name) in availableLanguages">
+        <a ng-click="setLang(lang)">{{ name }}</a>
+      </li>
+    </ul>
+
+    <h2 translate="MESSAGE">Message</h2>
+</div>
+
+<p></div></p>
+
+<h2>Teaching your app a new language</h2>
+
+<p>Now our app depends upon angular-translate as installed, and our app declares it as a dependency, so we can use it to translate our app&rsquo;s contents. </p>
+
+<p>First, we need to provide translation material for our app to actually <em>speak</em> a new language. This step actually entails configuring the <code>$translate</code> service through our fresh <code>$translateProvider</code> service. </p>
+
+<p>Training our app to use a new language is simple. Using the <code>config</code> function on our app, we provide the different language translations for our app, i.e. English, German, Hebrew, etc.. First, we inject our <code>$translateProvider</code> in the config function, like so:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'angularTranslateApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'pascalprecht.translate'</span><span class="p">])</span>
+  <span class="p">.</span><span class="nx">config</span><span class="p">([</span><span class="s1">'$translateProvider'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$translateProvider</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Our translations will go in here
+</span><span class="p">}]);</span>
+</pre>
+<p>To add a language, we have to make $translateProvider aware of a <strong>translation table</strong>, which is a JSON object containing our messages (keys) that are to be translated into (values). Using a <strong>translation table</strong> enables us to write our translations as simple JSON for loading remotely or setting at compile-time, such as:</p>
+<pre class="highlight javascript"><span class="p">{</span>
+  <span class="s1">'MESSAGE'</span><span class="err">:</span> <span class="s1">'Hello world'</span><span class="p">,</span>
+<span class="p">}</span>
+</pre>
+<p>In a translation table, the key represents a translation id, whereas the value 
+represents the concrete translation for a certain language. Now add a translation 
+table to your app. <code>$translateProvider</code> provides a method called <code>translations()</code>,
+which takes care of that.</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span> <span class="p">[</span><span class="s1">'$translateProvider'</span><span class="p">,</span> <span class="p">(</span><span class="nx">$translateProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$translateProvider</span><span class="p">.</span><span class="nx">translations</span><span class="p">({</span>
+    <span class="na">HEADLINE</span><span class="p">:</span> <span class="s1">'Hello there, This is my awesome app!'</span><span class="p">,</span>
+    <span class="na">INTRO_TEXT</span><span class="p">:</span> <span class="s1">'And it has i18n support!'</span>
+  <span class="p">});</span>
+<span class="p">}]);</span>
+</pre>
+<p>With this translation table in place, our app is set to use angular-translate. Since we&rsquo;re adding the translation table at configuration time, angular-translate&rsquo;s components are able to access it as soon as they are instantiated.</p>
+
+<p>Let&rsquo;s switch over to our app template. Adding translations in the view layer is as simple as binding our <em>key</em> to the view. Using the <code>translate</code> filter, we don&rsquo;t even have to engage our controller or services or worry about the view layer: We&rsquo;re able to decouple the translate logic from any controller or service and make our view replaceable without touching business logic code.</p>
+
+<p>Basically, the <code>translate</code> filter works like so:</p>
+<pre class="highlight html"><span class="nt">&lt;h2&gt;</span>{{ 'TRANSLATION_ID' | translate }}<span class="nt">&lt;/h2&gt;</span>
+</pre>
+<p>To update our example app, we make use of the <code>translate</code> filter:</p>
+<pre class="highlight html"><span class="nt">&lt;h2&gt;</span>{{ 'HEADLINE' | translate }}<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;p&gt;</span>{{ 'INTRO_TEXT' | translate }}<span class="nt">&lt;/p&gt;</span>
+</pre>
+<p>Great! We&rsquo;re now able to translate our content within the view layer without polluting your controllers logic with translation logic; however, we could achieve the same result without using angular-translate at all, since our app only knows about one language.</p>
+
+<p>Let&rsquo;s see angular-translate&rsquo;s real power and learn how to teach our app more than one language.</p>
+
+<h2>Multi-language support</h2>
+
+<p>You&rsquo;ve already learned how to add a translation table to your app using <code>$translateProvider.translations()</code>. </p>
+
+<p>The <code>$translateProvider</code> knows one language, as we set it with the <code>$translateProvider.translations()</code> method. Now, we can add an additional language in the same way by providing a second <strong>translation table</strong>.</p>
+
+<p>When we set our first translation table, we can provide it a key (a language key) that specifies the language we&rsquo;re translating. We can simply add another translation key with another language key.</p>
+
+<p>Let&rsquo;s update our app to include a second language:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span> <span class="p">[</span><span class="s1">'$translateProvider'</span><span class="p">,</span> <span class="p">(</span><span class="nx">$translateProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$translateProvider</span><span class="p">.</span><span class="nx">translations</span><span class="p">(</span><span class="s1">'en_US'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">HEADLINE</span><span class="p">:</span> <span class="s1">'Hello there, This is my awesome app!'</span><span class="p">,</span>
+    <span class="na">INTRO_TEXT</span><span class="p">:</span> <span class="s1">'And it has i18n support!'</span>
+  <span class="p">});</span>
+<span class="p">}]);</span>
+</pre>
+<p>To add a second translation table for another language, let&rsquo;s say German, just 
+do the same with a different language key:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span> <span class="p">[</span><span class="s1">'$translateProvider'</span><span class="p">,</span> <span class="p">(</span><span class="nx">$translateProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$translateProvider</span><span class="p">.</span><span class="nx">translations</span><span class="p">(</span><span class="s1">'en'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">HEADLINE</span><span class="p">:</span> <span class="s1">'Hello there, This is my awesome app!'</span><span class="p">,</span>
+    <span class="na">INTRO_TEXT</span><span class="p">:</span> <span class="s1">'And it has i18n support!'</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">translations</span><span class="p">(</span><span class="s1">'de'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">HEADLINE</span><span class="p">:</span> <span class="s1">'Hey, das ist meine großartige App!'</span><span class="p">,</span>
+    <span class="na">INTRO_TEXT</span><span class="p">:</span> <span class="s1">'Und sie untersützt mehrere Sprachen!'</span>
+  <span class="p">});</span>
+<span class="p">}]);</span>
+</pre>
+<p>Now our app knows about two different languages. We can add as many languages as needed, there&rsquo;s no limit; however, since there are now two languages available, how does our app know which language should to use? <code>angular-translate</code> doesn&rsquo;t prefer any language until you tell it to do so.</p>
+
+<p>To set a <em>preferred</em> language, we can use the method <code>$translateProvider.preferredLanguage()</code>. This method tells angular-translate which of the registered languages is the one that our app should use, by default. It expects an argument with the value of the language key, which points to a certain translation table.</p>
+
+<p>Now, let&rsquo;s tell our app that it should use English as its default language:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span> <span class="p">[</span><span class="s1">'$translateProvider'</span><span class="p">,</span> <span class="p">(</span><span class="nx">$translateProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$translateProvider</span><span class="p">.</span><span class="nx">translations</span><span class="p">(</span><span class="s1">'en'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">HEADLINE</span><span class="p">:</span> <span class="s1">'Hello there, This is my awesome app!'</span><span class="p">,</span>
+    <span class="na">INTRO_TEXT</span><span class="p">:</span> <span class="s1">'And it has i18n support!'</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">translations</span><span class="p">(</span><span class="s1">'de'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">HEADLINE</span><span class="p">:</span> <span class="s1">'Hey, das ist meine großartige App!'</span><span class="p">,</span>
+    <span class="na">INTRO_TEXT</span><span class="p">:</span> <span class="s1">'Und sie untersützt mehrere Sprachen!'</span>
+  <span class="p">});</span>
+  <span class="nx">$translateProvider</span><span class="p">.</span><span class="nx">preferredLanguage</span><span class="p">(</span><span class="s1">'en'</span><span class="p">);</span>
+<span class="p">}]);</span>
+</pre>
+<h2>Switching the language at runtime</h2>
+
+<p>To switch to a new language at runtime, we have to use angular-translate&rsquo;s <code>$translate</code> service. It has a method uses() that either returns the language key of the currently used language, or, when passing a language key as argument, tells angular-translate to use the corresponding language.</p>
+
+<p>To get a feeling for how this capability works in a real app, add two new translation id&rsquo;s that represent translations for buttons you&rsquo;ll add later in your HTML template:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span> <span class="p">[</span><span class="s1">'$translateProvider'</span><span class="p">,</span> <span class="p">(</span><span class="nx">$translateProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$translateProvider</span><span class="p">.</span><span class="nx">translations</span><span class="p">(</span><span class="s1">'en'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">HEADLINE</span><span class="p">:</span> <span class="s1">'Hello there, This is my awesome app!'</span><span class="p">,</span>
+    <span class="na">INTRO_TEXT</span><span class="p">:</span> <span class="s1">'And it has i18n support!'</span><span class="p">,</span>
+    <span class="na">BUTTON_TEXT_EN</span><span class="p">:</span> <span class="s1">'english'</span><span class="p">,</span>
+    <span class="na">BUTTON_TEXT_DE</span><span class="p">:</span> <span class="s1">'german'</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">translations</span><span class="p">(</span><span class="s1">'de'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">HEADLINE</span><span class="p">:</span> <span class="s1">'Hey, das ist meine großartige App!'</span><span class="p">,</span>
+    <span class="na">INTRO_TEXT</span><span class="p">:</span> <span class="s1">'Und sie untersützt mehrere Sprachen!'</span>
+    <span class="na">BUTTON_TEXT_EN</span><span class="p">:</span> <span class="s1">'englisch'</span><span class="p">,</span>
+    <span class="na">BUTTON_TEXT_DE</span><span class="p">:</span> <span class="s1">'deutsch'</span>
+  <span class="p">});</span>
+  <span class="nx">$translateProvider</span><span class="p">.</span><span class="nx">preferredLanguage</span><span class="p">(</span><span class="s1">'en'</span><span class="p">);</span>
+<span class="p">}]);</span>
+</pre>
+<p>Next, implement a function on a controller that uses the <code>$translate</code> service and its <code>uses()</code> method to change the language at runtime. To do that, we&rsquo;ll inject the <code>$translate</code> service in our app&rsquo;s controller and add a function on its <code>$scope</code>:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'TranslateCtrl'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$translate'</span><span class="p">,</span> <span class="s1">'$scope'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$translate</span><span class="p">,</span> <span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">changeLanguage</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">langKey</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$translate</span><span class="p">.</span><span class="nx">uses</span><span class="p">(</span><span class="nx">langKey</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">}]);</span>
+</pre>
+<p>Now, let&rsquo;s reflect this change in the HTML template by adding a button for each language. We&rsquo;ll also have to set up an <code>ng-click</code> directive on each button, which calls the function that changes the language at runtime:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;Ctrl&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">ng-click=</span><span class="s">&quot;changeLanguage('de')&quot;</span> <span class="na">translate=</span><span class="s">&quot;BUTTON_TEXT_DE&quot;</span><span class="nt">&gt;&lt;/button&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">ng-click=</span><span class="s">&quot;changeLanguage('en')&quot;</span> <span class="na">translate=</span><span class="s">&quot;BUTTON_TEXT_EN&quot;</span><span class="nt">&gt;&lt;/button&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>Et voilà! We now have an app with multi-language support!</p>
+
+<h2>Loading languages</h2>
+
+<p>What fun would it be if we were going to set the languages statically? We can dynamically load languages thanks to Angular&rsquo;s <code>$http</code> service, through the <code>$translateProvider</code>&rsquo;s <code>registerLoader</code> function. </p>
+
+<p>First, we need to install the loader-url extension by setting the <code>loader-url</code> service, which expects that there is a back-end server to send back JSON by handling the <code>lang</code> parameter. If you do have a back end that handles the route with the <code>lang</code> parameter, install the <code>loader-url</code> service with Bower like so:</p>
+<pre class="highlight shell">bower install angular-translate-loader-url
+</pre>
+<p>If you prefer to have a service that loads static files, we can use the <code>static-files</code> loader that loads JSON files from a path with language files. Since this router is simpler, we&rsquo;ll go ahead and install this service through Bower:</p>
+<pre class="highlight shell">bower install angular-translate-loader-static-files
+</pre>
+<p>Now, let&rsquo;s make sure this file is loaded in our view through a script tag:</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/js/angular-translate-loader-url.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>To configure our service to use the <code>static-files</code> loader, we need to tell our <code>$translateProvider</code> to use the loader with a configuration object. The configuration object takes two parameters:</p>
+
+<ul>
+<li><strong>prefix</strong> - which specifies the file prefix (including file paths)</li>
+<li><strong>suffix</strong> - which specifies the file suffix (usually the extension)</li>
+</ul>
+
+<p>The file loader attempts to fetch files at the following URL path: <code>[prefix]/[langKey]/[suffix]</code>. For instance, if we set our config object as:</p>
+<pre class="highlight javascript"><span class="nx">$translateProvider</span><span class="p">.</span><span class="nx">useStaticFilesLoader</span><span class="p">({</span>
+  <span class="na">prefix</span><span class="p">:</span> <span class="s1">'/languages/'</span><span class="p">,</span>
+  <span class="na">suffix</span><span class="p">:</span> <span class="s1">'.json'</span>
+<span class="p">});</span>
+</pre>
+<p>The <code>angular-translate</code> attempts to load the <code>en_US</code> language from <code>/languages/en_US.json</code>. Using the <code>StaticFilesLoader</code> like so gives us the side benefit of <strong>lazy-loading</strong>. <code>$translate</code> will only pull down the language files it needs at runtime. </p>
+
+<p>Of course, using asynchronous loading will cause a flash of untranslated content as the app loads. We can circumvent this side effect by setting a default language that is packaged with the app.</p>
+
+<p>One last cool feature: We can use local storage to store our language files. <code>angular-translate</code> provides the ability to use local storage; this capability can be enabled with one function:</p>
+<pre class="highlight javascript"><span class="nx">$translateProvider</span><span class="p">.</span><span class="nx">useLocalStorage</span><span class="p">();</span>
+</pre>
+<h2>Conclusion</h2>
+
+<p>We&rsquo;ve covered how to use <code>angular-translate</code> to bring i18n support to your Angular app using <code>$translateProvider.translations()</code> and the <code>translate</code> filter. We&rsquo;ve also shown how to change the language at runtime using <code>$translate</code> service and its <code>uses()</code> method. </p>
+
+<p>Try out <code>angular-translate</code>; it comes with a lot of really nice built-in features, such as handling pluralization, using custom loaders, and setting translations through a service. The docs are fantastic; we suggest you check them out <a href="http://pascalprecht.github.io/angular-translate">here</a>.</p>
+
+<p>There are a lot of examples with which you can play directly on the site! There&rsquo;s also an <a href="http://pascalprecht.github.io/angular-translate/#/api">API Reference</a> that shows all available components and the interfaces you can use to build awesome apps with internationalization support!</p>
+
+<script type="text/javascript" src="/js/vendor/angular-translate-loader-static-files.min.js"></script>
+
+<script type="text/javascript" src="/js/posts/angularTranslate.js"></script>
+
+
+          <div class="container" id="signupApp" ng-cloak>
+  <div id="topbar_signup_embed">
+  Get the weekly email all focused on AngularJS. <b>Sign up below</b> to receive the weekly email and exclusive content.
+  <form name="ngSignup" action="http://willcodeforfoo.us6.list-manage1.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=fa61364f13" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    
+    <div class="row collapse">
+      <div class="small-9 columns">
+        <input ng-class="{error: ngSignup.email.$dirty && ngSignup.email.$invalid}" type="email" ng-minlength=3 ng-model="ngSignup.email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address" required>
+      </div>
+      <div class="small-3 columns">
+        <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" ng-disabled="ngSignup.$invalid" class="button postfix"></div>
+      </div>
+        <div class="small-12 columns error" ng-show="ngSignup.EMAIL.$dirty && ngSignup.EMAIL.$invalid">
+          <small class="error" ng-show="ngSignup.EMAIL.$error.required">Your email is required.</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.minlength">Your email is required to be at least 3 characters</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.email">That is not a valid email. Please input a valid email.</small>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  if (typeof(app) == 'undefined') {
+    angular.module("signupApp", [])
+    .controller("mailChimpValidation", ['$scope', function($scope) {}]);
+    var ele = document.getElementById("signupApp");
+    angular.element(ele, ['signupApp']);
+  }
+</script>
+          <section id="sample_chapter" ng-app="ngBookApp">    <div class="content">      <h3 class="title">Download a free sample of the ng-book: The Complete Book on AngularJS</h3> <span class="image"><img src="http://www.ng-book.com/images/flatbook-ngbook-small.png" alt="book"></span><div class="desc">It's free, so just enter your email address and the PDF will be sent directly to your inbox.</div>    </div>    <div class="form" ng-init="signedup=false" ng-show="!signuped">      <form action="http://willcodeforfoo.us6.list-manage.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=7bbfaae868" method="post" id="mc-embedded-subscribe-form" name="ngBookSignup" class="validate ng-pristine ng-invalid ng-invalid-required" target="_blank" novalidate="">
+<div class="mc-field-group">          <input type="email" ng-model="ngBookSignup.email" ng-class="{error: ngBookSignup.email.$dirty &amp;&amp; ngBookSignup.email.$invalid}" value="" name="EMAIL" placeholder="Your email address" class="required email ng-pristine ng-valid ng-valid-email ng-valid-minlength" id="mce-EMAIL" ng-minlength="3">        </div>        <div id="mce-responses" class="clear">          <div class="response" id="mce-error-response" style="display:none"></div>          <div class="response" id="mce-success-response" style="display:none"></div>        </div>        <div class="clear"><input type="submit" value="Send me a free chapter" name="subscribe" id="ngBookSignupSubmit" ng-disabled="ngBookSignup.$invalid" class="button postfix" ng-click="signedup=true" disabled="disabled"></div>      </form>      <div ng-show="signedup" class="ng-hide">      <p>Sweet! We are glad to hear you're interested in learning AngularJS. Enjoy the free chapter. We put a lot of work into building the book series, so we hope you like it!      Talk soon</p>      </div>      <div class="desc">        We won't ever send you spam! You can unsubscribe at any time.      </div>    </div>  </section>
+
+          <footer>
+            <ul class="actions">
+              <li><a href="/articles"><span class="arrow">←</span> Back to articles</a></li>
+              <li><a href="http://twitter.com/home/?status=Easy global i18n angularJS language translations for your Angular app - http://ng-newsletter.com/posts/angular-translate.html via @ngnewsletter" target="_blank"><img src="/img/twitter-bird-blue-on-white.png" style="width: 56px; height: 26px;" />Share on twitter</a></li>
+            </ul>
+          </footer>
+
+        </article>
+
+        <section id="comments">
+            <h2 class="gamma">Comments</h2>
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ngnewsletter'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section>
+
+        
+
+        <script type="text/javascript" src="/js/vendor/zepto.js"></script>
+<script type="text/javascript" src="/js/vendor/foundation.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+        </div>
+    </div>
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28176211-3', 'ng-newsletter.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript">
+  var $mcGoal = {'settings':{'uuid':'86d6f14c7cc955128485e3b8e','dc':'us6'}};
+  (function() {
+     var sp = document.createElement('script'); sp.type = 'text/javascript'; sp.async = true; sp.defer = true;
+    sp.src = ('https:' == document.location.protocol ? 'https://s3.amazonaws.com/downloads.mailchimp.com' : 'http://downloads.mailchimp.com') + '/js/goal.min.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sp, s);
+  })(); 
+</script>
+
+</body>
+</html>

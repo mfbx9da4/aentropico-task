@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+
+<title>Build custom directives with AngularJS | ng-newsletter</title>
+
+<meta name="author" content="Ari Lerner">
+<meta name="description" content=" angularjs angularjs tutorial angular">
+<meta name="keywords" content="angularjs customizing AngularJS directives how to build directives how do directives work angularjs directives how do I build a directive custom directives angular tutorial angularjs tutorial angularjs angularjs tutorial angular realtime firebase angularfire">
+
+<meta name="msvalidate.01" content="BE7DA3BEF0F11153F6E4B5585C12DB20" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ng-newsletter" />
+<meta property="og:url" content="http://ng-newsletter.com" />
+<meta property="og:image" content="http://ng-newsletter.com/img/" />
+<meta property="og:description" content="" />
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:creator" value="@auser" />
+<meta name="twitter:title" value="ng-newsletter" />
+<meta name="twitter:description" value="" />
+<meta name="twitter:image" value="http://ng-newsletter.com/img/" />
+
+<link rel="alternate" type="application/rss+xml" href="feed.rss" title="Sitewide RSS 2.0 Feed">
+<link rel="alternate" type="application/atom+xml" href="atom.xml" title="Sitewide ATOM Feed">
+<link rel="alternate" type="application/atom+json" href="atom.json" title="Sitewide JSON Feed">
+
+<link href="/favicon.ico" rel="icon" type="image/ico" />
+<link href="/css/site.css" media="screen" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Roboto:400italic,700italic,400,700|Open+Sans:r,i,b,bi|Bitter:r,i,b" media="screen" rel="stylesheet" type="text/css" />
+<script src="/js/vendor/custom.modernizr.js"></script>
+<script src="/js/vendor/d3.v3.min.js"></script>
+<script src="/js/vendor/angular/angular.min.js"></script>
+<script src="/js/vendor/angular-route/angular-route.min.js"></script>
+<script src="/js/vendor/angular-animate.min.js"></script>
+<script src="/js/vendor/angular-translate.min.js"></script>
+<script src="/js/vendor/angular-cookies/angular-cookies.min.js"></script>
+
+
+</head>
+<body ng-app="directiveTutorialExampleApp">
+
+    
+    <div id="header">
+  <div id="topNav">
+    <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">ng-newsletter</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <ul class="right">
+      		<li><a href="/posts">Articles</a></li>
+          <li><a href="/advent2013/">25 days of Angular</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/sponsor">Sponsorship</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+  <div class="headerContent">
+  </div>
+</div>
+
+    <div class="container">
+      <div id="article">
+        <article class="post">
+          <header>
+            <h1 class="mega">Build custom directives with AngularJS</h1>
+          </header>
+          
+          <p>Most everything we use in AngularJS is a directive. Directives are what makes AngularJS so powerful and responsive. Directives are the root of AngularJS and how we as developers interact with AngularJS. </p>
+
+<p>Although AngularJS is packed with powerful directives out of the box, often times we want to create our own reusable functionality. In this post, we&rsquo;ll focus on how to tackle the seemingly complex process of creating directives. We&rsquo;ll start with building simple directives and explain the process throughout the post.</p>
+
+<p>To start making your own directive, let&rsquo;s first understand what directives actually are. Directives, in AngularJS are, at their core functions that get run when the DOM is compiled by the compiler.</p>
+
+<p>Using this powerful concept, AngularJS enables us to create new directives that we can encapsulate and simplify DOM manipulation. We can create directives that modify or even create totally new behavior in HTML. </p>
+
+<p>If you&rsquo;ve ever used any part of AngularJS before, you&rsquo;ve used a directive, whether you know it or not. The <code>ng-app</code> attribute is a directive, so is <code>ng-controller</code> and all of the <code>ng-</code> prefixed attributes.</p>
+<pre class="highlight html"><span class="nt">&lt;body</span> <span class="na">ng-app</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;name&quot;</span> <span class="na">placeholder=</span><span class="s">&quot;name&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>{{ name }}<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</pre>
+<h2>Try it</h2>
+
+<p><small>Type &lsquo;Hello Ari Lerner&rsquo;</small>
+<body ng-app>
+  <input type="text" ng-model="name" placeholder="name"/>
+  <h1>{{ name }}</h1>
+</body></p>
+
+<p>When AngularJS loads this simple example, it will traverse the DOM elements looking for any directives that are associated with each DOM element. Once it&rsquo;s found all of them (if there are multiple directives), it will then start running the directive and associating it with the DOM element. This all happens behind the scenes and automatically for you.</p>
+
+<p>To <code>invoke</code> a directive from HTML, we simply can apply the directive in the DOM. That is to say, we pick one of the four methods for invoking a directive:</p>
+
+<h4>As an attribute:</h4>
+<pre class="highlight html"><span class="nt">&lt;span</span> <span class="na">my-directive</span><span class="nt">&gt;&lt;/span&gt;</span>
+</pre>
+<h4>As a class:</h4>
+<pre class="highlight html"><span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;my-directive: expression;&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
+</pre>
+<h4>As an element:</h4>
+<pre class="highlight html"><span class="nt">&lt;my</span><span class="na">-directive</span><span class="nt">&gt;</span><span class="err">&lt;</span>/my-directive&gt;
+</pre>
+<h4>As a comment:</h4>
+<pre class="highlight html"><span class="c">&lt;!-- directive: my-directive expression --&gt;</span>
+</pre>
+<p>These are the same in the eyes of AngularJS. In fact, AngularJS even gives you other options for invoking directives with name prefixes. These are all equivalent, as well:</p>
+<pre class="highlight html"><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;directivename&quot;</span> <span class="na">placeholder=</span><span class="s">&quot;name&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;span</span> <span class="na">ng-bind=</span><span class="s">&quot;directivename&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
+<span class="nt">&lt;span</span> <span class="na">ng:bind=</span><span class="s">&quot;directivename&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
+<span class="nt">&lt;span</span> <span class="na">ng_bind=</span><span class="s">&quot;directivename&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
+<span class="nt">&lt;span</span> <span class="na">x-ng-bind=</span><span class="s">&quot;directivename&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
+<span class="nt">&lt;span</span> <span class="na">data-ng-bind=</span><span class="s">&quot;directivename&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
+</pre>
+<h2>Try it</h2>
+
+<div class="large-12">
+<input type="text" ng-model="directivename" placeholder="name" />
+<b>ng-bind=&ldquo;directivename&rdquo;</b>: <span ng-bind="directivename"></span><br />
+<b>ng:bind=&ldquo;directivename&rdquo;</b>: <span ng:bind="directivename"></span><br />
+<b>ng_bind=&ldquo;directivename&rdquo;</b>: <span ng-bind="directivename"></span><br />
+<b>x-ng-bind=&ldquo;directivename&rdquo;</b>: <span x-ng-bind="directivename"></span><br />
+<b>data-ng-bind=&ldquo;directivename&rdquo;</b>: <span data-ng-bind="directivename"></span>
+</div>
+
+<p>The last two are are the only methods of invoking directives that are HTML5 compliant and that will pass HTML5 validators. </p>
+
+<h2>Building our first directive</h2>
+
+<p>Although we&rsquo;ll discuss in greater detail how directives actually work at the fundamental level later, let&rsquo;s start by creating our first directive. </p>
+
+<p>We&rsquo;ll be walking through creating a sparkline directive that will show the weather forecast for the next few days based on <a href="http://openweathermap.org">openweathermap</a> data. We will be building this directive:</p>
+
+<div ng-sparkline5 ng-city="San Francisco" width='400'></div>
+
+<p>Our first, basic directive looks like this:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'ngSparkline'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'A'</span><span class="p">,</span>
+    <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;div class=&quot;sparkline&quot;&gt;&lt;/div&gt;'</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>And then we&rsquo;ll invoke it in our html:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-sparkline</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre>
+<div ng-sparkline1></div>
+
+<p>Notice that when we invoke it, the name of the directive is not the same as when we define it (<code>ngSparkline</code> vs. <code>ng-sparkline</code>). This is because AngularJS will handle translating the <em>camel cased</em> name when we define it to the <em>snake case</em> when we invoke it. </p>
+
+<p>Although our first example doesn&rsquo;t do very much (yet), it already is showing some powerful features. Anywhere in our html, we can add the attribute <code>ng-sparkline</code> and have the template be appended to the DOM element. </p>
+
+<p>There are two ways to build a directive. In our example, we&rsquo;re using the method of returning a <em>directive description object</em>. AngularJS expects either one of these objects or a <code>link</code> function when we&rsquo;re creating a directive. Building a directive with the link function is usually enough for relatively simple directives. For the most part, we&rsquo;ll be creating directives using the description object.</p>
+
+<h4>Restrict option</h4>
+
+<p>In our example&rsquo;s description object, we&rsquo;re setting two config components. First, we&rsquo;re setting the <code>restrict</code> config option. The restrict option is used to specify how a directive can be invoked on the page.</p>
+
+<p>As we saw before, there are four different ways to invoke a directive, so there are four <em>valid</em> options for restrict:</p>
+<pre class="highlight html">'A' - <span class="nt">&lt;span</span> <span class="na">ng-sparkline</span><span class="nt">&gt;&lt;/span&gt;</span>
+'E' - <span class="nt">&lt;ng</span><span class="na">-sparkline</span><span class="nt">&gt;</span><span class="err">&lt;</span>/ng-sparkline&gt;
+'C' - <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;ng-sparkline&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
+'M' - <span class="c">&lt;!-- directive: ng-sparkline --&gt;</span>
+</pre>
+<p>The <code>restrict</code> option can specify multiple options, as well. If you want to support more than one as an element or an attribute, simply make sure all are specified in the <code>restrict</code> keyword:</p>
+<pre class="highlight javascript"><span class="nx">restrict</span><span class="err">:</span> <span class="s1">'EA'</span>
+</pre>
+<h4>Template</h4>
+
+<p>Secondly, in our example we&rsquo;re also setting a template. This template is an inline template where we are specifying the html that will be appended (or replaced, we&rsquo;ll discuss this shortly). This is particularly useful when we want to share directives across apps and you only want to pass a single file around.</p>
+
+<h4>TemplateUrl</h4>
+
+<p>If you prefer to load a template over ajax, you can specify the <code>templateUrl</code> option, which will use ajax to pull the template.</p>
+<pre class="highlight javascript"><span class="nx">templateUrl</span><span class="err">:</span> <span class="s1">'templates/ng-sparkline-template.html'</span>
+</pre>
+<p>With that, we can start adding functionality. Before we can jump straight into that, we need to look at how the directive is instantiated in the DOM.</p>
+
+<h3>How directives are born (compilation and instantiation)</h3>
+
+<p>When the DOM is done loading and the AngularJS process starts booting up, the first process that happens is the HTML is parsed by the browser as a DOM tree. This tree is then parsed using AngularJS&rsquo;s <code>$compile()</code> method. <code>$compile</code> runs through the DOM tree and looks for directive declarations for the different DOM elements. Once all directive declarations are found for each DOM element and sorted (by priority, which we&rsquo;ll get into shortly), the directive&rsquo;s <code>compile</code> function is run and is expected to return a <code>link()</code> function. The <code>$compile()</code> function will return a linking function that wraps all of the containing DOM element&rsquo;s directives&#39; linking functions. </p>
+
+<p>Finally, the linking function is invoked with the containing scope that attaches all of the associated directives to that scope. This is where we&rsquo;ll do most of the work when building directives, as this is where we can register listeners, set up watches, and add functionality. The result of this process is why the <code>live</code> data-binding exists between the <code>scope</code> and the DOM tree. </p>
+
+<h3>Why have a <code>compile</code> and <code>link</code> function?</h3>
+
+<p>So why does AngularJS have two functions that run at the compile phase instead of just combining them into one? Boiled down, the answer is for performance. It&rsquo;s <strong>slow</strong> to compile and interpolate against scopes every time a new directive of the same type is created. Because of this, all of the <em>slow</em> parts of the compilation process are front-loaded into the compile phase, while the linking happens when everything is associated and attached to the DOM. </p>
+
+<h3>In summary</h3>
+
+<p>We&rsquo;ll use the <code>compile</code> function to both manipulate the DOM <em>before</em> it&rsquo;s rendered and return a <code>link</code> function (that will handle the linking for us). This <em>also</em> is the place to put any methods that need to be shared around with all of the instances of this directive.</p>
+
+<p>We&rsquo;ll use the <code>link</code> function to register all listeners on a specific DOM element (that&rsquo;s cloned from the template) and set up our bindings to the page.</p>
+
+<h3>Back to ngSparkline</h3>
+
+<p>Our sparkline graph will need to do a little more than show us a div on the page to actually be useful. To do that, we&rsquo;ll have to bind a controller input on the directive. Basically, we&rsquo;ll want the directive to be driven by the input of another directive. In most cases, we&rsquo;ll want to bind our directive to the <code>ng-model</code> directive&rsquo;s controller. </p>
+
+<h4>Require option</h4>
+
+<p>We&rsquo;ll enforce that we need this dependency by setting the <code>require</code> option:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'ngSparkline'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'A'</span><span class="p">,</span>
+    <span class="na">require</span><span class="p">:</span> <span class="s1">'^ngModel'</span><span class="p">,</span>
+    <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;div class=&quot;sparkline&quot;&gt;&lt;h4&gt;Weather for {{ngModel}}&lt;/h4&gt;&lt;/div&gt;'</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>Now, if we invoke the directive on the page <em>without</em> the <code>ng-model</code> directive, our browser will complain and throw an error. To invoke our directive now, we simply have to add the <code>ng-model</code> directive:</p>
+<pre class="highlight html"><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;city&quot;</span> <span class="na">placeholder=</span><span class="s">&quot;Enter a city&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">ng-sparkline</span> <span class="na">ng-model=</span><span class="s">&quot;city&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre>
+<p>Notice, in the <code>require</code> option, we prefixed the controller with a <code>^</code>. AngularJS gives you two options in the require option about how to declare requirements with a prefixed character:</p>
+<pre class="highlight javascript"><span class="o">^</span> <span class="o">--</span> <span class="nx">Look</span> <span class="k">for</span> <span class="nx">the</span> <span class="nx">controller</span> <span class="nx">on</span> <span class="nx">parent</span> <span class="nx">elements</span><span class="p">,</span> <span class="nx">not</span> <span class="nx">just</span> <span class="nx">on</span> <span class="nx">the</span> <span class="nx">local</span> <span class="nx">scope</span>
+<span class="p">?</span> <span class="o">--</span> <span class="nx">Don</span><span class="s1">'t raise an error if the controller isn'</span><span class="nx">t</span> <span class="nx">found</span>
+</pre>
+<h5>Scope</h5>
+
+<p>Just like in every other part of AngularJS DOM control, directives can be given their own scopes. This is important to note, because without declaring an isolated scope from the rest of the DOM, our directive could muck with the local controller scope and cause unexpected behavior. </p>
+
+<p>To get around this trouble, AngularJS gives you the ability to <em>isolate</em> the scope of the directive from the rest of the page using the <code>scope</code> option. </p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'ngSparkline'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'A'</span><span class="p">,</span>
+    <span class="na">require</span><span class="p">:</span> <span class="s1">'^ngModel'</span><span class="p">,</span>
+    <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">ngModel</span><span class="p">:</span> <span class="s1">'='</span>
+    <span class="p">},</span>
+    <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;div class=&quot;sparkline&quot;&gt;&lt;h4&gt;Weather for {{ngModel}}&lt;/h4&gt;&lt;/div&gt;'</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>The scope option can take one of two different options. It can be set to <em>true</em> (it&rsquo;s false by default).</p>
+<pre class="highlight javascript">    <span class="nx">scope</span><span class="err">:</span> <span class="kc">true</span><span class="p">,</span>
+</pre>
+<p>When the scope directive is set to <em>true</em>, a new scope will be created for the directive. </p>
+
+<p>While it&rsquo;s useful to ensure that a new scope will be created for the directive, that scope will still participate in the normal controller-scope hierarchical relationship. We can <em>isolate</em> the directive&rsquo;s scope outside of the parent relationship by creating an <em>isolate</em> scope.</p>
+
+<p>An <em>isolate</em> scope does <em>not</em> prototypically inherit from the parent scope, but creates an entirely new one. Creating this <em>isolate</em> scope will ensure that your directive does not mess with the existing scope. </p>
+
+<p>To create an <em>isolate</em> scope, simply pass an object back in the <code>scope</code> option:</p>
+<pre class="highlight javascript"><span class="nx">scope</span><span class="err">:</span> <span class="p">{}</span>
+</pre>
+<p>This will create an empty scope. This is not particularly useful because your directive will have nothing available on its scope (other than the variables that you manually add). </p>
+
+<p>To make local variables on your local scope available to the new directive&rsquo;s scope, you&rsquo;ll have to pass one of the following three aliases in the object:</p>
+
+<h5>Local scope property</h5>
+
+<p>Binding a local scope (<em>string</em>) to the value of the DOM attribute, use the <code>@</code> symbol. Now the value of the outer scope will be available inside your directive&rsquo;s scope:</p>
+<pre class="highlight javascript"><span class="err">@</span> <span class="p">(</span><span class="nx">or</span> <span class="err">@</span><span class="nx">attr</span><span class="p">)</span>
+</pre>
+<h5>Bi-directional binding</h5>
+
+<p>A bi-directional binding can be set up between the local scope property and the parent property using the <code>=</code> symbol. If the parent model changes, just like in normal data-binding then the local property will reflect the change.</p>
+<pre class="highlight javascript"><span class="o">=</span> <span class="p">(</span><span class="nx">or</span> <span class="o">=</span><span class="nx">attr</span><span class="p">)</span>
+</pre>
+<h5>Parent execution binding</h5>
+
+<p>To execute a function in the context of the parent scope, we can bind a function using the <code>&amp;</code> symbol. This is to say that when setting the value, a function wrapper will be created and point to the parent function.</p>
+
+<p>To call the parent method with an argument, you&rsquo;ll need to pass an object with the key being the name of the argument and the value being the argument to pass:</p>
+<pre class="highlight javascript"><span class="o">&amp;</span> <span class="p">(</span><span class="nx">or</span> <span class="o">&amp;</span><span class="nx">attr</span><span class="p">)</span>
+</pre>
+<p>For example, if we&rsquo;re writing an email client and we are creating an email textbox such as:</p>
+<pre class="highlight html"><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;to&quot;</span> <span class="nt">/&gt;</span>
+<span class="c">&lt;!-- Invoke the directive --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">scope-example</span> <span class="na">ng-model=</span><span class="s">&quot;to&quot;</span> <span class="na">on-send=</span><span class="s">&quot;sendMail(email)&quot;</span> <span class="na">from-name=</span><span class="s">&quot;<a class="__cf_email__" href="http://www.cloudflare.com/email-protection" data-cfemail="e786958ea781928b8b949386848cc98e88">[email&nbsp;protected]</a><script type="text/javascript">
+/* <![CDATA[ */
+(function(){try{var s,a,i,j,r,c,l,b=document.getElementsByTagName("script");l=b[b.length-1].previousSibling;a=l.getAttribute('data-cfemail');if(a){s='';r=parseInt(a.substr(0,2),16);for(j=2;a.length-j;j+=2){c=parseInt(a.substr(j,2),16)^r;s+=String.fromCharCode(c);}s=document.createTextNode(s);l.parentNode.replaceChild(s,l);}}catch(e){}})();
+/* ]]> */
+</script>&quot;</span> <span class="nt">/&gt;</span>
+</pre>
+<p>We have a model (<code>ng-model</code>), a function (<code>sendMail()</code>), and a string (<code>from-name</code>). To get access to these on your directive&rsquo;s scope:</p>
+<pre class="highlight javascript"><span class="nx">scope</span><span class="err">:</span> <span class="p">{</span>
+  <span class="na">ngModel</span><span class="p">:</span> <span class="s1">'='</span><span class="p">,</span>     <span class="c1">// Bind the ngModel to the object given
+</span>  <span class="na">onSend</span><span class="p">:</span> <span class="s1">'&amp;'</span><span class="p">,</span>      <span class="c1">// Pass a reference to the method 
+</span>  <span class="na">fromName</span><span class="p">:</span> <span class="s1">'@'</span>     <span class="c1">// Store the string associated by fromName
+</span><span class="p">}</span>
+</pre>
+<p>In this example, we can see the ngModel update when we manipulate the object through bi-directional data-binding. We can see the <code>fromName</code> string appear in our directive and we can see the <code>onSend()</code> method being called when we click on the Send button:</p>
+
+<h2>Try it</h2>
+
+<div class="row" ng-controller="scopeExampleController">
+  <div class="large-12 columns">
+    <div class="row collapse">
+      <div class="small-10 columns">
+        <input type="text" ng-model="to" />
+      </div>
+      <div class="small-2 columns">
+        <a ng-click="sendMail(to)" class="button prefix">Send</a>
+      </div>
+    </div>
+  </div>
+  <div class="large-12 columns">
+    <div scope-example ng-model="to" status='status' on-send="sendMail(email)" from-name="ari@fullstack.io" />
+  </div>
+</div>
+
+<p><a ng-click="showSource1=!showSource1" class="small">Show controller source</a>
+<div ng-show='showSource1'></p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'scopeExampleController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">status</span> <span class="o">=</span> <span class="s2">&quot;Not sent&quot;</span><span class="p">;</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">sendMail</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">mail</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">status</span> <span class="o">=</span> <span class="s2">&quot;Sent&quot;</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}]);</span>
+</pre>
+<p></div></p>
+
+<p>Going back to our sparkline directive, we&rsquo;ll need to pass in a city with our directive from which we want to pull the weather from openweathermap. To do this, we&rsquo;ll start out by setting it statically on the directive by passing it in as an attribute:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-sparkline</span> <span class="na">ng-model=</span><span class="s">&quot;San Francisco&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre>
+<p>Our directive now looks like this:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'ngSparkline'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'A'</span><span class="p">,</span>
+    <span class="na">require</span><span class="p">:</span> <span class="s1">'^ngModel'</span><span class="p">,</span>
+    <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">ngCity</span><span class="p">:</span> <span class="s1">'@'</span>
+    <span class="p">},</span>
+    <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;div class=&quot;sparkline&quot;&gt;&lt;h4&gt;Weather for {{ngModel}}&lt;/h4&gt;&lt;/div&gt;'</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>If we want to be more explicit and descriptive about what model we are requiring, we can change the <code>require: &#39;^ngModel&#39;</code> above to be <code>require: &#39;^ngCity&#39;</code>. This comes in handy when you are communicating requirements on a team or you want to reuse the directive in another project. The implementation would change to the more explicit version:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-sparkline</span> <span class="na">ng-city=</span><span class="s">&quot;San Francisco&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre>
+<p>If we want to support this method of setting <code>ng-city</code> instead of <code>ngModel</code>, we&rsquo;ll have to add some supporting logic. As we said above, the <code>require</code> option will <code>inject</code> the controller of the require option. </p>
+
+<p>For <code>ngCity</code> to work, we&rsquo;ll have to create a custom directive with a <code>controller</code> defined. This is as simple as:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'ngCity'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">controller</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>Alternatively, you can continue to use ngModel.</p>
+
+<h2>Pulling weather data</h2>
+
+<p>Now that we have the city, we can use openweathermap to grab the latest weather data. </p>
+
+<p>In order to do this, we&rsquo;ll have to set up a function that will run when the directive is <code>linked</code> to the DOM. If we write this function in the <code>compile</code> method, then we&rsquo;ll modify the DOM in place.</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'ngSparkline'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'A'</span><span class="p">,</span>
+    <span class="na">require</span><span class="p">:</span> <span class="s1">'^ngCity'</span><span class="p">,</span>
+    <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">ngCity</span><span class="p">:</span> <span class="s1">'@'</span>
+    <span class="p">},</span>
+    <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;div class=&quot;sparkline&quot;&gt;&lt;h4&gt;Weather for {{ngCity}}&lt;/h4&gt;&lt;/div&gt;'</span><span class="p">,</span>
+    <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">iElement</span><span class="p">,</span> <span class="nx">iAttrs</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// get weather details
+</span>    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>The link function will be run as soon as the directive is linked to the DOM. In order to call out to a separate service, however, we&rsquo;ll have to <em>inject</em> the <code>$http</code> service. Because of this, we&rsquo;ll need to define a controller to get access to the service.</p>
+
+<h4>Controller option</h4>
+
+<p>In a directive, when we set the controller option we are creating a controller for the directive. This controller is instantiated before the pre-linking phase. </p>
+
+<p>The pre-linking and post-linking phases are executed by the compiler. The pre-link function is executed before the child elements are linked, while the post-link function is executed after. It is only safe to do DOM transformations after the post-link function. </p>
+
+<p>We are defining a <code>controller</code> function in our directive, so we don&rsquo;t need to define either of these functions, but it is important to note that we cannot do DOM manipulations in our controller function.</p>
+
+<p>What does a controller function look like? Just like any other controller. We&rsquo;ll inject the <code>$http</code> service in our controller (using the <code>bracket</code> injection notation):</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'ngSparkline'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'A'</span><span class="p">,</span>
+    <span class="na">require</span><span class="p">:</span> <span class="s1">'^ngCity'</span><span class="p">,</span>
+    <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">ngCity</span><span class="p">:</span> <span class="s1">'@'</span>
+    <span class="p">},</span>
+    <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;div class=&quot;sparkline&quot;&gt;&lt;h4&gt;Weather for {{ngCity}}&lt;/h4&gt;&lt;/div&gt;'</span><span class="p">,</span>
+    <span class="na">controller</span><span class="p">:</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'$http'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">getTemp</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">city</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="p">}],</span>
+    <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">iElement</span><span class="p">,</span> <span class="nx">iAttrs</span><span class="p">,</span> <span class="nx">ctrl</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">scope</span><span class="p">.</span><span class="nx">getTemp</span><span class="p">(</span><span class="nx">iAttrs</span><span class="p">.</span><span class="nx">ngCity</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>Note that in our link function, we have access to all of the attributes that were declared in the DOM element. This will become important in a minute when we go to customize the directive.</p>
+
+<p>Now we can create the function <code>getTemp</code> to fetch from the openweathermap. </p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&amp;units=imperial&amp;cnt=7&amp;callback=JSON_CALLBACK&amp;q=&quot;</span>
+
+<span class="nx">$scope</span><span class="p">.</span><span class="nx">getTemp</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">city</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$http</span><span class="p">({</span>
+    <span class="na">method</span><span class="p">:</span> <span class="s1">'JSONP'</span><span class="p">,</span>
+    <span class="na">url</span><span class="p">:</span> <span class="nx">url</span> <span class="o">+</span> <span class="nx">city</span>
+  <span class="p">}).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">weather</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">list</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">){</span>
+      <span class="nx">weather</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+    <span class="p">});</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">weather</span> <span class="o">=</span> <span class="nx">weather</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</pre>
+<p>Now, inside of our link function, we&rsquo;ll have a <code>promise</code> that will be fulfilled by the controller method. A promise, if you&rsquo;re not familiar, is basically an object that will return the result of an action that is run asynchronously.</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-sparkline</span> <span class="na">ng-city=</span><span class="s">&quot;San Francisco&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre>
+<h2>See it</h2>
+
+<p><small>This will print out a bunch of JSON</small>
+<div ng-sparkline4 ng-city="San Francisco"></div></p>
+
+<p>As you can see, the directive is rendered on screen initially without data, but as soon as the <code>link</code> method is run (linking the specific element to the DOM), the <code>getTemp</code> method will run and will eventually populate the <code>weather</code> property on the scope.</p>
+
+<p>Now, let&rsquo;s take this data and create a sparkline with it. To start, we&rsquo;ll want to pick a property on the weather to work on. </p>
+
+<p>Let&rsquo;s start by creating a chart on the high temperatures. To start with, we&rsquo;ll need to create a <code>$watch</code> on the weather object. Because we are fetching the weather data asynchronously, we cannot simply write the method expecting the data to be populated for us when the linking function runs. No matter, AngularJS makes this incredibly easy with the built-in function <code>$watch</code>.</p>
+
+<p>The <code>$watch</code> function will register a callback to be executed whenever the result of the expression changes. Inside the <code>$digest</code> loop, every time AngularJS detects a change, it will call this function. This has the side effect that we cannot depend on state inside this function. To counter this, we&rsquo;ll check for the value before we depend on it being in place. </p>
+
+<p>Here is our new <code>$watch</code> function:</p>
+<pre class="highlight javascript"><span class="nx">scope</span><span class="p">.</span><span class="nx">getTemp</span><span class="p">(</span><span class="nx">iAttrs</span><span class="p">.</span><span class="nx">ngCity</span><span class="p">);</span>
+<span class="nx">scope</span><span class="p">.</span><span class="nx">$watch</span><span class="p">(</span><span class="s1">'weather'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newVal</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">newVal</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>Every time the <em>weather</em> property on our scope changes, our function will fire. We will use <a href="http://d3js.org/">d3</a> to chart our sparkline. </p>
+
+<p>Here&rsquo;s what we have so far:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'ngSparkline'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&amp;units=imperial&amp;cnt=14&amp;callback=JSON_CALLBACK&amp;q=&quot;</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'A'</span><span class="p">,</span>
+    <span class="na">require</span><span class="p">:</span> <span class="s1">'^ngCity'</span><span class="p">,</span>
+    <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">ngCity</span><span class="p">:</span> <span class="s1">'@'</span>
+    <span class="p">},</span>
+    <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;div class=&quot;sparkline&quot;&gt;&lt;h4&gt;Weather for {{ngCity}}&lt;/h4&gt;&lt;div class=&quot;graph&quot;&gt;&lt;/div&gt;&lt;/div&gt;'</span><span class="p">,</span>
+    <span class="na">controller</span><span class="p">:</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'$http'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">getTemp</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">city</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$http</span><span class="p">({</span>
+          <span class="na">method</span><span class="p">:</span> <span class="s1">'JSONP'</span><span class="p">,</span>
+          <span class="na">url</span><span class="p">:</span> <span class="nx">url</span> <span class="o">+</span> <span class="nx">city</span>
+        <span class="p">}).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">weather</span> <span class="o">=</span> <span class="p">[];</span>
+          <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">list</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">){</span>
+            <span class="nx">weather</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+          <span class="p">});</span>
+          <span class="nx">$scope</span><span class="p">.</span><span class="nx">weather</span> <span class="o">=</span> <span class="nx">weather</span><span class="p">;</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+    <span class="p">}],</span>
+    <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">iElement</span><span class="p">,</span> <span class="nx">iAttrs</span><span class="p">,</span> <span class="nx">ctrl</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">scope</span><span class="p">.</span><span class="nx">getTemp</span><span class="p">(</span><span class="nx">iAttrs</span><span class="p">.</span><span class="nx">ngCity</span><span class="p">);</span>
+      <span class="nx">scope</span><span class="p">.</span><span class="nx">$watch</span><span class="p">(</span><span class="s1">'weather'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newVal</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// the `$watch` function will fire even if the
+</span>        <span class="c1">// weather property is undefined, so we'll
+</span>        <span class="c1">// check for it
+</span>        <span class="k">if</span> <span class="p">(</span><span class="nx">newVal</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">highs</span> <span class="o">=</span> <span class="p">[],</span>
+              <span class="nx">width</span>   <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="nx">height</span>  <span class="o">=</span> <span class="mi">80</span><span class="p">;</span>
+
+          <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">weather</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">){</span>
+            <span class="nx">highs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">.</span><span class="nx">temp</span><span class="p">.</span><span class="nx">max</span><span class="p">);</span>
+          <span class="p">});</span>
+          <span class="c1">// chart
+</span>        <span class="p">}</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<h2>See it</h2>
+
+<div ng-sparkline5 ng-city="San Francisco"></div>
+
+<p><a ng-click="showSource2 = !showSource2" class="small">Show d3 source</a>
+<div ng-show="showSource2"></p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">highs</span> <span class="o">=</span> <span class="p">[];</span>
+
+<span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">weather</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">){</span>
+  <span class="nx">highs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">.</span><span class="nx">temp</span><span class="p">.</span><span class="nx">max</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="kd">var</span> <span class="nx">chartGraph</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">width</span> <span class="o">=</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">width</span> <span class="o">||</span> <span class="mi">200</span><span class="p">,</span>
+      <span class="nx">height</span> <span class="o">=</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">height</span> <span class="o">||</span> <span class="mi">80</span><span class="p">,</span>
+      <span class="nx">padding</span> <span class="o">=</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">padding</span> <span class="o">||</span> <span class="mi">30</span><span class="p">;</span>
+
+  <span class="c1">// chart
+</span>  <span class="kd">var</span> <span class="nx">svg</span>     <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="nx">element</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                  <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">'svg:svg'</span><span class="p">)</span>
+                  <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'width'</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span>
+                  <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'height'</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+                  <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'class'</span><span class="p">,</span> <span class="s1">'sparkline'</span><span class="p">)</span>
+                  <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">'g'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'transform'</span><span class="p">,</span> <span class="s1">'translate('</span><span class="o">+</span><span class="nx">padding</span><span class="o">+</span><span class="s1">', '</span><span class="o">+</span><span class="nx">padding</span><span class="o">+</span><span class="s1">')'</span><span class="p">);</span>
+
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s1">'*'</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
+
+  <span class="kd">var</span> <span class="nx">maxY</span>    <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
+      <span class="nx">x</span>       <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">()</span>
+                  <span class="p">.</span><span class="nx">domain</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">])</span>
+                  <span class="p">.</span><span class="nx">range</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nx">width</span><span class="p">]),</span>
+      <span class="nx">y</span>       <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">()</span>
+                  <span class="p">.</span><span class="nx">domain</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nx">maxY</span><span class="p">])</span>
+                  <span class="p">.</span><span class="nx">range</span><span class="p">([</span><span class="nx">height</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+      <span class="nx">yAxis</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">svg</span><span class="p">.</span><span class="nx">axis</span><span class="p">().</span><span class="nx">scale</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">orient</span><span class="p">(</span><span class="s1">'left'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">ticks</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">'g'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'class'</span><span class="p">,</span> <span class="s1">'axis'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">yAxis</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">line</span>    <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">svg</span><span class="p">.</span><span class="nx">line</span><span class="p">()</span>
+                  <span class="p">.</span><span class="nx">interpolate</span><span class="p">(</span><span class="s1">'linear'</span><span class="p">)</span>
+                  <span class="p">.</span><span class="nx">x</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span><span class="nx">i</span><span class="p">){</span><span class="k">return</span> <span class="nx">x</span><span class="p">(</span><span class="nx">i</span><span class="p">);})</span>
+                  <span class="p">.</span><span class="nx">y</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span><span class="nx">i</span><span class="p">){</span><span class="k">return</span> <span class="nx">y</span><span class="p">(</span><span class="nx">d</span><span class="p">);}),</span>
+      <span class="nx">path</span>    <span class="o">=</span> <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">'svg:path'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="nx">data</span><span class="p">])</span>
+                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'d'</span><span class="p">,</span> <span class="nx">line</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'fill'</span><span class="p">,</span> <span class="s1">'none'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'stroke-width'</span><span class="p">,</span> <span class="s1">'1'</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+<p></div>
+</div></p>
+
+<p>Now that we have our chart being drawn, let&rsquo;s look at ways that we can customize the directive when we invoke it.</p>
+
+<p>Inside of our watch function, we&rsquo;re currently setting a static height and width. We can do better than that by allowing the invocation to determine the width and the height. Because we have access to the iAttrs (the instance of the attributes on the instance of the DOM element), we can simply look there first; otherwise we can set a default.</p>
+
+<p>Change the width and the height to look like this:</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">width</span>   <span class="o">=</span> <span class="nx">iAttrs</span><span class="p">.</span><span class="nx">width</span> <span class="o">||</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="nx">height</span>  <span class="o">=</span> <span class="nx">iAttrs</span><span class="p">.</span><span class="nx">height</span> <span class="o">||</span> <span class="mi">80</span><span class="p">;</span>
+</pre>
+<p>When we invoke the directive, this time we can add a width to set the width:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-sparkline</span> <span class="na">width=</span><span class="s">'400'</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre>
+<p>Now our sparkline changes width to be 400 pixels, instead of the default 200.</p>
+
+<h2>See it</h2>
+
+<div ng-sparkline5 ng-city="San Francisco" width='400'></div>
+
+<p>Inside of our directive as it stands today, we have a label that tells us &ldquo;Weather for {{ ngCity }}.&rdquo; Although this is convenient for demo purposes, we might not always want that label to be static inside the directive. We can set it to include any html that we put inside of the DOM element that contains our directive. </p>
+
+<h4>Transclude option</h4>
+
+<p>Although the name sounds complex, transclusion refers to compiling the content of the element and making the source available to the directive. The transcluded function is pre-bound to the calling scope, so it has access to the current calling scope.</p>
+
+<p>Looking at an example, let&rsquo;s change the invocation to:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-sparkline</span> <span class="na">ng-city=</span><span class="s">&quot;San Francisco&quot;</span> <span class="na">width=</span><span class="s">'400'</span><span class="nt">&gt;</span>
+<span class="nt">&lt;h3&gt;</span>A custom view of the weather in San Francisco<span class="nt">&lt;/h3&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>To get this to show up in our template, we&rsquo;ll need to use a special directive called <code>ngTransclude</code>. This is how the template knows where to place the custom HTML. Let&rsquo;s modify the template in our directive to include the custom content:</p>
+<pre class="highlight javascript"><span class="nx">template</span><span class="err">:</span> <span class="s1">'&lt;div class=&quot;sparkline&quot;&gt;&lt;div ng-transclude&gt;&lt;/div&gt;&lt;div class=&quot;graph&quot;&gt;&lt;/div&gt;&lt;/div&gt;'</span>
+</pre>
+<p>Additionally, we&rsquo;ll have to tell AngularJS that our directive will be using transclusion. To do that, we&rsquo;ll have to set the transclude option either to:</p>
+
+<ul>
+<li>true, which will take the content of the directive and place it in the template</li>
+<li>&lsquo;element&rsquo;, which will take the entire defined element including the lower priority directives.</li>
+</ul>
+
+<p>Set the transclude option to true, as we only want the content of our directive to show up in our template:</p>
+<pre class="highlight javascript"><span class="nx">transclude</span><span class="err">:</span> <span class="kc">true</span>
+</pre>
+<h2>See it</h2>
+
+<div ng-sparkline6 ng-city="San Francisco" width='400'>
+  <h3>A custom view of the weather in San Francisco</h3>
+</div>
+
+<h4>Replace option</h4>
+
+<p>Sometimes it is better to replace the entire DOM object, rather than append the new template to it. AngularJS makes this easy to accomplish by simply adding <code>replace</code> option in the <code>directive description object</code>. Set the replace option to true, like so:</p>
+<pre class="highlight javascript"><span class="nx">replace</span><span class="err">:</span> <span class="kc">true</span>
+</pre>
+<h4>Priority option</h4>
+
+<p>Directives on elements are compiled in a sorted order based on priority. Sometimes it matters what ordered directives are applied. By setting a higher priority, you can <em>almost</em> guarantee the order in which the directives are applied. To set a higher priority of one directive over another, simply add the priority option and set it to a numerical value higher than 0 (the default):</p>
+<pre class="highlight javascript"><span class="nx">priority</span><span class="err">:</span> <span class="mi">10</span>
+</pre>
+<h4>Terminal option</h4>
+
+<p>Sometimes it&rsquo;s useful to stop the execution of the compiler for including other directives. This is most useful when used in conjunction with setting the priority. <code>terminal</code> will stop the execution of any directives at a lower priority than this one.</p>
+<pre class="highlight javascript"><span class="nx">terminal</span><span class="err">:</span> <span class="kc">true</span>
+</pre>
+<h4>Next steps</h4>
+
+<p>We&rsquo;ve covered how to build a directive from the very low-level to the top. Hopefully you&rsquo;ve gained some confidence and knowledge about how to move forward in the future and provide and build your own custom directives.</p>
+
+<p><a ng-click="showSourceFinal = !showSourceFinal" class="small">Show full source</a>
+<div ng-show="showSourceFinal"></p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'ngSparkline'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&amp;units=imperial&amp;cnt=14&amp;callback=JSON_CALLBACK&amp;q=&quot;</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'A'</span><span class="p">,</span>
+    <span class="na">require</span><span class="p">:</span> <span class="s1">'^ngCity'</span><span class="p">,</span>
+    <span class="na">transclude</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">ngCity</span><span class="p">:</span> <span class="s1">'@'</span>
+    <span class="p">},</span>
+    <span class="na">template</span><span class="p">:</span> <span class="s1">'&lt;div class=&quot;sparkline&quot;&gt;&lt;div ng-transclude&gt;&lt;/div&gt;&lt;div class=&quot;graph&quot;&gt;&lt;/div&gt;&lt;/div&gt;'</span><span class="p">,</span>
+    <span class="na">controller</span><span class="p">:</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'$http'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">getTemp</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">city</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$http</span><span class="p">({</span>
+          <span class="na">method</span><span class="p">:</span> <span class="s1">'JSONP'</span><span class="p">,</span>
+          <span class="na">url</span><span class="p">:</span> <span class="nx">url</span> <span class="o">+</span> <span class="nx">city</span>
+        <span class="p">}).</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">weather</span> <span class="o">=</span> <span class="p">[];</span>
+          <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">list</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">){</span>
+            <span class="nx">weather</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+          <span class="p">});</span>
+          <span class="nx">$scope</span><span class="p">.</span><span class="nx">weather</span> <span class="o">=</span> <span class="nx">weather</span><span class="p">;</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+    <span class="p">}],</span>
+    <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">iElement</span><span class="p">,</span> <span class="nx">iAttrs</span><span class="p">,</span> <span class="nx">ctrl</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">scope</span><span class="p">.</span><span class="nx">getTemp</span><span class="p">(</span><span class="nx">iAttrs</span><span class="p">.</span><span class="nx">ngCity</span><span class="p">);</span>
+      <span class="nx">scope</span><span class="p">.</span><span class="nx">$watch</span><span class="p">(</span><span class="s1">'weather'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newVal</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// the `$watch` function will fire even if the
+</span>        <span class="c1">// weather property is undefined, so we'll
+</span>        <span class="c1">// check for it
+</span>        <span class="k">if</span> <span class="p">(</span><span class="nx">newVal</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">highs</span> <span class="o">=</span> <span class="p">[];</span>
+
+          <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">scope</span><span class="p">.</span><span class="nx">weather</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">){</span>
+            <span class="nx">highs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">.</span><span class="nx">temp</span><span class="p">.</span><span class="nx">max</span><span class="p">);</span>
+          <span class="p">});</span>
+
+          <span class="nx">chartGraph</span><span class="p">(</span><span class="nx">iElement</span><span class="p">,</span> <span class="nx">highs</span><span class="p">,</span> <span class="nx">iAttrs</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">chartGraph</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">width</span> <span class="o">=</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">width</span> <span class="o">||</span> <span class="mi">200</span><span class="p">,</span>
+      <span class="nx">height</span> <span class="o">=</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">height</span> <span class="o">||</span> <span class="mi">80</span><span class="p">,</span>
+      <span class="nx">padding</span> <span class="o">=</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">padding</span> <span class="o">||</span> <span class="mi">30</span><span class="p">;</span>
+
+  <span class="c1">// chart
+</span>  <span class="kd">var</span> <span class="nx">svg</span>     <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">select</span><span class="p">(</span><span class="nx">element</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                  <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">'svg:svg'</span><span class="p">)</span>
+                  <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'width'</span><span class="p">,</span> <span class="nx">width</span><span class="p">)</span>
+                  <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'height'</span><span class="p">,</span> <span class="nx">height</span><span class="p">)</span>
+                  <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'class'</span><span class="p">,</span> <span class="s1">'sparkline'</span><span class="p">)</span>
+                  <span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">'g'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'transform'</span><span class="p">,</span> <span class="s1">'translate('</span><span class="o">+</span><span class="nx">padding</span><span class="o">+</span><span class="s1">', '</span><span class="o">+</span><span class="nx">padding</span><span class="o">+</span><span class="s1">')'</span><span class="p">);</span>
+
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">selectAll</span><span class="p">(</span><span class="s1">'*'</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
+
+  <span class="kd">var</span> <span class="nx">maxY</span>    <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
+      <span class="nx">x</span>       <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">()</span>
+                  <span class="p">.</span><span class="nx">domain</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">])</span>
+                  <span class="p">.</span><span class="nx">range</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nx">width</span><span class="p">]),</span>
+      <span class="nx">y</span>       <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">linear</span><span class="p">()</span>
+                  <span class="p">.</span><span class="nx">domain</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nx">maxY</span><span class="p">])</span>
+                  <span class="p">.</span><span class="nx">range</span><span class="p">([</span><span class="nx">height</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+      <span class="nx">yAxis</span> <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">svg</span><span class="p">.</span><span class="nx">axis</span><span class="p">().</span><span class="nx">scale</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">orient</span><span class="p">(</span><span class="s1">'left'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">ticks</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">'g'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'class'</span><span class="p">,</span> <span class="s1">'axis'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">yAxis</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">line</span>    <span class="o">=</span> <span class="nx">d3</span><span class="p">.</span><span class="nx">svg</span><span class="p">.</span><span class="nx">line</span><span class="p">()</span>
+                  <span class="p">.</span><span class="nx">interpolate</span><span class="p">(</span><span class="s1">'linear'</span><span class="p">)</span>
+                  <span class="p">.</span><span class="nx">x</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span><span class="nx">i</span><span class="p">){</span><span class="k">return</span> <span class="nx">x</span><span class="p">(</span><span class="nx">i</span><span class="p">);})</span>
+                  <span class="p">.</span><span class="nx">y</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">,</span><span class="nx">i</span><span class="p">){</span><span class="k">return</span> <span class="nx">y</span><span class="p">(</span><span class="nx">d</span><span class="p">);}),</span>
+      <span class="nx">path</span>    <span class="o">=</span> <span class="nx">svg</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">'svg:path'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">data</span><span class="p">([</span><span class="nx">data</span><span class="p">])</span>
+                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'d'</span><span class="p">,</span> <span class="nx">line</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'fill'</span><span class="p">,</span> <span class="s1">'none'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'stroke-width'</span><span class="p">,</span> <span class="s1">'1'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'ngCity'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">controller</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p></div></p>
+
+<p>Feel free to sign up for the newsletter for updates when new posts come out as well as for new content on AngularJS weekly.</p>
+
+<script type="text/javascript">
+var app = angular.module("directiveTutorialExampleApp", []);
+app.directive('ngSparkline1', function() {
+  return {
+    restrict: 'A',
+    template: '<div class="sparkline"></div>'
+  }
+});
+app.directive('ngSparkline2', function() {
+  return {
+    restrict: 'A',
+    require: '^ngModel',
+    scope: {
+      ngModel: '='
+    },
+    template: '<div class="sparkline"><h4>Weather for {{ngModel}}</h4></div>'
+  }
+});
+
+app.directive('ngCity', function() {
+  return {
+    controller: function($scope) {}
+  }
+});
+
+app.directive('ngSparkline3', function() {
+  return {
+    restrict: 'A',
+    require: '^ngCity',
+    scope: {
+      ngCity: '@'
+    },
+    template: '<div class="sparkline"><h4>Weather for {{ngCity}}</h4></div>'
+  }
+});
+app.directive('ngSparkline4', function() {
+  var url = "http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&units=imperial&cnt=3&callback=JSON_CALLBACK&q=";
+  return {
+    restrict: 'A',
+    require: '^ngCity',
+    scope: {
+      ngCity: '@'
+    },
+    template: '<div class="sparkline"><h4>Weather for {{ngCity}}</h4>Weather: <pre>{{ weather }}</pre></div>',
+    controller: ['$scope', '$http', function($scope, $http) {
+      $scope.getTemp = function(city) {
+        $http({
+          method: 'JSONP',
+          url: url + city
+        }).success(function(data) {
+          var weather = [];
+          angular.forEach(data.list, function(value){
+            weather.push(value);
+          });
+          $scope.weather = weather;
+        });
+      }
+    }],
+    link: function(scope, iElement, iAttrs, ctrl) {
+      scope.getTemp(iAttrs.ngCity);
+    }
+  }
+});
+
+var chartGraph = function(element, data, opts) {
+  var width = opts.width || 200,
+      height = opts.height || 80,
+      padding = opts.padding || 30;
+
+  // chart
+  var svg     = d3.select(element[0])
+                  .append('svg:svg')
+                  .attr('width', width)
+                  .attr('height', height)
+                  .attr('class', 'sparkline')
+                  .append('g')
+                    .attr('transform', 'translate('+padding+', '+padding+')');
+
+  svg.selectAll('*').remove();
+
+  var maxY    = d3.max(data),
+      x       = d3.scale.linear()
+                  .domain([0, data.length])
+                  .range([0, width]),
+      y       = d3.scale.linear()
+                  .domain([0, maxY])
+                  .range([height, 0]),
+      yAxis = d3.svg.axis().scale(y)
+                    .orient('left')
+                    .ticks(5);
+
+  svg.append('g')
+      .attr('class', 'axis')
+      .call(yAxis);
+
+  var line    = d3.svg.line()
+                  .interpolate('linear')
+                  .x(function(d,i){return x(i);})
+                  .y(function(d,i){return y(d);}),
+      path    = svg.append('svg:path')
+                    .data([data])
+                    .attr('d', line)
+                    .attr('fill', 'none')
+                    .attr('stroke-width', '1');
+}
+
+app.directive('ngSparkline5', function() {
+  var url = "http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&units=imperial&cnt=14&callback=JSON_CALLBACK&q=";
+  return {
+    restrict: 'A',
+    require: '^ngCity',
+    scope: {
+      ngCity: '@'
+    },
+    template: '<div class="sparkline"><h4>Weather for {{ngCity}}</h4><div class="graph"></div></div>',
+    controller: ['$scope', '$http', function($scope, $http) {
+      $scope.getTemp = function(city) {
+        $http({
+          method: 'JSONP',
+          url: url + city
+        }).success(function(data) {
+          var weather = [];
+          angular.forEach(data.list, function(value){
+            weather.push(value);
+          });
+          $scope.weather = weather;
+        });
+      }
+    }],
+    link: function(scope, iElement, iAttrs, ctrl) {
+      scope.getTemp(iAttrs.ngCity);
+      scope.$watch('weather', function(newVal) {
+        // the `$watch` function will fire even if the
+        // weather property is undefined, so we'll
+        // check for it
+        if (newVal) {
+          var highs = [];
+
+          angular.forEach(scope.weather, function(value){
+            highs.push(value.temp.max);
+          });
+
+          chartGraph(iElement, highs, iAttrs);
+        }
+      });
+    }
+  }
+});
+
+app.directive('ngSparkline6', function() {
+  var url = "http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&units=imperial&cnt=14&callback=JSON_CALLBACK&q=";
+  return {
+    restrict: 'A',
+    require: '^ngCity',
+    transclude: true,
+    scope: {
+      ngCity: '@'
+    },
+    template: '<div class="sparkline"><div ng-transclude></div><div class="graph"></div></div>',
+    controller: ['$scope', '$http', function($scope, $http) {
+      $scope.getTemp = function(city) {
+        $http({
+          method: 'JSONP',
+          url: url + city
+        }).success(function(data) {
+          var weather = [];
+          angular.forEach(data.list, function(value){
+            weather.push(value);
+          });
+          $scope.weather = weather;
+        });
+      }
+    }],
+    link: function(scope, iElement, iAttrs, ctrl) {
+      scope.getTemp(iAttrs.ngCity);
+      scope.$watch('weather', function(newVal) {
+        // the `$watch` function will fire even if the
+        // weather property is undefined, so we'll
+        // check for it
+        if (newVal) {
+          var highs = [];
+
+          angular.forEach(scope.weather, function(value){
+            highs.push(value.temp.max);
+          });
+
+          chartGraph(iElement, highs, iAttrs);
+        }
+      });
+    }
+  }
+});
+
+// Scope example
+app.controller('scopeExampleController', ['$scope', function($scope) {
+  $scope.status = "Not sent";
+  $scope.sendMail = function(mail) {
+    $scope.status = "Sent";
+  };
+}]);
+app.directive('scopeExample', function() {
+  return {
+    restrict: 'A',
+    require: '^ngModel',
+    scope: {
+      ngModel: '=',
+      sentMail: '=',
+      sendMail: '&',
+      fromName: '@',
+      status: '='
+    },
+    template: '<div class="sparkline">' +
+        '<ul>' +
+        '<li><b>ngModel</b>: {{ngModel}}</li>' +
+        '<li><b>onSend (status)</b>: {{status}}</li>' +
+        '<li><b>fromName</b>: {{fromName}}</li>' +
+        '</ul></div>'
+  }
+});
+</script>
+
+
+          <div class="container" id="signupApp" ng-cloak>
+  <div id="topbar_signup_embed">
+  Get the weekly email all focused on AngularJS. <b>Sign up below</b> to receive the weekly email and exclusive content.
+  <form name="ngSignup" action="http://willcodeforfoo.us6.list-manage1.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=fa61364f13" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    
+    <div class="row collapse">
+      <div class="small-9 columns">
+        <input ng-class="{error: ngSignup.email.$dirty && ngSignup.email.$invalid}" type="email" ng-minlength=3 ng-model="ngSignup.email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address" required>
+      </div>
+      <div class="small-3 columns">
+        <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" ng-disabled="ngSignup.$invalid" class="button postfix"></div>
+      </div>
+        <div class="small-12 columns error" ng-show="ngSignup.EMAIL.$dirty && ngSignup.EMAIL.$invalid">
+          <small class="error" ng-show="ngSignup.EMAIL.$error.required">Your email is required.</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.minlength">Your email is required to be at least 3 characters</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.email">That is not a valid email. Please input a valid email.</small>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  if (typeof(app) == 'undefined') {
+    angular.module("signupApp", [])
+    .controller("mailChimpValidation", ['$scope', function($scope) {}]);
+    var ele = document.getElementById("signupApp");
+    angular.element(ele, ['signupApp']);
+  }
+</script>
+          <section id="sample_chapter" ng-app="ngBookApp">    <div class="content">      <h3 class="title">Download a free sample of the ng-book: The Complete Book on AngularJS</h3> <span class="image"><img src="http://www.ng-book.com/images/flatbook-ngbook-small.png" alt="book"></span><div class="desc">It's free, so just enter your email address and the PDF will be sent directly to your inbox.</div>    </div>    <div class="form" ng-init="signedup=false" ng-show="!signuped">      <form action="http://willcodeforfoo.us6.list-manage.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=7bbfaae868" method="post" id="mc-embedded-subscribe-form" name="ngBookSignup" class="validate ng-pristine ng-invalid ng-invalid-required" target="_blank" novalidate="">
+<div class="mc-field-group">          <input type="email" ng-model="ngBookSignup.email" ng-class="{error: ngBookSignup.email.$dirty &amp;&amp; ngBookSignup.email.$invalid}" value="" name="EMAIL" placeholder="Your email address" class="required email ng-pristine ng-valid ng-valid-email ng-valid-minlength" id="mce-EMAIL" ng-minlength="3">        </div>        <div id="mce-responses" class="clear">          <div class="response" id="mce-error-response" style="display:none"></div>          <div class="response" id="mce-success-response" style="display:none"></div>        </div>        <div class="clear"><input type="submit" value="Send me a free chapter" name="subscribe" id="ngBookSignupSubmit" ng-disabled="ngBookSignup.$invalid" class="button postfix" ng-click="signedup=true" disabled="disabled"></div>      </form>      <div ng-show="signedup" class="ng-hide">      <p>Sweet! We are glad to hear you're interested in learning AngularJS. Enjoy the free chapter. We put a lot of work into building the book series, so we hope you like it!      Talk soon</p>      </div>      <div class="desc">        We won't ever send you spam! You can unsubscribe at any time.      </div>    </div>  </section>
+
+          <footer>
+            <ul class="actions">
+              <li><a href="/articles"><span class="arrow">←</span> Back to articles</a></li>
+              <li><a href="http://twitter.com/home/?status=Build custom directives with AngularJS - http://ng-newsletter.com/posts/directives.html via @ngnewsletter" target="_blank"><img src="/img/twitter-bird-blue-on-white.png" style="width: 56px; height: 26px;" />Share on twitter</a></li>
+            </ul>
+          </footer>
+
+        </article>
+
+        <section id="comments">
+            <h2 class="gamma">Comments</h2>
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ngnewsletter'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section>
+
+        
+
+        <script type="text/javascript" src="/js/vendor/zepto.js"></script>
+<script type="text/javascript" src="/js/vendor/foundation.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+        </div>
+    </div>
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28176211-3', 'ng-newsletter.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript">
+  var $mcGoal = {'settings':{'uuid':'86d6f14c7cc955128485e3b8e','dc':'us6'}};
+  (function() {
+     var sp = document.createElement('script'); sp.type = 'text/javascript'; sp.async = true; sp.defer = true;
+    sp.src = ('https:' == document.location.protocol ? 'https://s3.amazonaws.com/downloads.mailchimp.com' : 'http://downloads.mailchimp.com') + '/js/goal.min.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sp, s);
+  })(); 
+</script>
+
+</body>
+</html>

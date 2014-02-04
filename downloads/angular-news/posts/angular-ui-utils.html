@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+
+<title>Breaking the Ice with AngularUI Utils | ng-newsletter</title>
+
+<meta name="author" content="Ari Lerner">
+<meta name="description" content="In this week's post, we explore the UI Utils library,t he utility package that makes a lot of custom extensions available to our projects. angularjs angularjs tutorial angular">
+<meta name="keywords" content="angularjs angular-ui angular menu angularjs doubleclick angularjs dblclick dblclick angularjs quickstart beginner angular tutorial angularjs tutorial angularjs angularjs tutorial angular realtime firebase angularfire">
+
+<meta name="msvalidate.01" content="BE7DA3BEF0F11153F6E4B5585C12DB20" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ng-newsletter" />
+<meta property="og:url" content="http://ng-newsletter.com" />
+<meta property="og:image" content="http://ng-newsletter.com/img/" />
+<meta property="og:description" content="In this week's post, we explore the UI Utils library,t he utility package that makes a lot of custom extensions available to our projects." />
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:creator" value="@auser" />
+<meta name="twitter:title" value="ng-newsletter" />
+<meta name="twitter:description" value="In this week's post, we explore the UI Utils library,t he utility package that makes a lot of custom extensions available to our projects." />
+<meta name="twitter:image" value="http://ng-newsletter.com/img/" />
+
+<link rel="alternate" type="application/rss+xml" href="feed.rss" title="Sitewide RSS 2.0 Feed">
+<link rel="alternate" type="application/atom+xml" href="atom.xml" title="Sitewide ATOM Feed">
+<link rel="alternate" type="application/atom+json" href="atom.json" title="Sitewide JSON Feed">
+
+<link href="/favicon.ico" rel="icon" type="image/ico" />
+<link href="/css/site.css" media="screen" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Roboto:400italic,700italic,400,700|Open+Sans:r,i,b,bi|Bitter:r,i,b" media="screen" rel="stylesheet" type="text/css" />
+<script src="/js/vendor/custom.modernizr.js"></script>
+<script src="/js/vendor/d3.v3.min.js"></script>
+<script src="/js/vendor/angular/angular.min.js"></script>
+<script src="/js/vendor/angular-route/angular-route.min.js"></script>
+<script src="/js/vendor/angular-animate.min.js"></script>
+<script src="/js/vendor/angular-translate.min.js"></script>
+<script src="/js/vendor/angular-cookies/angular-cookies.min.js"></script>
+
+
+</head>
+<body ng-app="uiAngularApp">
+
+    
+    <div id="header">
+  <div id="topNav">
+    <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">ng-newsletter</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <ul class="right">
+      		<li><a href="/posts">Articles</a></li>
+          <li><a href="/advent2013/">25 days of Angular</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/sponsor">Sponsorship</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+  <div class="headerContent">
+  </div>
+</div>
+
+    <div class="container">
+      <div id="article">
+        <article class="post">
+          <header>
+            <h1 class="mega">Breaking the Ice with AngularUI Utils</h1>
+          </header>
+          
+          <p>The UI Utils library is a powerful utility package that makes a lot of custom extensions available to your project without needing to reinvent the wheel. </p>
+
+<p>We&rsquo;ll cover a few notable features that the <code>ui-utils</code> library gives us, including:</p>
+
+<ul>
+<li>input masking</li>
+<li>custom event handling</li>
+<li>custom formatting</li>
+<li>jQuery passthrough directives</li>
+<li>string inflector</li>
+<li>fragment inclusion based on selectors</li>
+<li>text highlighting</li>
+<li>more&hellip;</li>
+</ul>
+
+<h3>Installation</h3>
+<pre class="highlight shell"><span class="gp">$ </span>bower install --save angular-ui-utils
+</pre>
+<p>We&rsquo;ll need to ensure that we include the library in our HTML template. Each component of the <code>ui-utils</code> library is built as an individual module, so we&rsquo;ll need to include each one independently. </p>
+
+<h3>Mask</h3>
+
+<p>When we want to take a credit card or a phone number (or any other input that requires a specific format), we can present a clean UI that tells our users that they are giving us clean input. </p>
+
+<p>We&rsquo;ll need to ensure we include the <code>mask.js</code> library in our HTML:</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;app/bower_components/angular-ui-utils/modules/mask/mask.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>And set the <code>ui-mask</code> as a dependency for our app:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'ui.mask'</span><span class="p">])</span>
+</pre>
+<p>Now, we can specify input masks using the <code>ui-mask</code> directive. The <code>ui-mask</code> directive takes a single format string that follows the formatting rules:</p>
+
+<ul>
+<li><code>A</code> - any letter</li>
+<li><code>9</code> - any number</li>
+<li><code>*</code> - any alphanumeric character</li>
+</ul>
+
+<p>For instance, to format a credit card number in an input, we might set the <code>ui-mask</code> directive to the following:</p>
+<pre class="highlight html"><span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;ccnum&quot;</span> <span class="na">ui-mask=</span><span class="s">&quot;9999 9999 9999 9999&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;user.cc&quot;</span> <span class="na">placeholder=</span><span class="s">&quot;Credit card number&quot;</span> <span class="nt">/&gt;</span>
+</pre>
+<blockquote>
+<p>Note that, similar to how Angular input works, the input will not be valid until it matches the mask.</p>
+</blockquote>
+
+<h4>See it</h4>
+
+<div ng-controller="MaskController" class="payment_form">
+<form name="payment">
+<div class="creditcard">
+  <input name="ccnum" ui-mask="9999 9999 9999 9999" ng-model="user.cc" />
+  <div class="placeholder" ng-class="user.cctype"></div>
+</div>
+
+<p></form></p>
+
+<p>Try a few credit card numbers out, like:</p>
+
+<ul>
+<li><a ng-click="user.cc='5555555555554444'">Mastercard: 5555555555554444</a></li>
+<li><a ng-click="user.cc='4111111111111111'">Visa: 4111111111111111</a></li>
+<li><a ng-click="user.cc='6011111111111117'">Discover: 6011111111111117</a></li>
+</ul>
+
+<p>Or type yours in (don&rsquo;t worry, we&rsquo;re not saving it).</p>
+
+<h5>Credit card: {{ user.cc }}</h5>
+
+<h5>Credit card type: {{ user.cctype }}</h5>
+
+<p></div></p>
+
+<blockquote>
+<p>Note that this input only supports credit cards whose input mask matches <code>9999-9999-9999-9999</code>. With a bit more work, we can support other card types.</p>
+</blockquote>
+
+<p>In the same sense, we can format an input field with characters or any alphanumeric character.</p>
+
+<h3>ui-event</h3>
+
+<p>Just like the other modules, we&rsquo;ll need to include the <code>event.js</code> library in our HTML:</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;app/bower_components/angular-ui-utils/modules/event/event.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>And we need to include the <code>ui.event</code> as a dependency for our app, as well:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'ui.event'</span><span class="p">])</span>
+</pre>
+<p>When we want to handle events that are not natively supported by AngularJS (for instance, if we want the user to double click on an element or handle a blur event), we&rsquo;d have to write a wrapper around the native browser events. </p>
+
+<p>This <code>ui-event</code> module is simply a wrapper around native events; therefore, we can use it to respond to any event that the browser fires on any element. </p>
+
+<p>For instance, let&rsquo;s say we want to reveal an image after the user double clicks on another image. We simply set the <code>ui-event</code> directive to a key-value pair with the event name and the action to take when the element catches the event.</p>
+
+<p>For instance, in our HTML, we can set a double click <code>dblclick</code> event to call a <code>showImage()</code> function on our controller:</p>
+<pre class="highlight html"><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">&quot;/images/ui/ginger.png&quot;</span> 
+      <span class="na">ui-event=</span><span class="s">&quot;{dblclick:'showImage()'}&quot;</span> <span class="nt">/&gt;</span>
+</pre>
+<p>And in our controller, we can write our the method on the scope like normal:</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'DemoController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">showImage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">shouldshowImage</span> <span class="o">=</span> <span class="o">!</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">shouldshowImage</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}]);</span>
+</pre>
+<h4>See it</h4>
+
+<div ng-controller="EventController" class="doubleclickdemo">
+<img ng-hide="shouldshowImage"
+      src="/images/ui/ginger.png" 
+      ui-event="{dblclick:'showImage()'}" 
+      />
+<img ng-show="shouldshowImage"
+      src="/images/ui/ginger-exposed.png"
+      ui-event="{dblclick:'showImage()'}"
+    />
+<h5>Double click the image</h5>
+</div>
+
+<p>Since the <code>ui-event</code> directive is simply a wrapper around native browser events, we can use it to mimic any browser event on any element.</p>
+
+<p>For instance, if we want to capture a blur or focus event on an element, we can use the <code>ui-event</code> directive to capture these events for us.</p>
+
+<p>Let&rsquo;s say we want to provide some helpful tips for filling out a form. We can set actions on the <code>focus</code> event and the <code>blur</code> event to show and reveal these help tips.</p>
+
+<p>For instance, if we have a form that includes the input fields of name and email, we can attach functions to our <code>blur</code> and <code>focus</code> events to show <code>help</code> events.</p>
+<pre class="highlight html"><span class="nt">&lt;form</span> <span class="na">name=</span><span class="s">&quot;form&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">name=</span><span class="s">&quot;name&quot;</span> <span class="na">placeholder=</span><span class="s">&quot;Your name&quot;</span> 
+    <span class="na">ui-event=</span><span class="s">&quot;{focus: 'showNameHelp=true',
+              blur: 'showNameHelp=false'}&quot;</span>
+    <span class="nt">/&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;email&quot;</span> <span class="na">name=</span><span class="s">&quot;email&quot;</span> <span class="na">placeholder=</span><span class="s">&quot;Your email&quot;</span> 
+    <span class="na">ui-event=</span><span class="s">&quot;{focus: 'showEmailHelp=true',
+              blur: 'showEmailHelp=false'}&quot;</span>
+    <span class="nt">/&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</pre>
+<p>With these events set on the input fields, we can show our help fields, depending on which field the user is focused on, in the Angular way (i.e., using <code>ng-show</code> and <code>ng-hide</code>).</p>
+
+<h4>See it</h4>
+
+<div ng-controller="EventController" class="doubleclickdemo" class="row">
+<div class="large-8 small-8 columns">
+  <form name="form">
+    <input type="text" name="name" placeholder="Your name" 
+      ui-event="{focus: 'form.showNameHelp=true',
+                blur: 'form.showNameHelp=false'}"
+      />
+    <input type="email" name="email" placeholder="Your email" 
+      ui-event="{focus: 'form.showEmailHelp=true',
+                blur: 'form.showEmailHelp=false'}"
+      />
+  </form>
+</div>
+
+<div class="large-4 small-4 columns tips">
+  <div ng-show="form.showNameHelp">
+    Why do we need your name? So we can best serve you&hellip; other help here.
+  </div>
+  <div ng-show="form.showEmailHelp">
+    Why do we need your email? We won&rsquo;t send you any spam,
+    </div>
+  </div>
+</div>
+
+<div class="clear"></div>
+
+<h3>ui-format</h3>
+
+<p>We&rsquo;ll need to ensure we include the <code>format.js</code> library in our HTML:</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;app/bower_components/angular-ui-utils/modules/format/format.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>And set <code>ui.format</code> as a dependency for our app:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'ui.format'</span><span class="p">])</span>
+</pre>
+<p>The <code>format</code> library is a wrapper around different ways to work with string tokens. It enables us to work directly with variable tokens that we expect in our app.</p>
+
+<p>Token replacement with the <code>format</code> library works with either an array or a key-value/JavaScript object. For instance:</p>
+<pre class="highlight html">{{ &quot;Hello $0&quot; | format: 'Ari' }}
+</pre>
+<h4>See it</h4>
+
+<div ng-controller="FormatController">
+<div class="code_with_result"><pre ng-non-bindable>{{ "Hello $0" | format: 'Ari' }}</pre></div>
+</div>
+
+<p>Alternatively, we can bind the name to a variable on our scope and use the <code>format</code> library to present it in a clean format. Let&rsquo;s say we have a controller that looks like:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'ui.format'</span><span class="p">])</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'FormatController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">'Ari'</span><span class="p">;</span>
+<span class="p">}]);</span>
+</pre>
+<p>We can format the input against that bound variable on the <code>$scope</code>:</p>
+
+<h4>See it</h4>
+
+<div ng-controller="FormatController">
+<div class="code_with_result"><pre ng-non-bindable>{{ "Hello $0" | format: name }}</pre></div>
+
+<a ng-click="modifyName=!modifyName">Modify name</a>
+  <div ng-show="modifyName">
+    <input ng-model="name" placeholder="Or enter another name" name="name" />
+  </div>
+</div>
+
+<p>Although this example isn&rsquo;t particularly interesting (and this functionality comes out of the box with Angular), it becomes interesting when we want to manipulate text on a key-value basis. </p>
+
+<p>For instance, we can format a string based on the keys of an object we have. Let&rsquo;s say we have an object with a <code>name</code> and an <code>email</code> attribute:</p>
+<pre class="highlight javascript"><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'FormatController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="s1">'Ari'</span><span class="p">,</span>
+    <span class="na">email</span><span class="p">:</span> <span class="s1">'<a class="__cf_email__" href="http://www.cloudflare.com/email-protection" data-cfemail="5637243f1630233a3a252237353d783f39">[email&nbsp;protected]</a><script type="text/javascript">
+/* <![CDATA[ */
+(function(){try{var s,a,i,j,r,c,l,b=document.getElementsByTagName("script");l=b[b.length-1].previousSibling;a=l.getAttribute('data-cfemail');if(a){s='';r=parseInt(a.substr(0,2),16);for(j=2;a.length-j;j+=2){c=parseInt(a.substr(j,2),16)^r;s+=String.fromCharCode(c);}s=document.createTextNode(s);l.parentNode.replaceChild(s,l);}}catch(e){}})();
+/* ]]> */
+</script>'</span>
+  <span class="p">}</span>
+<span class="p">}]);</span>
+</pre>
+<p>We can change our markup to include the keys (i.e., <code>name</code> and <code>email</code>) as <code>tokens</code> such that our app replaces them with input values:</p>
+<pre class="highlight html">{{ &quot;Hello :name. Your email is :email&quot; | format: person }}
+</pre>
+<h4>See it</h4>
+
+<div ng-controller="FormatController">
+<div class="code_with_result"><pre ng-non-bindable>{{ "Hello :name. Your email is :email" | format: person }}</pre></div>
+</div>
+
+<p>The <code>format</code> module is particularly useful when working with translations or <code>i18n</code> support (for more on translations, check out our <a href="/posts/angular-translate.html">post</a> on i18n support).</p>
+
+<div id="codemirror_link"></div>
+
+<h3>CodeMirror</h3>
+
+<p>The CodeMirror web IDE is pretty fantastic. The community is wildly active, and the support for building plugins inside the IDE is stellar. </p>
+
+<p>The AngularUI library supports embedding CodeMirror instances in our page.</p>
+
+<p>To install the <code>angular-ui-codemirror</code> library, we can use Bower:</p>
+<pre class="highlight shell"><span class="gp">$ </span>bower install angular-ui-codemirror
+</pre>
+<p>In our <code>index.html</code> file, we&rsquo;ll need to reference the <code>angular-ui-codemirror</code> library as a dependency, as well as the <code>codemirror</code> library and any modes that we want to install.</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;app/bower_components/codemirror/lib/codemirror.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;app/bower_components/angular-ui-codemirror/ui-codemirror.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>Once we have completed that set up, we&rsquo;ll need to set the injection of <code>ui.codemirror</code> as a dependency for our application:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'codemirrorApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'ui.codemirror'</span><span class="p">]);</span>
+</pre>
+<p>Now we can use the <code>ui-codemirror</code> directive on our <code>textarea</code> HTML object to create an editing environment:</p>
+<pre class="highlight html"><span class="nt">&lt;textarea</span> <span class="na">ui-codemirror</span> <span class="na">ng-model=</span><span class="s">&quot;code&quot;</span><span class="nt">&gt;&lt;/textarea&gt;</span>
+</pre>
+<h4>See it</h4>
+
+<div class="editor" ng-controller="CodemirrorController">
+<textarea ui-codemirror ng-model="code1"></textarea>
+</div>
+
+<p>Now, just like using plain CodeMirror, we can set options on our instance. We pass options in the <code>ui-codemirror</code> directive, like so:</p>
+<pre class="highlight html"><span class="nt">&lt;textarea</span> <span class="na">ui-codemirror=</span><span class="s">&quot;editorOptions&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;code&quot;</span><span class="nt">&gt;&lt;/textarea&gt;</span>
+</pre>
+<p>Now we can either pass <code>editorOptions</code> as an object that is on a controller (as we did above) or we can even pass those options as a string (that will be parsed):</p>
+<pre class="highlight html"><span class="nt">&lt;textarea</span> <span class="na">ui-codemirror=</span><span class="s">&quot;{mode: 'javascript'}&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;code&quot;</span><span class="nt">&gt;&lt;/textarea&gt;</span>
+</pre>
+<p>The CodeMirror plugin has many options that we can use to manipulate our CodeMirror instance, from helping us to handle code events to giving us direct access to the CodeMirror instance.</p>
+
+<p>The <code>ui-codemirror</code> options can take any options that the CodeMirror instance requires. For instance, if we want to change the theme of the CodeMirror instance, we&rsquo;ll need to change options on that instance.</p>
+
+<p>We can get access to it by creating an <code>onLoad</code> event handler that stores the instance of the CodeMirror. Then, we can update the actual CodeMirror instance and do all sorts of fun magic.</p>
+
+<p>To get started, let&rsquo;s pass an <code>onLoad</code> event in our options:</p>
+<pre class="highlight javascript"><span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;editor&quot;</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">controller</span><span class="o">=</span><span class="s2">&quot;CodemirrorController&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="nx">textarea</span> <span class="nx">ui</span><span class="o">-</span><span class="nx">codemirror</span><span class="o">=</span><span class="s2">&quot;{
+      lineNumbers: true,
+      mode: 'javascript',
+      onLoad: codemirrorLoaded
+    }&quot;</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">model</span><span class="o">=</span><span class="s2">&quot;code1&quot;</span><span class="o">&gt;&lt;</span><span class="sr">/</span><span class="err">textarea&gt;</span>
+<span class="o">&lt;</span><span class="sr">/</span><span class="err">div&gt;</span>
+</pre>
+<p>Now, in our <code>CodemirrorController</code>, we can add the function <code>codemirrorLoaded</code>, which simply stores the CodeMirror instance on our scope:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'CodemirrorController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">editor</span><span class="p">;</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">codemirrorLoaded</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">_editor</span><span class="p">){</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">editor</span> <span class="o">=</span> <span class="nx">_editor</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}]);</span>
+</pre>
+<p>With that set, we can pretty much do anything we want to the CodeMirror instance, as we now have access to it on the scope. </p>
+
+<p>Let&rsquo;s provide an option for the user to change the theme of his CodeMirror instance. We&rsquo;ll provide a dropdown select menu that will display all of the CSS files we have available. When the user selects a new theme, we&rsquo;ll update the theme of the CodeMirror instance.</p>
+
+<p>Inside of our <code>CodemirrorController</code> (ideally, inside of a <em>directive</em>), we can add the functionality to handle theming the instance:</p>
+<pre class="highlight javascript"><span class="c1">// ...
+</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'CodemirrorController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">editor</span><span class="p">;</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">codemirrorLoaded</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">_editor</span><span class="p">){</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">editor</span> <span class="o">=</span> <span class="nx">_editor</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">theme</span> <span class="o">=</span> <span class="s1">'3024-night'</span><span class="p">;</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">themes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">'3024-day'</span><span class="p">,</span> 
+    <span class="s1">'3024-night'</span><span class="p">,</span>
+    <span class="s1">'eclipse'</span><span class="p">,</span>
+    <span class="s1">'neat'</span><span class="p">,</span>
+    <span class="s1">'monokai'</span><span class="p">,</span>
+    <span class="s1">'elegant'</span>
+  <span class="p">];</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">$watch</span><span class="p">(</span><span class="s1">'theme'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newVal</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">newVal</span><span class="p">)</span> <span class="p">{</span> <span class="nx">$scope</span><span class="p">.</span><span class="nx">changeTheme</span><span class="p">(</span><span class="nx">newVal</span><span class="p">);</span> <span class="p">}</span>
+  <span class="p">})</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">changeTheme</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">theme</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">editor</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">editor</span><span class="p">.</span><span class="nx">setOption</span><span class="p">(</span><span class="s1">'theme'</span><span class="p">,</span> <span class="nx">theme</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}]);</span>
+</pre>
+<h4>See it</h4>
+
+<div class="editor" ng-controller="CodemirrorController">
+<textarea ui-codemirror="{
+      lineNumbers: true,
+      lineWrapping: true,
+      mode: 'javascript',
+      theme: theme,
+      onChange: changed,
+      onLoad: codemirrorLoaded
+    }" ng-model="code1"></textarea>
+<label for="select">Change the editor theme</label>
+<select ng-model="theme" name="theme" ng-options="name for name in themes" placeholder="Change the editor theme"></select>
+</div>
+
+<p>You can see that this UI element is very powerful. A little more work, and we can create a CodePen or JS Bin.</p>
+
+<p>You can find more <a href="https://github.com/angular-ui/ui-codemirror">here</a>.</p>
+
+<h2>Google Maps</h2>
+
+<p>People often ask us how they can best integrate <a href="http://maps.google.com">Google Maps</a> in Angular apps. </p>
+
+<p>The AngularUI toolkit comes with a Google Maps directive that&rsquo;s pretty darn good.</p>
+
+<h4>See it</h4>
+
+<div ari-iframe>
+  <section id="map" ng-controller="MapCtrl" >
+    <div ui-map="myMap" ui-options="mapOptions" class="map-canvas"></div>
+  </section>
+  <script type="text/javascript" src="/js/vendor/angular-ui-utils/modules/event/event.js"></script>
+<script type="text/javascript" src="/js/vendor/angular-ui-map/src/map.js"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=onGoogleReady"></script>
+  <script type="text/javascript">
+    angular.module('appMap', ['ui.map'])
+    .controller('MapCtrl', ['$scope', function ($scope) {
+    $scope.mapOptions = {
+      center: new google.maps.LatLng(37.7833, -122.4167),
+      zoom: 13,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      disableDefaultUI: true,
+      zoomControl: false,
+      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+    };
+  }]);
+    function onGoogleReady() {
+      angular.bootstrap(document.getElementById("map"), ['appMap']);
+
+    }
+  </script>
+  <style type="text/css">
+  body { margin: 0; padding: 0; }
+  .map-canvas { height: 100%; width: 100%; }
+  </style>
+</div>
+
+<p>To install the <code>angular-ui-map</code> library, we can use Bower:</p>
+<pre class="highlight shell"><span class="gp">$ </span>bower install --save angular-ui-map
+</pre>
+<p>In our <code>index.html</code> file, we&rsquo;ll need to reference this <code>angular-ui-map</code> library, the <code>map</code> library, <b>and the events library</b> as dependencies; we include this last library because <code>map</code> relies on the UI Utils <code>event</code> library.</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;app/bower_components/angular-ui-utils/modules/event/event.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;app/bower_components/angular-ui-map/src/map.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>Lastly, we&rsquo;ll need to load the Google Maps API JavaScript. </p>
+
+<blockquote>
+<p>For simplicity&rsquo;s sake, we won&rsquo;t walk through the best practices for loading Google Maps into our app. We&rsquo;ll cover this topic in our upcoming book <strong><a href="http://ng-book.com">ng-book: The Complete Book on AngularJS</a></strong></p>
+</blockquote>
+
+<p>To include this JavaScript as a library in our app, Google requires us to have a callback function that alerts our page that the Google Maps object is ready to go. To handle this function, we&rsquo;ll create a callback that the Google API will call on our page.</p>
+
+<p>First, the inclusion:</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false&amp;callback=onGoogleReady&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>With this callback set up, we&rsquo;ll need to set the injection of <code>ui.map</code> as a dependency for our application:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'appMap'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'ui.map'</span><span class="p">]);</span>
+</pre>
+<p>Now we have to <em>manually</em> bootstrap our Angular app, as we&rsquo;re dependent upon the Google Maps JavaScript library to load before we can run. Angular makes it easy. </p>
+
+<p>Notice that when we included the Google Maps API JavaScript, we attached a <code>callback</code> with the name of a function (that we will define) called <code>onGoogleReady</code>. Google will call this function after the Maps API has loaded. Inside this function, we&rsquo;ll tell our Angular app to bootstrap:</p>
+<pre class="highlight javascript"><span class="kd">function</span> <span class="nx">onGoogleReady</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">angular</span><span class="p">.</span><span class="nx">bootstrap</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;mapApp&quot;</span><span class="p">),</span> <span class="p">[</span><span class="s1">'appMap'</span><span class="p">]);</span>
+<span class="p">}</span>
+</pre>
+<p>Now we can guarantee that the Google Maps API has loaded for us before our app even boots up.</p>
+
+<p>Next, we can attach our app module to the HTML and place controller (where we will attach our map options) inside of it:</p>
+<pre class="highlight html"><span class="nt">&lt;section</span> <span class="na">id=</span><span class="s">&quot;mapApp&quot;</span> <span class="na">ng-controller=</span><span class="s">&quot;MapController&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">ui-map=</span><span class="s">&quot;myMap&quot;</span> 
+        <span class="na">ui-options=</span><span class="s">&quot;mapOptions&quot;</span> 
+        <span class="na">class=</span><span class="s">&quot;map-canvas&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="nt">&lt;/section&gt;</span>
+</pre>
+<p>Our <code>section</code> element houses our <code>mapApp</code> and ties the <code>MapController</code> to the DOM element. Inside the <code>app</code> element, we also have a div that holds onto the <code>google.maps.Map</code> object through the <code>ui-map</code> directive and a <code>google.maps.MapOptions</code> object through the <code>ui-options</code> directive created by the Google Maps API.</p>
+
+<p>We now have access to the raw Google Maps objects on the scope of our <code>MapController</code>. From here, we can do all sorts of fun stuff, setting the options we want to manipulate.</p>
+
+<p>Check out the demo below and click <a href="https://gist.github.com/auser/6680563">here</a> for the full source.</p>
+
+<h4>See it</h4>
+
+<div ari-iframe>
+  <section id="map" ng-controller="MapCtrl" >
+    <input type="number" placeholder="zoom" ng-model="mapOptions.zoom" />
+    <label for="select">Change the map type</label>
+    <select ng-model="mapOptions.mapTypeId" name="typeId" ng-options="map for map in mapTypes" placeholder="Map type"></select>
+
+    <div ui-map="myMap" ui-options="mapOptions" class="map-canvas"></div>
+  </section>
+  <script type="text/javascript" src="/js/vendor/angular-ui-utils/modules/event/event.js"></script>
+<script type="text/javascript" src="/js/vendor/angular-ui-map/src/map.js"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=onGoogleReady"></script>
+  <script type="text/javascript">
+    angular.module('appMap', ['ui.map'])
+    .controller('MapCtrl', ['$scope', function ($scope) {
+    $scope.mapOptions = {
+      center: new google.maps.LatLng(37.7833, -122.4167),
+      zoom: 13,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      disableDefaultUI: true,
+      zoomControl: true,
+      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+    };
+    $scope.mapTypes = [
+      google.maps.MapTypeId.ROADMAP,
+      google.maps.MapTypeId.SATELLITE,
+      google.maps.MapTypeId.HYBRID,
+      google.maps.MapTypeId.TERRAIN
+    ]
+    $scope.$watch('mapOptions.zoom', function(n) {
+      if (n) {
+        $scope.myMap.setOptions($scope.mapOptions);
+      }
+    });
+    $scope.$watch('mapOptions.mapTypeId', function(n) {
+      if (n) {
+        $scope.myMap.setOptions($scope.mapOptions);
+      }
+    })
+  }]);
+    function onGoogleReady() {
+      angular.bootstrap(document.getElementById("map"), ['appMap']);
+
+    }
+  </script>
+  <style type="text/css">
+  body { margin: 0; padding: 0; }
+  .map-canvas { height: 175px; width: 100%; }
+  </style>
+</div>
+
+<p>We&rsquo;ve covered a small portion of the <code>angular-ui</code> library today; we hope that you&rsquo;ll check out the <code>angular-ui</code> library for yourself for many more Angular options. There are plenty of libraries out there to help you build amazing projects.</p>
+
+<p>Get in touch if you have any comments or concerns about this post or any of the others!</p>
+
+<style type="text/css">
+  .payment_form input {
+    width: 300px;
+    height: 28px;
+    font-size: 130%;
+    padding: 0 5px;
+    border-radius: 3px;
+  }
+  .payment_form .creditcard {
+    position: relative;
+    width: 300px;
+  }
+  .payment_form .creditcard .placeholder {
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+    height: 20px;
+    width: 32px;
+    background-size: 32px 19px;
+    background-repeat: no-repeat;
+    -webkit-transition: 0.4s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    -moz-transition: 0.4s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    transition: 0.4s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    pointer-events: none;
+  }
+  .payment_form .placeholder.mastercard {
+    background-image: url("/images/ui/mastercard-curved-32px.png");
+  }
+  .payment_form .placeholder.visa {
+    background-image: url("/images/ui/visa-curved-32px.png");
+  }
+  .payment_form .placeholder.amex {
+    background-image: url("/images/ui/american-express-curved-32px.png");
+  }
+  .payment_form .placeholder.discover {
+    background-image: url("/images/ui/discover-curved-32px.png");
+  }
+  .doubleclickdemo {
+    margin: 10px;
+  }
+  .doubleclickdemo img {
+    width: 320px !important;
+    height: 225px !important;
+  }
+  .tips div {
+    border: 1px solid #bbc;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  .editor .CodeMirror {
+    height: 150px !important;
+  }
+</style>
+
+<script type="text/javascript" src="/js/vendor/angular-ui-utils/modules/format/format.js"></script>
+
+<script type="text/javascript" src="/js/vendor/angular-ui-utils/modules/mask/mask.js"></script>
+
+<script type="text/javascript" src="/js/vendor/angular-ui-utils/modules/event/event.js"></script>
+
+<script type="text/javascript" src="/js/vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
+
+<p><link rel="stylesheet" type="text/css" href="/js/vendor/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="/js/vendor/codemirror/theme/3024-night.css" />
+<link rel="stylesheet" type="text/css" href="/js/vendor/codemirror/theme/3024-day.css" />
+<link rel="stylesheet" type="text/css" href="/js/vendor/codemirror/theme/eclipse.css" />
+<link rel="stylesheet" type="text/css" href="/js/vendor/codemirror/theme/elegant.css" />
+<link rel="stylesheet" type="text/css" href="/js/vendor/codemirror/theme/monokai.css" />
+<link rel="stylesheet" type="text/css" href="/js/vendor/codemirror/theme/neat.css" />
+<link rel="stylesheet" type="text/css" href="/js/vendor/codemirror/theme/solarized.css" /></p>
+
+<script type="text/javascript" src="/js/vendor/codemirror/lib/codemirror.js"></script>
+
+<script type="text/javascript" src="/js/vendor/angular-ui-codemirror/ui-codemirror.js"></script>
+
+<script type="text/javascript">
+  angular.module('uiAngularApp', [
+    'ngNewsletter', 
+    'ui.format',
+    'ui.mask',
+    'ui.event',
+    'ariIframe',
+    'ui.codemirror'
+    ])
+  .controller('FormatController', ['$scope', function($scope) {
+    $scope.name = "Ari";
+    $scope.person = {
+      name: 'Ari',
+      email: 'ari@fullstack.io'
+    };
+  }])
+  .controller('MaskController', ['$scope', function($scope) {
+    $scope.user = {};
+    $scope.$watch('user.cc', function(v) {
+      if (v) {
+        var type = getCardType(v);
+        if (type) {
+          $scope.user.cctype = type;
+        } else {
+          $scope.user.cctype = undefined;
+        }
+      } else {
+        $scope.user.cctype = undefined;
+      }
+    })
+  }])
+  .controller('EventController', ['$scope', function($scope) {
+    $scope.showImage = function() {
+      $scope.shouldshowImage = !$scope.shouldshowImage;
+    }
+    $scope.showNameHelp = function() {
+      $scope.showNameHelp = !$scope.showNameHelp;
+    }
+  }])
+  .controller('CodemirrorController', ['$scope', function($scope) {
+    $scope.editor;
+    $scope.code1 = 'function(name) {\n\talert("Hello " + name);\n}';
+    $scope.theme = '3024-night';
+    $scope.themes = [
+      '3024-day', 
+      '3024-night',
+      'eclipse',
+      'neat',
+      'monokai',
+      'elegant'
+    ]; 
+
+    $scope.$watch('theme', function(newVal) {
+      if (newVal) {
+        $scope.changeTheme(newVal);
+      }
+    })
+    $scope.changeTheme = function(theme) {
+      if ($scope.editor) {
+        $scope.editor.setOption('theme', theme);
+      }
+    }
+    $scope.codemirrorLoaded = function(_editor){
+      $scope.editor = _editor;
+    }
+  }]);
+
+  function getCardType(num) {
+    /* Visa: length 16, prefix 4, dashes optional.
+    Mastercard: length 16, prefix 51-55, dashes optional.
+    Discover: length 16, prefix 6011, dashes optional.
+    American Express: length 15, prefix 34 or 37.
+    Diners: length 14, prefix 30, 36, or 38. */
+    var types = {
+        "visa": "^4([0-9]{12})?",
+        "mastercard": "^5[1-5]([0-9]{14})?",
+        "amex": "^3[47]([0-9]{13})?",
+        "diners": "^3[068](\d{12})?",
+        "discover": "^6(?:011|5[0-9]{2})([0-9]{12})?"
+      }
+
+    for (type in types) {
+      var re = new RegExp(types[type]);
+      if (re.test(num)) {
+        return type;
+      }
+    }
+    return '';
+  }
+</script>
+
+<script type="text/javascript" src="/js/vendor/codemirror.js"></script>
+
+<script type="text/javascript" src="/js/vendor/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+
+<script type="text/javascript" src="/js/vendor/codemirror/mode/javascript/javascript.js"></script>
+
+<script type="text/javascript" src="/js/vendor/codemirror/mode/xml/xml.js"></script>
+
+
+          <div class="container" id="signupApp" ng-cloak>
+  <div id="topbar_signup_embed">
+  Get the weekly email all focused on AngularJS. <b>Sign up below</b> to receive the weekly email and exclusive content.
+  <form name="ngSignup" action="http://willcodeforfoo.us6.list-manage1.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=fa61364f13" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    
+    <div class="row collapse">
+      <div class="small-9 columns">
+        <input ng-class="{error: ngSignup.email.$dirty && ngSignup.email.$invalid}" type="email" ng-minlength=3 ng-model="ngSignup.email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address" required>
+      </div>
+      <div class="small-3 columns">
+        <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" ng-disabled="ngSignup.$invalid" class="button postfix"></div>
+      </div>
+        <div class="small-12 columns error" ng-show="ngSignup.EMAIL.$dirty && ngSignup.EMAIL.$invalid">
+          <small class="error" ng-show="ngSignup.EMAIL.$error.required">Your email is required.</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.minlength">Your email is required to be at least 3 characters</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.email">That is not a valid email. Please input a valid email.</small>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  if (typeof(app) == 'undefined') {
+    angular.module("signupApp", [])
+    .controller("mailChimpValidation", ['$scope', function($scope) {}]);
+    var ele = document.getElementById("signupApp");
+    angular.element(ele, ['signupApp']);
+  }
+</script>
+          <section id="sample_chapter" ng-app="ngBookApp">    <div class="content">      <h3 class="title">Download a free sample of the ng-book: The Complete Book on AngularJS</h3> <span class="image"><img src="http://www.ng-book.com/images/flatbook-ngbook-small.png" alt="book"></span><div class="desc">It's free, so just enter your email address and the PDF will be sent directly to your inbox.</div>    </div>    <div class="form" ng-init="signedup=false" ng-show="!signuped">      <form action="http://willcodeforfoo.us6.list-manage.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=7bbfaae868" method="post" id="mc-embedded-subscribe-form" name="ngBookSignup" class="validate ng-pristine ng-invalid ng-invalid-required" target="_blank" novalidate="">
+<div class="mc-field-group">          <input type="email" ng-model="ngBookSignup.email" ng-class="{error: ngBookSignup.email.$dirty &amp;&amp; ngBookSignup.email.$invalid}" value="" name="EMAIL" placeholder="Your email address" class="required email ng-pristine ng-valid ng-valid-email ng-valid-minlength" id="mce-EMAIL" ng-minlength="3">        </div>        <div id="mce-responses" class="clear">          <div class="response" id="mce-error-response" style="display:none"></div>          <div class="response" id="mce-success-response" style="display:none"></div>        </div>        <div class="clear"><input type="submit" value="Send me a free chapter" name="subscribe" id="ngBookSignupSubmit" ng-disabled="ngBookSignup.$invalid" class="button postfix" ng-click="signedup=true" disabled="disabled"></div>      </form>      <div ng-show="signedup" class="ng-hide">      <p>Sweet! We are glad to hear you're interested in learning AngularJS. Enjoy the free chapter. We put a lot of work into building the book series, so we hope you like it!      Talk soon</p>      </div>      <div class="desc">        We won't ever send you spam! You can unsubscribe at any time.      </div>    </div>  </section>
+
+          <footer>
+            <ul class="actions">
+              <li><a href="/articles"><span class="arrow">←</span> Back to articles</a></li>
+              <li><a href="http://twitter.com/home/?status=Breaking the Ice with AngularUI Utils - http://ng-newsletter.com/posts/angular-ui-utils.html via @ngnewsletter" target="_blank"><img src="/img/twitter-bird-blue-on-white.png" style="width: 56px; height: 26px;" />Share on twitter</a></li>
+            </ul>
+          </footer>
+
+        </article>
+
+        <section id="comments">
+            <h2 class="gamma">Comments</h2>
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ngnewsletter'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section>
+
+        
+
+        <script type="text/javascript" src="/js/vendor/zepto.js"></script>
+<script type="text/javascript" src="/js/vendor/foundation.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+        </div>
+    </div>
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28176211-3', 'ng-newsletter.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript">
+  var $mcGoal = {'settings':{'uuid':'86d6f14c7cc955128485e3b8e','dc':'us6'}};
+  (function() {
+     var sp = document.createElement('script'); sp.type = 'text/javascript'; sp.async = true; sp.defer = true;
+    sp.src = ('https:' == document.location.protocol ? 'https://s3.amazonaws.com/downloads.mailchimp.com' : 'http://downloads.mailchimp.com') + '/js/goal.min.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sp, s);
+  })(); 
+</script>
+
+</body>
+</html>

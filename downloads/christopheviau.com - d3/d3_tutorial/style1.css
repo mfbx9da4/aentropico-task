@@ -1,0 +1,47 @@
+.legend{
+font-style:italic;
+font-size:12px;
+margin-bottom: 10px;
+}
+h1{
+font:48px Times,serif;
+color:silver;
+}
+h2{
+font:24px Times,serif;
+color:black;
+margin-top:50px;
+margin-bottom: -10px;
+}
+p{
+font-size:14px;
+text-align:justify;
+line-height:140%;
+}
+code{
+background-color: aliceblue;
+}
+a{
+color: gray;
+}
+pre code{
+font:12px monospace;
+}
+body {
+margin:0px; padding:0px;
+text-align:center;
+font-family:"Verdana", Times, serif;
+font-size:14px;
+}
+#container {
+width:800px;
+margin:0px auto;
+text-align:left;
+padding:15px;
+background-color:white;
+}
+.hilite{
+display: inline;
+font-weight: bold;
+background-color: #FFFFCC;
+}

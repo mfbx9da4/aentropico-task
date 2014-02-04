@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+
+<title>Restangular on Angular | ng-newsletter</title>
+
+<meta name="author" content="Ari Lerner">
+<meta name="description" content="Using Restangular with Angular. Why it's cool and why it makes SO much sense. angularjs angularjs tutorial angular">
+<meta name="keywords" content="angularjs angularjs restangular rest angularjs angularjs restful angularjs resource angularjs http restangular angular tutorial angularjs tutorial angularjs angularjs tutorial angular realtime firebase angularfire">
+
+<meta name="msvalidate.01" content="BE7DA3BEF0F11153F6E4B5585C12DB20" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ng-newsletter" />
+<meta property="og:url" content="http://ng-newsletter.com" />
+<meta property="og:image" content="http://ng-newsletter.com/img/" />
+<meta property="og:description" content="Using Restangular with Angular. Why it's cool and why it makes SO much sense." />
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:creator" value="@auser" />
+<meta name="twitter:title" value="ng-newsletter" />
+<meta name="twitter:description" value="Using Restangular with Angular. Why it's cool and why it makes SO much sense." />
+<meta name="twitter:image" value="http://ng-newsletter.com/img/" />
+
+<link rel="alternate" type="application/rss+xml" href="feed.rss" title="Sitewide RSS 2.0 Feed">
+<link rel="alternate" type="application/atom+xml" href="atom.xml" title="Sitewide ATOM Feed">
+<link rel="alternate" type="application/atom+json" href="atom.json" title="Sitewide JSON Feed">
+
+<link href="/favicon.ico" rel="icon" type="image/ico" />
+<link href="/css/site.css" media="screen" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Roboto:400italic,700italic,400,700|Open+Sans:r,i,b,bi|Bitter:r,i,b" media="screen" rel="stylesheet" type="text/css" />
+<script src="/js/vendor/custom.modernizr.js"></script>
+<script src="/js/vendor/d3.v3.min.js"></script>
+<script src="/js/vendor/angular/angular.min.js"></script>
+<script src="/js/vendor/angular-route/angular-route.min.js"></script>
+<script src="/js/vendor/angular-animate.min.js"></script>
+<script src="/js/vendor/angular-translate.min.js"></script>
+<script src="/js/vendor/angular-cookies/angular-cookies.min.js"></script>
+
+
+</head>
+<body ng-app="restangularDemoApp">
+
+    
+    <div id="header">
+  <div id="topNav">
+    <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">ng-newsletter</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <ul class="right">
+      		<li><a href="/posts">Articles</a></li>
+          <li><a href="/advent2013/">25 days of Angular</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/sponsor">Sponsorship</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+  <div class="headerContent">
+  </div>
+</div>
+
+    <div class="container">
+      <div id="article">
+        <article class="post">
+          <header>
+            <h1 class="mega">Restangular on Angular</h1>
+          </header>
+          
+          <p>Although Angular on its own is powerful enough to build standalone applications where we pack all important data inside the application, in doing so we would be missing out on one of the nicest features of the framework: its ability to talk with the outside world.</p>
+
+<p>In this section, we&rsquo;re going to talk specifically about an incredibly well-developed and well-thought-out library: <strong>Restangular</strong>. All of the code in this article is available at the end of the article.</p>
+
+<h2>The what and the why</h2>
+
+<p>Restangular is an Angular service specifically designed simply to fetch data from the rest of the world.</p>
+
+<p>Why not use <code>$http</code> or <code>$resource</code>? Although <code>$http</code> and <code>$resource</code> are built into the framework, they carry limitations with them. Restangular takes a completely different approach to XHR and makes it a pleasant experience.</p>
+
+<p>The complete list of benefits to using Restangular is available on the <a href="https://github.com/mgonto/restangular">README</a>, but we&rsquo;ll cover a few benefits here:</p>
+
+<ul>
+<li><strong>Promises</strong></li>
+</ul>
+
+<p>Using promises makes Restangular <em>feel</em> more Angular-esque as it uses and resolves on promises. This enables us to chain together responses just as though we&rsquo;re using the raw <code>$http</code> method.</p>
+
+<ul>
+<li><strong>Explicit</strong> </li>
+</ul>
+
+<p>Restangular has little to no magic included in the library. We don&rsquo;t have to guess how it works or dig up documentation on how to use it.</p>
+
+<ul>
+<li><strong>All HTTP methods</strong></li>
+</ul>
+
+<p>All <em>HTTP</em> methods are supported.</p>
+
+<ul>
+<li><strong>Forget URLs</strong></li>
+</ul>
+
+<p>While <code>$resource</code> requires us to specify the URLs we want to fetch, Restangular doesn&rsquo;t require us to <em>know</em> the URLs in advance, nor do we have to specify them all upfront, other than the base URL.</p>
+
+<ul>
+<li><strong>Nested resources</strong></li>
+</ul>
+
+<p>Want to use nested resources? No need to create another instance of the Restangular instance, it&rsquo;ll handle it for us.</p>
+
+<ul>
+<li><strong>One resource, not many</strong></li>
+</ul>
+
+<p>Unlike <code>$resource</code>, we only ever need to create one instance of the Restangular resource object. </p>
+
+<p>And there is much, much more. </p>
+
+<h2>Installation</h2>
+
+<p>Installing Restangular is easy &ndash; we have options. We can download the files manually (from <a href="https://raw.github.com/jimaek/jsdelivr/master/files/restangular/latest/restangular.min.js">GitHub</a>) and include the file locally. If we download the file to our <code>js/vendor</code> directory, then we can include it in our HTML, like so:</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;test/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;js/vendor/restangular.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>We can include the JavaScript libraries hosted on <a href="http://www.jsdelivr.com/">jsDelivr</a> in our page:</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;http://cdn.jsdelivr.net/restangular/latest/restangular.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;http://cdn.jsdelivr.net/restangular/latest/restangular.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>Alternatively, we can use <code>npm</code> to install Restangular if we&rsquo;re using <code>npm</code> in our project:</p>
+<pre class="highlight shell"><span class="gp">$ </span>npm install restangular
+</pre>
+<p>Or we can use Bower to install Restangular, if we&rsquo;ve set up Bower for our project.</p>
+<pre class="highlight shell"><span class="gp">$ </span>bower install restangular
+</pre>
+<p><strong>Note:</strong> Restangular depends on either lodash or underscore, so in order support restangular, we&rsquo;ll need to make sure we include one of the two.</p>
+
+<p>We can either use <a href="http://www.jsdelivr.com/#!lodash">jsDelivr</a> to include <code>lodash</code>:</p>
+<pre class="highlight html"><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;//cdn.jsdelivr.net/lodash/2.1.0/lodash.compat.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>Or download lodash <a href="http://lodash.com/">here</a> or use bower to install.</p>
+<pre class="highlight javascript"><span class="nx">bower</span> <span class="nx">install</span> <span class="nx">lodash</span>
+</pre>
+<p>And include it as a script on the page:</p>
+<pre class="highlight javascript"><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">type</span><span class="o">=</span><span class="s2">&quot;text/javascript&quot;</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&quot;/js/vendor/lodash/dist/lodash.min.js&quot;</span><span class="o">&gt;&lt;</span><span class="sr">/</span><span class="err">script&gt;</span>
+</pre>
+<p>Also, just like any other AngularJS library, we&rsquo;ll need to include the <code>restangular</code> resource as a dependency for our app module object:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'restangular'</span><span class="p">]);</span>
+</pre>
+<p>Once we&rsquo;ve done that, we&rsquo;ll be able to inject the <code>Restangular</code> service in our Angular objects:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'MainController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'Restangular'</span><span class="p">,</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">Restangular</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="p">}]);</span>
+</pre>
+<h2>Intro to the Restangular object</h2>
+
+<p>To use Restangular, there are two ways we can create an object to fetch services. We can either set the base route to fetch objects from:</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">User</span> <span class="o">=</span> <span class="nx">Restangular</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="s1">'users'</span><span class="p">);</span>
+</pre>
+<p>This will set all HTTP requests that come from the Restangular service to pull from <code>/users</code>. For instance, calling <code>getList()</code> on the above object will fetch from <code>/users</code>:</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">allUsers</span> <span class="o">=</span> <span class="nx">User</span><span class="p">.</span><span class="nx">getList</span><span class="p">();</span> <span class="c1">// GET /users
+</span></pre>
+<p>It&rsquo;s also possible to fetch nested requests for a single object. Instead of passing only a route, we can pass a unique ID to pull from as well:</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">oneUser</span> <span class="o">=</span> <span class="nx">Restangular</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span><span class="s1">'users'</span><span class="p">,</span> <span class="s1">'abc123'</span><span class="p">);</span>
+</pre>
+<p>This will generate the request <code>/users/abc123</code> when calling <code>getList()</code> on it.</p>
+<pre class="highlight javascript"><span class="nx">oneUser</span><span class="p">.</span><span class="nx">get</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// GET /users/abc123/inboxes
+</span>  <span class="nx">user</span><span class="p">.</span><span class="nx">getList</span><span class="p">(</span><span class="s1">'inboxes'</span><span class="p">);</span> 
+<span class="p">});</span>
+</pre>
+<p>As you can see from above, Restangular is smart enough to figure out how to construct URLs based upon the methods that we are calling on the Restangular source object. Sometimes, however, it is convenient to set the URL that we&rsquo;re fetching, especially if our back end doesn&rsquo;t support pure RESTful APIs.</p>
+
+<p>To set the URL for a specific request, we can pass a separate argument using the <code>allUrl</code> method:</p>
+<pre class="highlight javascript"><span class="c1">// All URLs on searches will use `http://google.com/` as
+// the baseUrl
+</span><span class="kd">var</span> <span class="nx">searches</span> <span class="o">=</span> 
+  <span class="nx">Restangular</span><span class="p">.</span><span class="nx">allUrl</span><span class="p">(</span><span class="s1">'searches'</span><span class="p">,</span> <span class="s1">'http://google.com/'</span><span class="p">);</span>
+<span class="c1">// Will send a request to GET http://google.com/
+</span><span class="nx">searches</span><span class="p">.</span><span class="nx">getList</span><span class="p">();</span>
+</pre>
+<p>Additionally, we can set the base URL for one particular request, rather than manipulating the entire request using <code>oneUrl</code>:</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">singleSearch</span> <span class="o">=</span> 
+  <span class="nx">Restangular</span><span class="p">.</span><span class="nx">oneUrl</span><span class="p">(</span><span class="s1">'betaSearch'</span><span class="p">,</span> <span class="s1">'http://beta.google.com/1'</span><span class="p">);</span>
+
+<span class="c1">// Trigger a request to GET http://google.com/1
+</span><span class="nx">singleSearch</span><span class="p">.</span><span class="nx">get</span><span class="p">();</span>
+</pre>
+<h2>Using Restangular</h2>
+
+<p>With a good handle on the Restangular object, we can now get down to using it to make requests. </p>
+
+<p>With the initial object that&rsquo;s returned from Restangular, we have a lot of methods that we can use to interact with our back-end API.</p>
+
+<p>Let&rsquo;s say we&rsquo;ve created a Restangular object that represents public discussions:</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">messages</span> <span class="o">=</span> <span class="nx">Restangular</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="s1">'messages'</span><span class="p">);</span>
+</pre>
+<p>With this object, we can get a list of all of the messages with the <code>getList()</code> method. This <code>getList()</code> method returns a collection containing methods we can call to work with the specific collection.</p>
+<pre class="highlight javascript"><span class="c1">// allMessages is a promise that will resolve into the
+// list of all messages
+</span><span class="kd">var</span> <span class="nx">allMessages</span> <span class="o">=</span> <span class="nx">messages</span><span class="p">.</span><span class="nx">getList</span><span class="p">();</span>
+</pre>
+<h4>See it</h4>
+
+<div ng-controller="MessageController" class="height220">
+<ul>
+  <li ng-repeat="msg in messages | orderBy: createdAt">
+    {{ msg.body }}
+  </li>
+</ul>
+<small>These messages are being fetched out of a mongo instance</small>
+</div>
+
+<p>We can also create messages using the Restangular object. To create an object, we&rsquo;ll use the <code>post()</code> method. </p>
+
+<p>The post method requires a single object as a parameter and will send a (you guessed it) POST request to the <em>URL</em> we specified. We can also add queryParameters and headers to this request. </p>
+<pre class="highlight javascript"><span class="c1">// POST to /messages
+</span><span class="kd">var</span> <span class="nx">newMessage</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">body</span><span class="p">:</span> <span class="s2">&quot;Hello world&quot;</span>
+<span class="p">};</span>
+<span class="nx">messages</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">newMessage</span><span class="p">);</span>
+<span class="c1">// OR we can call this on an element to create a nested
+// resource for the element
+</span><span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">Restangular</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span><span class="s1">'messages'</span><span class="p">,</span> <span class="s1">'abc123'</span><span class="p">);</span>
+<span class="nx">message</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">'replies'</span><span class="p">,</span> <span class="nx">newMessage</span><span class="p">);</span>
+</pre>
+<p>Because Restangular returns promises, we can then call methods on the returned data on promises so that we can run a function after the promise has completed. For instance, after we update a collection, we can then refresh the collection on our scope:</p>
+<pre class="highlight javascript"><span class="nx">messages</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">newMessage</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">newMsg</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">messages</span> <span class="o">=</span> <span class="nx">messages</span><span class="p">.</span><span class="nx">getList</span><span class="p">();</span>
+<span class="p">},</span> <span class="kd">function</span> <span class="nx">error</span><span class="p">(</span><span class="nx">reason</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// An error has occurred
+</span><span class="p">});</span>
+</pre>
+<h4>Try it</h4>
+
+<div ng-controller="MessageController" class="height220">
+<form>
+<input type="text" ng-model="newMessage.body" placeholder="New message body" ng-minlength='1' />
+<input class="button" type="submit" ng-click="addMessage()" value="Add message"></input>
+</form>
+<ul>
+  <li ng-repeat="msg in messages | orderBy: createdAt">
+    {{ msg.body }}
+  </li>
+</ul>
+<small>These messages are being fetched out of a mongo instance</small>
+</div>
+
+<p>We can also remove an object from the collection. Using the <code>remove()</code> method, we can send a DELETE HTTP request to our back end. To send a delete request, we can call the <code>remove()</code> method on an object inside the collection (an element).</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">messages</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="mi">123</span><span class="p">);</span>
+<span class="nx">message</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span> <span class="c1">// Send a DELETE to /messages
+</span></pre>
+<h4>Try it</h4>
+
+<div ng-controller="MessageController" class="height220">
+<ul>
+  <li ng-repeat="msg in messages | orderBy: createdAt">
+    <a ng-click="removeMessage(msg)">X</a>
+    {{ msg.body }}
+  </li>
+</ul>
+<small>These messages are being fetched out of a mongo instance</small>
+</div>
+
+<p>Updating and saving objects is something we&rsquo;ll do quite often. Traditionally, this operation is done with the HTTP method PUT. Restangular supports this out of the box through the method <code>put()</code>.</p>
+
+<p>To update an object, we&rsquo;ll need to query the object, set our new attributes on the instance, and then call <code>put()</code> on the object to save the updated attributes in the back end.</p>
+
+<blockquote>
+<p>Note, that before modifying an object, it&rsquo;s good practice to copy it and then modify the copied object before we save it. Restangular has it&rsquo;s own version of copy such that it won&rsquo;t rebind <code>this</code> in the bundled functions. It&rsquo;s good practice to use <code>Restangular.copy()</code> when updating an object.</p>
+</blockquote>
+
+<h4>Try it</h4>
+
+<div ng-controller="MessageController" class="height220">
+<ul ng-hide="showEdit">
+  <li ng-repeat="msg in messages | orderBy: createdAt">
+    <a ng-click="showEditMessage(msg);">Edit</a>
+    {{ msg.body }}
+  </li>
+</ul>
+<div ng-show="showEdit">
+  <form>
+  <input ng-model="editMessage.body" name="Body"  ng-minlength='1' />
+  <input type="submit" class="button" ng-click="saveEdit(); showEdit = false">Save</input>
+  </form>
+</div>
+
+<p><small>These messages are being fetched out of a mongo instance</small>
+</div></p>
+
+<blockquote>
+<p>Note that before modifying an object, it&rsquo;s good practice to copy it and then modify the copied object before we save it. Restangular has its own version of copy such that it won&rsquo;t rebind <code>this</code> in the bundled functions. It&rsquo;s good practice to use <code>Restangular.copy()</code> when updating an object.</p>
+</blockquote>
+
+<p>Now that we have experience working on instances of our collection, let&rsquo;s dig into nested components. Nested components are those that live underneath other components. For instance, for all of the books written by a certain author.</p>
+
+<p>Restangular supports nested resources by default. In fact, we can query a particular instance from our collection for their nested resources.</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">author</span> <span class="o">=</span> <span class="nx">Restangular</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span><span class="s1">'users'</span><span class="p">,</span> <span class="s1">'abc123'</span><span class="p">);</span>
+<span class="c1">// Builds a GET to /authors/abc123/books
+</span><span class="kd">var</span> <span class="nx">books</span> <span class="o">=</span> <span class="nx">author</span><span class="p">.</span><span class="nx">getList</span><span class="p">(</span><span class="s1">'books'</span><span class="p">);</span>
+</pre>
+<h4>Try it</h4>
+
+<div ng-controller="MessageController" class="height220">
+<a class="button" ng-click="getAuthorMessages()">Get all my messages</a> (based off a custom user id, generated for you)
+<div ng-show="authorMessagesEmpty">
+<form>
+<h4>In order to fetch your articles, you need to add at least one. Try adding one now&hellip;</h4>
+<input type="text" ng-model="newMessage.body" placeholder="New message body"  ng-minlength='1' />
+<input class="button" type="submit" ng-click="addMessage()" value="Add message"></input>
+</form>
+</div>
+
+<ul ng-show="!authorMessagesEmpty">
+  <li ng-repeat="msg in authorMessages | orderBy: createdAt">
+    {{ msg.body }}
+  </li>
+</ul>
+
+<p><small>These messages are being fetched out of a mongo instance</small>
+</div></p>
+
+<h3>But what about my HTTP methods?</h3>
+
+<p>Restangular supports, out of the box, <em>all</em> HTTP methods. It can support calling GET, PUT, POST, DELETE, HEAD, TRACE, OPTIONS, and PATCH.</p>
+<pre class="highlight javascript"><span class="nx">author</span><span class="p">.</span><span class="nx">get</span><span class="p">();</span> <span class="c1">// GET /authors/abc123
+</span><span class="nx">author</span><span class="p">.</span><span class="nx">getList</span><span class="p">(</span><span class="s1">'books'</span><span class="p">);</span> <span class="c1">// GET /authors/abc123/books
+</span><span class="nx">author</span><span class="p">.</span><span class="nx">put</span><span class="p">();</span> <span class="c1">// PUT /authors/abc123
+</span><span class="nx">author</span><span class="p">.</span><span class="nx">post</span><span class="p">();</span> <span class="c1">// POST /authors/abc123
+</span><span class="nx">author</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span> <span class="c1">// DELETE /authors/abc123
+</span><span class="nx">author</span><span class="p">.</span><span class="nx">head</span><span class="p">();</span> <span class="c1">// HEAD /authors/abc123
+</span><span class="nx">author</span><span class="p">.</span><span class="nx">trace</span><span class="p">();</span> <span class="c1">// TRACE /authors/abc123
+</span><span class="nx">author</span><span class="p">.</span><span class="nx">options</span><span class="p">();</span> <span class="c1">// OPTIONS /authors/abc123
+</span><span class="nx">author</span><span class="p">.</span><span class="nx">patch</span><span class="p">();</span> <span class="c1">// PATCH /author/abc123
+</span></pre>
+<p>Restangular also makes it possible to create custom HTTP methods for cases when our back-end server maps resources differently than we expect. </p>
+
+<p>For instance, if we want to get the author&rsquo;s biography (not a RESTful resource), then we can set the URL through the <code>customMETHOD()</code> function (where METHOD is replaced by any of the following: GET, GETLIST, DELETE, POST, PUT, HEAD, OPTIONS, PATCH, TRACE).</p>
+<pre class="highlight javascript"><span class="c1">// Maps to GET /users/abc123/biography
+</span><span class="nx">author</span><span class="p">.</span><span class="nx">customGET</span><span class="p">(</span><span class="s2">&quot;biography&quot;</span><span class="p">);</span>
+<span class="c1">// Or customPOST with a new bio object
+// as {body: &quot;Ari's bio&quot;}
+// The two empty fields in between are the 
+// params field and any custom headers
+</span><span class="nx">author</span><span class="p">.</span><span class="nx">customPOST</span><span class="p">({</span><span class="na">body</span><span class="p">:</span> <span class="s2">&quot;Ari's Bio&quot;</span><span class="p">},</span> <span class="c1">// post body
+</span>  <span class="s2">&quot;biography&quot;</span><span class="p">,</span>  <span class="c1">// route
+</span>  <span class="p">{},</span>           <span class="c1">// custom params
+</span>  <span class="p">{});</span>          <span class="c1">// custom headers
+</span></pre>
+<h3>Custom query parameters and headers</h3>
+
+<p>With all of these methods, we can send custom query parameters or custom headers. </p>
+
+<p>To add custom query parameters, we&rsquo;ll add a JavaScript object as the second parameter to our method call. We can also add a second JavaScript object as a third parameter. Most all of the individual methods that we can call on an element take these two parameters as optional parameters.</p>
+
+<p>With custom query parameters, a <code>post</code> method might look something like:</p>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">queryParamObj</span> <span class="o">=</span> <span class="p">{</span> <span class="na">role</span><span class="p">:</span> <span class="s1">'admin'</span> <span class="p">},</span>
+    <span class="nx">headerObj</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">'x-user'</span><span class="err">:</span> <span class="s1">'admin'</span> <span class="p">};</span>
+
+<span class="nx">messages</span><span class="p">.</span><span class="nx">getList</span><span class="p">(</span><span class="s1">'accounts'</span><span class="p">,</span> <span class="nx">queryParamObj</span><span class="p">,</span> <span class="nx">headerObj</span><span class="p">);</span>
+</pre>
+<p>Restangular is incredibly simple to use and gets out of the way so that we can focus on building our app, rather than wrestling with the API.</p>
+
+<h2>Configuring Restangular</h2>
+
+<p>Restangular is highly configurable and expects us to configure it for our apps. It does come with defaults for every single property, so we don&rsquo;t have to configure it if we don&rsquo;t need to do so.</p>
+
+<p>There are a few different places where we can configure a Restangular service. We can configure it globally or using a custom service.</p>
+
+<p>To configure Restangular for all Restangular usages, regardless of the location it&rsquo;s used in, we can inject the <code>RestangularProvider</code> in a <code>config()</code> function or inject <code>Restangular</code> in a <code>run()</code> function.</p>
+
+<blockquote>
+<p>A good rule of thumb to determine where we should configure our Restangular instances: If we need to use any other service in configuring Restangular, then we should configure it in the <code>run()</code> method, otherwise we&rsquo;ll keep it in the <code>config()</code> method.</p>
+</blockquote>
+
+<h4>Setting the baseUrl</h4>
+
+<p>To set the <code>baseUrl</code> for all calls to our <code>backendAPI</code>, we can use the <code>setBaseUrl()</code> method. For instance, if our API is located at <code>/api/v1</code>, rather than at the root of our server. </p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">RestangularProvider</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">RestangularProvider</span><span class="p">.</span><span class="nx">setBaseUrl</span><span class="p">(</span><span class="s1">'/api/v1'</span><span class="p">);</span>
+  <span class="p">});</span>
+</pre>
+<h4>Adding element transformations</h4>
+
+<p>We can add any element transformations after an element has been loaded by Restangular. </p>
+
+<p>Using these <code>elementTransformers</code>, we can add <em>custom</em> methods to our Restangular objects, such as when the object instance was fetched, for example.</p>
+
+<p>This will get called as a callback that will enable us to update or modify the element we fetched after it&rsquo;s been loaded, but before we use it in our Angular objects.</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">RestangularProvider</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Three parameters:
+</span>    <span class="c1">// the route
+</span>    <span class="c1">// if it's a collection - boolean (true/false)
+</span>    <span class="c1">// and the transformer
+</span>    <span class="nx">RestangularProvider</span><span class="p">.</span><span class="nx">addElementTransformer</span><span class="p">(</span><span class="s1">'authors'</span><span class="p">,</span>
+      <span class="kc">false</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">element</span><span class="p">.</span><span class="nx">fetchedAt</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nx">element</span><span class="p">;</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+</pre>
+<h4>Setting responseInterceptors</h4>
+
+<p>Restangular can set responseInterceptors. <code>responseInterceptors</code> are useful for when we want to translate the response we get back from the server. For instance, if our server comes back with the data tucked away in a nested object, we can use a <code>responseInterceptor</code> to dig it out.</p>
+
+<p>This is called after every response we get back from the backend. It will get called with the following parameters:</p>
+
+<ul>
+<li>data - data retrieved from the server</li>
+<li>operation - the HTTP method used</li>
+<li>what - the model that&rsquo;s requested</li>
+<li>url - the relative URL that&rsquo;s being requested</li>
+<li>response - the full server response, including headers</li>
+<li>deferred - the promise for the request</li>
+</ul>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">RestangularProvider</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">RestangularProvider</span><span class="p">.</span><span class="nx">setResponseInterceptor</span><span class="p">(</span>
+      <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">operation</span><span class="p">,</span> <span class="nx">what</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">operation</span> <span class="o">==</span> <span class="s1">'getList'</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">data</span><span class="p">[</span><span class="nx">what</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+</pre>
+<h4>Using requestInterceptors</h4>
+
+<p>Restangular supports the other side of the operation as well: We can work with the data we are going to send to the server before we ever actually send any data back to the server in the first place. </p>
+
+<p><code>requestInterceptors</code> are useful for times when we&rsquo;ll need to run manipulations on the object before sending it to the server. For instance, we can&rsquo;t call directly to mongo with an <code>_id</code> field, so we have to remove it before it gets sent to the backend if we&rsquo;re in a PUT operation.</p>
+
+<p>To set a <code>requestInterceptor</code>, we can use the method <code>setRequestInterceptor()</code>. The <code>setRequestInterceptor()</code> method will be called with the following parameters:</p>
+
+<ul>
+<li>element - the element we&rsquo;re sending to the server</li>
+<li>operation - the HTTP method used</li>
+<li>what - the model that&rsquo;s being requested</li>
+<li>url - the relative URL that&rsquo;s being requested</li>
+</ul>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">RestangularProvider</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">RestangularProvider</span><span class="p">.</span><span class="nx">setRequestInterceptor</span><span class="p">(</span>
+      <span class="kd">function</span><span class="p">(</span><span class="nx">elem</span><span class="p">,</span> <span class="nx">operation</span><span class="p">,</span> <span class="nx">what</span><span class="p">)</span> <span class="p">{</span>        
+        <span class="k">if</span> <span class="p">(</span><span class="nx">operation</span> <span class="o">===</span> <span class="s1">'put'</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">elem</span><span class="p">.</span><span class="nx">_id</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+          <span class="k">return</span> <span class="nx">elem</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">elem</span><span class="p">;</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+</pre>
+<h4>Custom fields</h4>
+
+<p>Restangular also supports setting custom Restangular fields. This is important for times when we are connecting not to a back-end server, but to a back-end database, such as MongoDB where the <code>id</code> field doesn&rsquo;t map to an <code>id</code>. </p>
+
+<p>For instance, when connecting to MongoDB, the <code>id</code> field actually maps to <code>_id.$oid</code>. </p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">RestangularProvider</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">RestangularProvider</span><span class="p">.</span><span class="nx">setRestangularFields</span><span class="p">({</span>
+        <span class="na">id</span><span class="p">:</span> <span class="s1">'_id.$oid'</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+  <span class="err">}</span><span class="p">);</span>
+</pre>
+<h4>Catching errors with errorInterceptors</h4>
+
+<p>It&rsquo;s also possible to set error Interceptors, for those times when we want to catch an error from within Restangular. Using the <code>errorInterceptor</code> gives us the ability to halt the flow of the error down to our app.</p>
+
+<p>If we return <code>false</code> from the <code>errorInterceptor</code>, then the flow of the promise will end and our app will never need to deal with handling errors. </p>
+
+<p>This is a good time to handle dealing with authentication failures, for instance. If any request comes back with a <code>401</code>, we can use the <code>errorInterceptor</code> to catch it and handle redirecting the user to the login page.</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">RestangularProvider</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">RestangularProvider</span><span class="p">.</span><span class="nx">setErrorInterceptor</span><span class="p">(</span>
+        <span class="kd">function</span><span class="p">(</span><span class="nx">resp</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">displayError</span><span class="p">();</span>
+          <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="c1">// stop the promise chain
+</span>      <span class="p">});</span>
+    <span class="p">});</span>
+  <span class="err">}</span><span class="p">);</span>
+</pre>
+<h2>Configuring Restangular to talk to MongoDB</h2>
+
+<p>One of the nicer features of using Restangular is that we can connect our app to talk directly to a MongoDB database (in fact, all the examples on this page talk directly to a MongoDB database).</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'restangular'</span><span class="p">])</span>
+<span class="p">.</span><span class="nx">constant</span><span class="p">(</span><span class="s1">'apiKey'</span><span class="p">,</span> <span class="s1">'123412341234'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">RestangularProvider</span><span class="p">,</span> <span class="nx">apiKey</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">RestangularProvider</span><span class="p">.</span><span class="nx">setBaseUrl</span><span class="p">(</span>
+    <span class="s1">'https://api.mongolab.com/api/1/databases/YOURDB/collections'</span><span class="p">);</span>
+    <span class="nx">RestangularProvider</span><span class="p">.</span><span class="nx">setDefaultRequestParams</span><span class="p">({</span> 
+      <span class="na">apiKey</span><span class="p">:</span> <span class="nx">apiKey</span>
+    <span class="p">})</span>
+    <span class="nx">RestangularProvider</span><span class="p">.</span><span class="nx">setRestangularFields</span><span class="p">({</span>
+      <span class="na">id</span><span class="p">:</span> <span class="s1">'_id.$oid'</span>
+    <span class="p">});</span>
+
+    <span class="nx">RestangularProvider</span><span class="p">.</span><span class="nx">setRequestInterceptor</span><span class="p">(</span>
+      <span class="kd">function</span><span class="p">(</span><span class="nx">elem</span><span class="p">,</span> <span class="nx">operation</span><span class="p">,</span> <span class="nx">what</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">operation</span> <span class="o">===</span> <span class="s1">'put'</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">elem</span><span class="p">.</span><span class="nx">_id</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+          <span class="k">return</span> <span class="nx">elem</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">elem</span><span class="p">;</span>
+  <span class="p">})</span>
+<span class="p">});</span>
+</pre>
+<h4>Custom Restangular services</h4>
+
+<p>Finally, we <em>highly</em> recommend using Restangular from inside a custom service object. This is particularly useful, as we can configure Restangular on a per-service level using a service as well as disconnecting the logic to talk to our back end from within our controllers/directives and enabling our services to handle talking to them directly.</p>
+
+<p>This disconnection from inside Angular objects also helps with making testing a breeze as we can stub and mock back-end calls without worrying about actually making the calls to our back end during tests.</p>
+
+<p>To create a service that wraps Restangular, we simply need to <em>inject</em> the <code>Restangular</code> service in our factory and call the methods like normal. Inside this factory, we can create custom configurations by using the <code>withConfig()</code> function.</p>
+
+<p>For instance:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'restangular'</span><span class="p">])</span>
+<span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'MessageService'</span><span class="p">,</span> <span class="p">[</span>
+  <span class="s1">'Restangular'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Restangular</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">restAngular</span> <span class="o">=</span> 
+      <span class="nx">Restangular</span><span class="p">.</span><span class="nx">withConfig</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">Configurer</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">Configurer</span><span class="p">.</span><span class="nx">setBaseUrl</span><span class="p">(</span><span class="s1">'/api/v2/messages'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="kd">var</span> <span class="nx">_messageService</span> <span class="o">=</span> <span class="nx">restAngular</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="s1">'messages'</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">getMessages</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">_messageService</span><span class="p">.</span><span class="nx">getList</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}]);</span>
+</pre>
+<p>Restangular is <strong>really</strong>, <strong>really</strong>, <strong>really</strong> cool and reduces a lot of the complexity and <em>unknowns</em> from using the <code>$resource</code> service and let&rsquo;s us focus on the building the functionality of our web app.</p>
+
+<p>All of the code for this article can be found at: <a href="http://d.pr/sb9f">http://d.pr/sb9f</a>.</p>
+
+<p>There are many more configuration operations we can set on Restangular. We encourage you to check out the Restangular <a href="https://github.com/mgonto/restangular">documentation</a> or check out our upcoming <a href="http://ng-book.com">book</a> that covers an extensive review of Restangular.</p>
+
+<script type="text/javascript">
+  (function() {
+    angular.module('restangularDemoApp', [
+      'restangular',
+      'ngCookies'
+    ])
+    .constant('apiKey', 'sKoiVlWRICg3e3QUtHQGUGL7ZtabgKUP')
+    .config(function(RestangularProvider, apiKey) {
+      RestangularProvider.setBaseUrl('https://api.mongolab.com/api/1/databases/ngnewsletter/collections');
+        RestangularProvider.setDefaultRequestParams({ 
+          apiKey: apiKey
+        })
+        RestangularProvider.setRestangularFields({
+          id: '_id.$oid'
+        });
+        
+        RestangularProvider.setRequestInterceptor(
+          function(elem, operation, what) {
+        
+            if (operation === 'put') {
+              elem._id = undefined;
+              return elem;
+            }
+            return elem;
+      })
+    })
+    .factory('Messages', [
+      '$rootScope', '$cookieStore', 'Restangular',
+      function($rootScope, $cookieStore, Restangular) {
+        var messageService = 
+          Restangular.all('message'),
+            authorService =
+          Restangular.all('authors');
+
+        var service = {
+          thisAuthor: function() {
+            var author;
+            if (!$cookieStore.get('thisAuthor')) {
+              author = {
+                id: guid()
+              };
+              $cookieStore.put('thisAuthor', author);
+              authorService.post(author);
+            } else {
+              author = $cookieStore.get('thisAuthor');
+            }
+            return author;
+          },
+          addMessage: function(msg) {
+            var newMsg = msg;
+            newMsg.author = service.thisAuthor().id;
+            newMsg.createdAt = new Date();
+            $rootScope.$broadcast('messages:added');
+            return messageService.post(newMsg);
+          },
+          getMessages: function() {
+            return messageService.getList();
+          },
+          removeMessage: function(msg) {
+            $rootScope.$broadcast('messages:removed');
+            return msg.remove();
+          },
+          updateMessage: function(msg) {
+            $rootScope.$broadcast('messages:updated');
+            return msg.put();
+          },
+          getAuthorMessages: function() {
+            var params = {
+              author: service.thisAuthor().id
+            };
+            return messageService.getList({q: params});
+          }
+        };
+        return service;
+      }
+      ])
+    .controller('MessageController', [
+      '$scope', '$timeout', 'Messages', 'Restangular',
+      function($scope, $timeout,
+          Messages, Restangular) {
+        var thisAuthor = Messages.thisAuthor(),
+            updateMessageTimeout = undefined;
+
+        $scope.showEdit = false;
+        $scope.editMessage = undefined;
+        $scope.messages = Messages.getMessages();
+
+        var updateMessages = function() {
+          if (updateMessageTimeout) $timeout.cancel(updateMessageTimeout);
+
+          updateMessageTimeout = $timeout(function() {
+
+            $scope.$apply(function() {
+              Messages.getMessages().then(function(d) {
+                $scope.messages = d;
+              });
+            });
+          }, 500);
+        }
+
+        $scope.$on('messages:added', updateMessages);
+        $scope.$on('messages:removed', updateMessages);
+        $scope.$on('messages:updated', updateMessages);
+
+        $scope.showEditMessage = function(msg) {
+          $scope.editMessage = Restangular.copy(msg);
+          $scope.showEdit = true;
+        }
+
+        $scope.saveEdit = function() {
+          Messages.updateMessage($scope.editMessage)
+            .then(function(data) {
+            $scope.editMessage = undefined;
+            $scope.showEdit = false;
+          });
+        }
+
+        $scope.addMessage = function() {
+          Messages.addMessage($scope.newMessage);
+          $scope.authorMessagesEmpty = false;
+          $scope.newMessage = {};
+        };
+
+        $scope.removeMessage = function(msg) {
+          Messages.removeMessage(msg);
+        }
+
+        $scope.authorMessagesEmpty = false;
+        $scope.getAuthorMessages = function() {
+          Messages.getAuthorMessages().then(function(d) {
+            if (d.length === 0) {
+              $scope.authorMessagesEmpty = true;
+            } else {
+              $scope.authorMessages = d;
+            }
+          });
+        }
+      }]);
+  })();
+</script>
+
+<script type="text/javascript" src="/js/vendor/lodash/dist/lodash.min.js"></script>
+
+<script type="text/javascript" src="/js/vendor/restangular/dist/restangular.js"></script>
+
+
+          <div class="container" id="signupApp" ng-cloak>
+  <div id="topbar_signup_embed">
+  Get the weekly email all focused on AngularJS. <b>Sign up below</b> to receive the weekly email and exclusive content.
+  <form name="ngSignup" action="http://willcodeforfoo.us6.list-manage1.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=fa61364f13" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    
+    <div class="row collapse">
+      <div class="small-9 columns">
+        <input ng-class="{error: ngSignup.email.$dirty && ngSignup.email.$invalid}" type="email" ng-minlength=3 ng-model="ngSignup.email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address" required>
+      </div>
+      <div class="small-3 columns">
+        <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" ng-disabled="ngSignup.$invalid" class="button postfix"></div>
+      </div>
+        <div class="small-12 columns error" ng-show="ngSignup.EMAIL.$dirty && ngSignup.EMAIL.$invalid">
+          <small class="error" ng-show="ngSignup.EMAIL.$error.required">Your email is required.</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.minlength">Your email is required to be at least 3 characters</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.email">That is not a valid email. Please input a valid email.</small>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  if (typeof(app) == 'undefined') {
+    angular.module("signupApp", [])
+    .controller("mailChimpValidation", ['$scope', function($scope) {}]);
+    var ele = document.getElementById("signupApp");
+    angular.element(ele, ['signupApp']);
+  }
+</script>
+          <section id="sample_chapter" ng-app="ngBookApp">    <div class="content">      <h3 class="title">Download a free sample of the ng-book: The Complete Book on AngularJS</h3> <span class="image"><img src="http://www.ng-book.com/images/flatbook-ngbook-small.png" alt="book"></span><div class="desc">It's free, so just enter your email address and the PDF will be sent directly to your inbox.</div>    </div>    <div class="form" ng-init="signedup=false" ng-show="!signuped">      <form action="http://willcodeforfoo.us6.list-manage.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=7bbfaae868" method="post" id="mc-embedded-subscribe-form" name="ngBookSignup" class="validate ng-pristine ng-invalid ng-invalid-required" target="_blank" novalidate="">
+<div class="mc-field-group">          <input type="email" ng-model="ngBookSignup.email" ng-class="{error: ngBookSignup.email.$dirty &amp;&amp; ngBookSignup.email.$invalid}" value="" name="EMAIL" placeholder="Your email address" class="required email ng-pristine ng-valid ng-valid-email ng-valid-minlength" id="mce-EMAIL" ng-minlength="3">        </div>        <div id="mce-responses" class="clear">          <div class="response" id="mce-error-response" style="display:none"></div>          <div class="response" id="mce-success-response" style="display:none"></div>        </div>        <div class="clear"><input type="submit" value="Send me a free chapter" name="subscribe" id="ngBookSignupSubmit" ng-disabled="ngBookSignup.$invalid" class="button postfix" ng-click="signedup=true" disabled="disabled"></div>      </form>      <div ng-show="signedup" class="ng-hide">      <p>Sweet! We are glad to hear you're interested in learning AngularJS. Enjoy the free chapter. We put a lot of work into building the book series, so we hope you like it!      Talk soon</p>      </div>      <div class="desc">        We won't ever send you spam! You can unsubscribe at any time.      </div>    </div>  </section>
+
+          <footer>
+            <ul class="actions">
+              <li><a href="/articles"><span class="arrow">←</span> Back to articles</a></li>
+              <li><a href="http://twitter.com/home/?status=Restangular on Angular - http://ng-newsletter.com/posts/restangular.html via @ngnewsletter" target="_blank"><img src="/img/twitter-bird-blue-on-white.png" style="width: 56px; height: 26px;" />Share on twitter</a></li>
+            </ul>
+          </footer>
+
+        </article>
+
+        <section id="comments">
+            <h2 class="gamma">Comments</h2>
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ngnewsletter'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section>
+
+        
+
+        <script type="text/javascript" src="/js/vendor/zepto.js"></script>
+<script type="text/javascript" src="/js/vendor/foundation.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+        </div>
+    </div>
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28176211-3', 'ng-newsletter.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript">
+  var $mcGoal = {'settings':{'uuid':'86d6f14c7cc955128485e3b8e','dc':'us6'}};
+  (function() {
+     var sp = document.createElement('script'); sp.type = 'text/javascript'; sp.async = true; sp.defer = true;
+    sp.src = ('https:' == document.location.protocol ? 'https://s3.amazonaws.com/downloads.mailchimp.com' : 'http://downloads.mailchimp.com') + '/js/goal.min.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sp, s);
+  })(); 
+</script>
+
+</body>
+</html>

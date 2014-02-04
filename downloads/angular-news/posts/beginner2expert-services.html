@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="width=device-width" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+
+<title>Services (Part 6 of AngularJS from beginner to expert in 7 steps series) | ng-newsletter</title>
+
+<meta name="author" content="Ari Lerner">
+<meta name="description" content=" angularjs angularjs tutorial angular">
+<meta name="keywords" content="angularjs quickstart getting started with angularjs how to learn angularjs services angular factories angular.factory angular services angularjs services angular tutorial angularjs tutorial angularjs angularjs tutorial angular realtime firebase angularfire">
+
+<meta name="msvalidate.01" content="BE7DA3BEF0F11153F6E4B5585C12DB20" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ng-newsletter" />
+<meta property="og:url" content="http://ng-newsletter.com" />
+<meta property="og:image" content="http://ng-newsletter.com/img/" />
+<meta property="og:description" content="" />
+
+<meta name="twitter:card" value="summary" />
+<meta name="twitter:creator" value="@auser" />
+<meta name="twitter:title" value="ng-newsletter" />
+<meta name="twitter:description" value="" />
+<meta name="twitter:image" value="http://ng-newsletter.com/img/" />
+
+<link rel="alternate" type="application/rss+xml" href="feed.rss" title="Sitewide RSS 2.0 Feed">
+<link rel="alternate" type="application/atom+xml" href="atom.xml" title="Sitewide ATOM Feed">
+<link rel="alternate" type="application/atom+json" href="atom.json" title="Sitewide JSON Feed">
+
+<link href="/favicon.ico" rel="icon" type="image/ico" />
+<link href="/css/site.css" media="screen" rel="stylesheet" type="text/css" /><link href="http://fonts.googleapis.com/css?family=Roboto:400italic,700italic,400,700|Open+Sans:r,i,b,bi|Bitter:r,i,b" media="screen" rel="stylesheet" type="text/css" />
+<script src="/js/vendor/custom.modernizr.js"></script>
+<script src="/js/vendor/d3.v3.min.js"></script>
+<script src="/js/vendor/angular/angular.min.js"></script>
+<script src="/js/vendor/angular-route/angular-route.min.js"></script>
+<script src="/js/vendor/angular-animate.min.js"></script>
+<script src="/js/vendor/angular-translate.min.js"></script>
+<script src="/js/vendor/angular-cookies/angular-cookies.min.js"></script>
+
+
+</head>
+<body ng-app="beginnersTutorialApp">
+
+    
+    <div id="header">
+  <div id="topNav">
+    <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/">ng-newsletter</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <ul class="right">
+      		<li><a href="/posts">Articles</a></li>
+          <li><a href="/advent2013/">25 days of Angular</a></li>
+          <li><a href="/books">Books</a></li>
+          <li><a href="/sponsor">Sponsorship</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+  <div class="headerContent">
+  </div>
+</div>
+
+    <div class="container">
+      <div id="article">
+        <article class="post">
+          <header>
+            <h1 class="mega">Services (Part 6 of AngularJS from beginner to expert in 7 steps series)</h1>
+          </header>
+          
+          <blockquote>
+<p>This is the sixth post of the <a href="/posts/beginner2expert-how_to_start.html">AngularJS - from beginner to expert in 7
+steps</a> series.</p>
+
+<p>We started our <a href="/posts/beginner2expert-how_to_start.html">first</a> <a href="/posts/beginner2expert-scopes.html">several</a> <a href="/posts/beginner2expert-data-binding.html">entries</a> demonstrating the core components of the application and how to set up an AngularJS app. In the <a href="/posts/beginner2expert-directives.html">previous post</a>, we covered the internals of <em>directives</em> in AngularJS. </p>
+
+<p>In this section, we&rsquo;ll tackle <em>services</em>, clean up our code, and finalize our <a href="/code/beginner_series">audio player</a>.</p>
+
+<p>Throughout this tutorial series, we are building an NPR audio player that will show us the current stories on the show <em>Morning Edition</em> and play them in our browser. To see the fully finished demo, head over <a href="/code/beginner_series">here</a>.</p>
+</blockquote>
+
+<p>Up until now, we&rsquo;ve only concerned ourselves with how the view is tied to <code>$scope</code> and how the controller manages the data. For memory and performance purposes, controllers are instantiated only when they are needed and discarded when they are not. That means that every time we switch a route or reload a view (we&rsquo;ll cover routing in the next post), the current controller gets tossed out.</p>
+
+<p><em>Services</em> provide a method for us to keep data around for the lifetime of the app and communicate across controllers in a consistent manner. </p>
+
+<h3>6. Services</h3>
+
+<p>Services are singletons, which are objects that are instantiated only once per app (by the <code>$injector</code>). They provide an interface to keep together methods that relate to a specific function.</p>
+
+<p>The <code>$http</code> service, for instance, is an example of an AngularJS service, as we saw in the last article. It provides low-level access to the browser&rsquo;s <code>XMLHttpRequest</code> object. Rather than needing to dirty the application with low-level calls to the <code>XMLHttpRequest</code> object, we can simply interact with the <code>$http</code> API. </p>
+
+<p>Angular comes with several built-in services with which we&rsquo;ll interact consistently. It will also be useful to make our <em>own</em> services for any decently complex application. </p>
+
+<p>AngularJS makes it very easy to create our own services, simply by registering the service. Once a service is registered, the Angular compiler can reference it and load it as a dependency for runtime use.</p>
+
+<p>Here is the simplest, most common way to create a service, by using the angular.module API <code>factory</code>:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp.services'</span><span class="p">,</span> <span class="p">[])</span>
+  <span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'githubService'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">serviceInstance</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="c1">// Our first service
+</span>    <span class="k">return</span> <span class="nx">serviceInstance</span><span class="p">;</span>
+  <span class="p">});</span>
+</pre>
+<blockquote>
+<p>We can also create a service using the built-in <code>$provide</code> service. </p>
+</blockquote>
+
+<p>This service doesn&rsquo;t do anything interesting, but it shows us how to define one. Creating a service simply returns a function that returns an object. This object is created with the creation of the application instance (remember, it&rsquo;s a singleton object). </p>
+
+<p>We can set our application to handle specific needs within this singleton object across the entire application. In the above example, we started creating a GitHub service. Let&rsquo;s make it a bit more useful and call the GitHub API:</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp.services'</span><span class="p">,</span> <span class="p">[])</span>
+  <span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'githubService'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$http'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">doRequest</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">username</span><span class="p">,</span> <span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">$http</span><span class="p">({</span>
+        <span class="na">method</span><span class="p">:</span> <span class="s1">'JSONP'</span><span class="p">,</span>
+        <span class="na">url</span><span class="p">:</span> <span class="s1">'https://api.github.com/users/'</span> <span class="o">+</span> <span class="nx">username</span> <span class="o">+</span> <span class="s1">'/'</span> <span class="o">+</span> <span class="nx">path</span> <span class="o">+</span> <span class="s1">'?callback=JSON_CALLBACK'</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">events</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">username</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">doRequest</span><span class="p">(</span><span class="nx">username</span><span class="p">,</span> <span class="s1">'events'</span><span class="p">);</span> <span class="p">},</span>
+    <span class="p">};</span>
+  <span class="p">}]);</span>
+</pre>
+<p>This snippet creates a GitHub service that has a single method, <code>events</code> that fetches the latest GitHub events for a given GitHub user. To use this service in our controller, we&rsquo;ll set up the controller to load (or <em>inject</em>) <code>githubService</code> as a dependency at runtime. To <em>inject</em> the service in the controller, we pass the name as an argument in the controller function in the array (using <code>[]</code> bracket notation):</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'ServiceController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'githubService'</span><span class="p">,</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">githubService</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}]);</span>
+</pre>
+<blockquote>
+<p>Note that this method of <em>dependency injection</em> is safe for minification. We&rsquo;ll cover this in-depth in the last and final part of the series.</p>
+</blockquote>
+
+<p>With our new <code>githubService</code> injected into our <code>ServiceController</code>, we can now use it just like any other service (like the <code>$http</code> service that we saw in the previous post).</p>
+
+<p>Let&rsquo;s set up our example flow to call the GitHub API for a GitHub username that we define in our view. Just as we saw in the <a href="/posts/beginner2expert-data-binding">data binding</a> section, we&rsquo;ll <em>bind</em> the username property to the view:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">ng-controller=</span><span class="s">&quot;ServiceController&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">&quot;username&quot;</span><span class="nt">&gt;</span>Type in a GitHub username<span class="nt">&lt;/label&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">ng-model=</span><span class="s">&quot;username&quot;</span> <span class="na">placeholder=</span><span class="s">&quot;Enter a GitHub username, like auser&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;pre</span> <span class="na">ng-show=</span><span class="s">&quot;username&quot;</span><span class="nt">&gt;</span>{{ events }}<span class="nt">&lt;/pre&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>Now we can <em>watch</em> for the <code>$scope.username</code> property to react to how we&rsquo;ve changed the view, based on our bi-directional data binding.</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'ServiceController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'githubService'</span><span class="p">,</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">githubService</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Watch for changes on the username property.
+</span>    <span class="c1">// If there is a change, run the function
+</span>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">$watch</span><span class="p">(</span><span class="s1">'username'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newUsername</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// uses the $http service to call the GitHub API
+</span>            <span class="c1">// and returns the resulting promise
+</span>      <span class="nx">githubService</span><span class="p">.</span><span class="nx">events</span><span class="p">(</span><span class="nx">newUsername</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">headers</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="c1">// the success function wraps the response in data
+</span>                    <span class="c1">// so we need to call data.data to fetch the raw data
+</span>          <span class="nx">$scope</span><span class="p">.</span><span class="nx">events</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+        <span class="p">})</span>
+    <span class="p">});</span>
+<span class="p">}]);</span>
+</pre>
+<blockquote>
+<p>Since we are returning the <code>$http</code> promise (as we did in the previous article), we can call the <code>.success</code> method on the return as though we are calling <code>$http</code> directly.</p>
+</blockquote>
+
+<h4>Try it</h4>
+
+<div ng-controller="ServicesDemoController">
+  <label for="username">Type in a GitHub username</label>
+  <input type="text" ng-model="username" placeholder="Enter a GitHub username, like auser" />
+  <pre ng-show="username" class="syntax-highlight json slide-animation height150">{{ events | limitTo:1 | json }}</pre>
+</div>
+
+<p>In this example, you&rsquo;ll notice that there is a delay before the input field changes. If we don&rsquo;t include this delay, we&rsquo;ll end up calling the GitHub API for every key that is entered into the input, which is obviously not what we want. To introduce this delay, we&rsquo;re using the built-in <code>$timeout</code> service.</p>
+
+<p>To use the <code>$timeout</code> service, we inject it into our controller just like we injected the <code>githubService</code> into the controller:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'ServiceController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'$timeout'</span><span class="p">,</span> <span class="s1">'githubService'</span><span class="p">,</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$timeout</span><span class="p">,</span> <span class="nx">githubService</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}]);</span>
+</pre>
+<blockquote>
+<p>It&rsquo;s conventional to inject any Angular services before our own custom services.</p>
+</blockquote>
+
+<p>Now we can use the <code>$timeout</code> service as we would expect. The <code>$timeout</code> service, in this case, cancels any network requests that would otherwise be running and gives us a <em>350</em> millisecond delay between changes in the input field. In other words, if there is a delay of 350 milliseconds between keyboard strokes, we&rsquo;ll assume the user is done typing and we can start the GitHub request:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'ServiceController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'$timeout'</span><span class="p">,</span> <span class="s1">'githubService'</span><span class="p">,</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$timeout</span><span class="p">,</span> <span class="nx">githubService</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// The same example as above, plus the $timeout service
+</span>    <span class="kd">var</span> <span class="nx">timeout</span><span class="p">;</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">$watch</span><span class="p">(</span><span class="s1">'username'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newVal</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">newVal</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">timeout</span><span class="p">)</span> <span class="nx">$timeout</span><span class="p">.</span><span class="nx">cancel</span><span class="p">(</span><span class="nx">timeout</span><span class="p">);</span>
+        <span class="nx">timeout</span> <span class="o">=</span> <span class="nx">$timeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="nx">githubService</span><span class="p">.</span><span class="nx">events</span><span class="p">(</span><span class="nx">newVal</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">$scope</span><span class="p">.</span><span class="nx">events</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+          <span class="p">});</span>
+        <span class="p">},</span> <span class="mi">350</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}]);</span>
+</pre>
+<p>Since we began this app, we&rsquo;ve only looked at how services can bundle similar functionality together. Services are <em>also</em> the canonical way to share data across several controllers. For instance, if our application has a settings page where we set the user&rsquo;s GitHub username, we&rsquo;ll want to share the username to the other controllers in our application.</p>
+
+<blockquote>
+<p>The final article in this series will cover routing and how to introduce multiple pages into our app.</p>
+</blockquote>
+
+<p>To share the username across controllers, we need to add a method to our service that stores the username. Remember, the service will stick around for the lifetime of the app, so we can store the username safely inside of it.</p>
+<pre class="highlight javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">'myApp.services'</span><span class="p">,</span> <span class="p">[])</span>
+  <span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'githubService'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$http'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">githubUsername</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">doRequest</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">$http</span><span class="p">({</span>
+        <span class="na">method</span><span class="p">:</span> <span class="s1">'JSONP'</span><span class="p">,</span>
+        <span class="na">url</span><span class="p">:</span> <span class="s1">'https://api.github.com/users/'</span> <span class="o">+</span> <span class="nx">githubUsername</span> <span class="o">+</span> <span class="s1">'/'</span> <span class="o">+</span> <span class="nx">path</span> <span class="o">+</span> <span class="s1">'?callback=JSON_CALLBACK'</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">events</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">doRequest</span><span class="p">(</span><span class="s1">'events'</span><span class="p">);</span> <span class="p">},</span>
+      <span class="na">setUsername</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newUsername</span><span class="p">)</span> <span class="p">{</span> <span class="nx">githubUsername</span> <span class="o">=</span> <span class="nx">newUsername</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+  <span class="p">}]);</span>
+</pre>
+<p>Now, we have a <code>setUsername</code> method in our service that enables us to set the username for the current GitHub user. In any controller in our application, we can now call <code>events()</code> without concerning ourselves with whether or not we have the right username on our scope object.</p>
+
+<h3>Services in our app</h3>
+
+<p>In our app, we have three elements for which we&rsquo;ll make services: the audio element, a player element, and the nprService. </p>
+
+<p>The simplest service we&rsquo;ll abstract is the <code>audio</code> service. In Angular, it&rsquo;s considered a bad idea to try to manipulate the DOM from within a controller. Doing so results in dirty controller code and potential unexpected behavior. </p>
+
+<p>In our app, the <code>PlayerController</code> has an instance of the an audio element that we created on the DOM:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'PlayerController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'$http'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">audio</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'audio'</span><span class="p">);</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">audio</span> <span class="o">=</span> <span class="nx">audio</span><span class="p">;</span>
+  <span class="c1">// ...
+</span></pre>
+<p>Instead of setting up the audio element in the controller, we can create a singleton service to manage the audio element, like so:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'audio'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$document'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$document</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">audio</span> <span class="o">=</span> <span class="nx">$document</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'audio'</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">audio</span><span class="p">;</span>
+<span class="p">}]);</span>
+</pre>
+<blockquote>
+<p>Notice that we&rsquo;re using another built-in service, the <code>$document</code> service. This service gives us a reference to the <code>window.document</code> element (which is the root JavaScript object on all html pages). </p>
+</blockquote>
+
+<p>Now, in our <code>PlayerController</code>, we can reference this audio element instead of recreating the audio element in the controller itself.</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'PlayerController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'$http'</span><span class="p">,</span> <span class="s1">'audio'</span><span class="p">,</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$http</span><span class="p">,</span> <span class="nx">audio</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">audio</span> <span class="o">=</span> <span class="nx">audio</span><span class="p">;</span>
+</pre>
+<p>Although it looks like we&rsquo;re not gaining much functionality or code clarity, we will once we remove the requirement to tie the audio element to the <code>PlayerController</code>. </p>
+
+<blockquote>
+<p>Note that we can now share this <code>audio</code> service with other applications, as it doesn&rsquo;t have any application-specific functionality tied to it.</p>
+</blockquote>
+
+<p>To see what we&rsquo;ve done, we&rsquo;ll build our next service, the <code>player</code> service. In our current iteration, we&rsquo;ve attached the <code>play()</code> and <code>stop()</code> methods to the <code>PlayerController</code>. These methods relate only to the functionality of playing audio and don&rsquo;t particularly need to be tied to the <code>PlayerController</code>. In summary, the <code>PlayerController</code> calls the <code>player</code> services API to play the audio element rather than needing to know how to interact with the raw audio element itself. </p>
+
+<p>Let&rsquo;s start building our <code>player</code> service by defining it. Our <code>player</code> service will use the <code>audio</code> service we just created, so we&rsquo;ll need to inject that into our <code>player</code> service:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'player'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'audio'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">audio</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">player</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="k">return</span> <span class="nx">player</span><span class="p">;</span>
+<span class="p">}]);</span>
+</pre>
+<p>Now, we can take the <code>play()</code> method that we originally defined in the <code>PlayerController</code> and move it into this service. We&rsquo;ll also add a stop method and store the state of the player:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'player'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'audio'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">audio</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">player</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">playing</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="na">current</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="na">ready</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+
+    <span class="na">play</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">program</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// If we are playing, stop the current playback
+</span>      <span class="k">if</span> <span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">playing</span><span class="p">)</span> <span class="nx">player</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+      <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">program</span><span class="p">.</span><span class="nx">audio</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">format</span><span class="p">.</span><span class="nx">mp4</span><span class="p">.</span><span class="nx">$text</span><span class="p">;</span> <span class="c1">// from the npr API
+</span>      <span class="nx">player</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="nx">program</span><span class="p">;</span> <span class="c1">// Store the current program
+</span>      <span class="nx">audio</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">url</span><span class="p">;</span>
+      <span class="nx">audio</span><span class="p">.</span><span class="nx">play</span><span class="p">();</span> <span class="c1">// Start playback of the url
+</span>      <span class="nx">player</span><span class="p">.</span><span class="nx">playing</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="p">},</span>
+
+    <span class="na">stop</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">playing</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">audio</span><span class="p">.</span><span class="nx">pause</span><span class="p">();</span> <span class="c1">// stop playback
+</span>        <span class="c1">// Clear the state of the player
+</span>        <span class="nx">player</span><span class="p">.</span><span class="nx">ready</span> <span class="o">=</span> <span class="nx">player</span><span class="p">.</span><span class="nx">playing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span> 
+        <span class="nx">player</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="k">return</span> <span class="nx">player</span><span class="p">;</span>
+<span class="p">}]);</span>
+</pre>
+<p>We now have a fully functioning player on which we can call both <code>play()</code> and <code>stop()</code>. Instead of using the <code>PlayerController</code> to manage the <code>player</code>-specific functionality, we have handed over control to the <code>player</code> <em>service</em> in our <code>PlayerController</code>:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'PlayerController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'player'</span><span class="p">,</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">player</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">player</span> <span class="o">=</span> <span class="nx">player</span><span class="p">;</span>
+<span class="p">}]);</span>
+</pre>
+<h2>Try it</h2>
+
+<div ng-controller="DemoPlayerController1">
+<button ng-show="!player.playing" ng-click="player.play(program)">Play</button>
+<button ng-show="player.playing" ng-click="player.stop()">Stop</button>
+<ul>
+  <li>Player playing: {{ player.playing }}</li>
+  <li>Player duration: {{ player.currentDuration() }} seconds</li>
+  <li>Player progress: {{ player.progress }} seconds {{ player.progress_percent | number:1 }}%</li>
+</ul>
+</div>
+
+<p><small>In order to keep the code simple, we&rsquo;ve opted to use the pure HTML5 audio tag. If audio does not play for you, try opening this page in a more modern browser. In production, you&rsquo;d likely want to use a shim to support more browsers, such as <a href="http://zohararad.github.io/audio5js/">Audio5js</a>.</small></p>
+
+<p>Notice that by using the <code>player</code> service, we don&rsquo;t need to even reference our <code>audio</code> service because the <code>player</code> service will manage the audio for us.</p>
+
+<p>Note: When the audio is done playing, we have no way of resetting the player&rsquo;s state. The player itself will constantly think it&rsquo;s still playing. </p>
+
+<p>To fix this, we can use the <code>$rootScope</code> service (another built-in Angular service) to catch the <code>ended</code> event on the audio element. We&rsquo;ll inject the <code>$rootScope</code> service and create an event listener on the audio element:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'player'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'audio'</span><span class="p">,</span> <span class="s1">'$rootScope'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">audio</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">player</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">playing</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="na">ready</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="c1">// ...
+</span>  <span class="p">};</span>
+  <span class="nx">audio</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'ended'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">(</span><span class="nx">player</span><span class="p">.</span><span class="nx">stop</span><span class="p">());</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">player</span><span class="p">;</span>
+<span class="p">}]);</span>
+</pre>
+<blockquote>
+<p>We need to use the <code>$rootScope</code> service in this case because we need to capture an event. Notice that we&rsquo;re calling <code>$rootScope.$apply()</code>. That&rsquo;s because the ended event will be fired outside the scope of the Angular event loop. We&rsquo;ll discuss the event loop in an advanced article in the near future.</p>
+</blockquote>
+
+<p>Lastly, we can get more detailed information about our currently playing audio program as we are managing the current audio program in addition to the audio element. </p>
+
+<p>For instance, we can create a method that fetches the currentTime and the currentDuration of the audio element, which we&rsquo;ll use when we want to show a player view that provide the percentage of progress of the current audio program. </p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'player'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'audio'</span><span class="p">,</span> <span class="s1">'$rootScope'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">audio</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">player</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">playing</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="c1">// ...
+</span>    <span class="na">currentTime</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">audio</span><span class="p">.</span><span class="nx">currentTime</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="na">currentDuration</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">audio</span><span class="p">.</span><span class="nx">duration</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="k">return</span> <span class="nx">player</span><span class="p">;</span>
+<span class="err">}</span><span class="p">]);</span>
+</pre>
+<p>We use the audio element to update the progress through the <code>timeupdate</code> event, which the audio element throws by default:</p>
+<pre class="highlight javascript"><span class="nx">audio</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'timeupdate'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">player</span><span class="p">.</span><span class="nx">progress</span> <span class="o">=</span> <span class="nx">player</span><span class="p">.</span><span class="nx">currentTime</span><span class="p">();</span>
+      <span class="nx">player</span><span class="p">.</span><span class="nx">progress_percent</span> <span class="o">=</span> <span class="nx">player</span><span class="p">.</span><span class="nx">progress</span> <span class="o">/</span> <span class="nx">player</span><span class="p">.</span><span class="nx">currentDuration</span><span class="p">();</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+</pre>
+<p>Lastly, we need a way to tell if the audio is ready to go in our view. To do that, let&rsquo;s add a handler for the <code>canplay</code> event:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'player'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'audio'</span><span class="p">,</span> <span class="s1">'$rootScope'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">audio</span><span class="p">,</span> <span class="nx">$rootScope</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">player</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">playing</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="na">ready</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="c1">// ...
+</span>  <span class="p">}</span>
+  <span class="nx">audio</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'canplay'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$rootScope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">player</span><span class="p">.</span><span class="nx">ready</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">player</span><span class="p">;</span>
+<span class="p">}]);</span>
+</pre>
+<p>Now that we have a player service, we need to manipulate our <code>nprLink</code> directive to call &lsquo;play&rsquo; on the player instead of on the <code>$scope</code>. (Note that this change is optional, and we could alternatively create <code>play()</code> and <code>stop()</code> methods on the <code>PlayerController</code>).</p>
+
+<p>On the directive itself, we need to reference the player on the local scope. The full source of this directive now looks like:</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">directive</span><span class="p">(</span><span class="s1">'nprLink'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="na">restrict</span><span class="p">:</span> <span class="s1">'EA'</span><span class="p">,</span>
+    <span class="na">require</span><span class="p">:</span> <span class="p">[</span><span class="s1">'^ngModel'</span><span class="p">],</span>
+    <span class="na">replace</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">scope</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">ngModel</span><span class="p">:</span> <span class="s1">'='</span><span class="p">,</span>
+      <span class="na">player</span><span class="p">:</span> <span class="s1">'='</span>
+    <span class="p">},</span>
+    <span class="na">templateUrl</span><span class="p">:</span> <span class="s1">'/code/views/nprListItem'</span><span class="p">,</span>
+    <span class="na">link</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">ele</span><span class="p">,</span> <span class="nx">attr</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">scope</span><span class="p">.</span><span class="nx">duration</span> <span class="o">=</span> <span class="nx">scope</span><span class="p">.</span><span class="nx">ngModel</span><span class="p">.</span><span class="nx">audio</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">duration</span><span class="p">.</span><span class="nx">$text</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre>
+<p>Now, in order to work with our existing template, we&rsquo;ll need to update how we call the <code>npr-link</code> in our <code>index.html</code>. We&rsquo;ll need to include the player in the view. </p>
+<pre class="highlight html"><span class="nt">&lt;npr</span><span class="na">-link</span> <span class="na">ng-model=</span><span class="s">&quot;program&quot;</span> <span class="na">player=</span><span class="s">&quot;player&quot;</span><span class="nt">&gt;</span><span class="err">&lt;</span>/npr-link&gt;
+</pre>
+<p>In our view, instead of calling <code>play(ngModel)</code>, we&rsquo;ll want to call <code>player.play(ngModel)</code>. We can update our template (shortened for brevity) to:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;nprLink row&quot;</span> <span class="na">player=</span><span class="s">&quot;player&quot;</span> <span class="na">ng-click=</span><span class="s">&quot;player.play(ngModel)&quot;</span><span class="nt">&gt;</span>
+</pre>
+<p><a ng-click="showFullListTemplate = !showFullListTemplate">Show full template</a>
+<div ng-show="showFullListTemplate"></p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;nprLink row&quot;</span> <span class="na">player=</span><span class="s">&quot;player&quot;</span> <span class="na">ng-click=</span><span class="s">&quot;player.play(ngModel)&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;name large-8 columns&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;button</span> <span class="na">class=</span><span class="s">&quot;large-2 small-2 playButton columns&quot;</span> <span class="na">ng-click=</span><span class="s">&quot;ngModel.play(ngModel)&quot;</span><span class="nt">&gt;&lt;div</span> <span class="na">class=</span><span class="s">&quot;triangle&quot;</span><span class="nt">&gt;&lt;/div&gt;&lt;/button&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;large-10 small-10 columns&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;large-12&quot;</span><span class="nt">&gt;</span>{{ ngModel.title.$text }}<span class="nt">&lt;/span&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;small-1 columns&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;small-2 columns push-8&quot;</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;{{ ngModel.link[0].$text }}&quot;</span><span class="nt">&gt;</span>Link<span class="nt">&lt;/a&gt;&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/span&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p></div></p>
+
+<p>Logically, we can also add a playerView to our overall view as we can now encapsulate the player data and status.</p>
+
+<p>Check out the <a href="https://github.com/auser/ng-newsletter-beginner-series/blob/part6/js/beginner.js#L89-L121">playerView directive</a> and the <a href="https://github.com/auser/ng-newsletter-beginner-series/blob/part6/views/playerView.html">template</a>.</p>
+
+<p>Let&rsquo;s build our last service, the <code>nprService</code>. The <code>nprService</code> will be similar to the <code>githubService</code> we built in the beginning of this article. We&rsquo;ll use the <code>$http</code> service to fetch the latest programs from NPR.</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">'nprService'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$http'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$http</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">doRequest</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">apiKey</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">$http</span><span class="p">({</span>
+        <span class="na">method</span><span class="p">:</span> <span class="s1">'JSONP'</span><span class="p">,</span>
+        <span class="na">url</span><span class="p">:</span> <span class="nx">nprUrl</span> <span class="o">+</span> <span class="s1">'&amp;apiKey='</span> <span class="o">+</span> <span class="nx">apiKey</span> <span class="o">+</span> <span class="s1">'&amp;callback=JSON_CALLBACK'</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">programs</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">apiKey</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">doRequest</span><span class="p">(</span><span class="nx">apiKey</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">};</span>
+  <span class="p">}]);</span>
+</pre>
+<p>In the <code>PlayerController</code>, instead of calling <code>$http</code> directive, now we can call the method <code>programs()</code> on our <code>nprService</code>. We&rsquo;ll inject the new <code>nprService</code>, similar to how we injected the <code>player</code> service in the <code>PlayerController</code>.</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'PlayerController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'nprService'</span><span class="p">,</span> <span class="s1">'player'</span><span class="p">,</span> 
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">nprService</span><span class="p">,</span> <span class="nx">player</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">player</span> <span class="o">=</span> <span class="nx">player</span><span class="p">;</span>
+  <span class="nx">nprService</span><span class="p">.</span><span class="nx">programs</span><span class="p">(</span><span class="nx">apiKey</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">programs</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">list</span><span class="p">.</span><span class="nx">story</span><span class="p">;</span>
+    <span class="p">});</span>
+<span class="p">}]);</span>
+</pre>
+<blockquote>
+<p>Ideally, we&rsquo;d use <em>promises</em> to simplify the API, but we&rsquo;ve kept it simple for the purposes of demonstration. We&rsquo;ll briefly cover promises in the next post.</p>
+</blockquote>
+
+<p>When the <code>PlayerController</code> is instantiated, our <code>nprService</code> fetches the latest programs, and we&rsquo;ve successfully encapsulated the NPR functionality in our service.</p>
+
+<p>On another note, we can set up a <code>RelatedController</code> to show content in the sidebar that&rsquo;s related to the currently playing program.</p>
+
+<p>Since we have the latest playing program available in our <code>player</code> service, we will <code>$watch</code> the current property and show related links.</p>
+<pre class="highlight javascript"><span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">'RelatedController'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'$scope'</span><span class="p">,</span> <span class="s1">'player'</span><span class="p">,</span>
+  <span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">player</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">player</span> <span class="o">=</span> <span class="nx">player</span><span class="p">;</span>
+
+  <span class="nx">$scope</span><span class="p">.</span><span class="nx">$watch</span><span class="p">(</span><span class="s1">'player.current'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">program</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">program</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">related</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="nx">angular</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">program</span><span class="p">.</span><span class="nx">relatedLink</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">link</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">related</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+          <span class="na">link</span><span class="p">:</span> <span class="nx">link</span><span class="p">.</span><span class="nx">link</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">$text</span><span class="p">,</span> 
+          <span class="na">caption</span><span class="p">:</span> <span class="nx">link</span><span class="p">.</span><span class="nx">caption</span><span class="p">.</span><span class="nx">$text</span>
+        <span class="p">});</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">}]);</span>
+</pre>
+<p>In our HTML, we just reference the related links like we did with our NPR programs, using the <code>ng-repeat</code> directive:</p>
+<pre class="highlight html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;large-4 small-4 columns&quot;</span> <span class="na">ng-controller=</span><span class="s">&quot;RelatedController&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;h2&gt;</span>Related content<span class="nt">&lt;/h2&gt;</span>
+  <span class="nt">&lt;ul</span> <span class="na">id=</span><span class="s">&quot;related&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">&quot;s in related&quot;</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;{{ s.link }}&quot;</span><span class="nt">&gt;</span>{{ s.caption }}<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+  <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre>
+<p>Now, any time our <code>player.current</code> changes, we can show the related content. </p>
+
+<h2>See it</h2>
+
+<p><small>Unstyled for demo purposes</small>
+<div ng-controller="DemoPlayerController2">
+<button ng-show="!demoing" ng-click="kickOffDemo()" class="button large radius">Show demo</button>
+<div ng-show="demoing" class="row large-slide-animation">
+  <div class="row">
+    <button ng-click="stopDemo()" class="stopDemoButton button small radius">Stop demo</button>
+  </div>
+  <div class="row">
+    <ul class="large-8 small-8 columns">
+      <li ng-repeat="p in programs | limitTo: 3">
+        <a ng-click="player.play(p)">Play {{ p.title.$text }}</a>
+      </li>
+    </ul>
+    <div class="small-4 large-4 columns">
+      <ul class="">
+        <li ng-repeat="s in related"><a href="{{ s.link }}">{{ s.caption }}</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</div></p>
+
+<p>In the next and final section of our beginner to expert series, we&rsquo;ll discuss dependency injection, routing, and production-level tools to get you working with AngularJS as quickly as possible.</p>
+
+<p>The <em>official</em> repository for the beginner series is available as a git repo here: <a href="https://github.com/auser/ng-newsletter-beginner-series">https://github.com/auser/ng-newsletter-beginner-series</a>. </p>
+
+<p>To get this repo locally, ensure that you have <code>git</code> installed, clone the repo, and check out <code>part6</code> branch. We are using XHR to fetch templates, so you&rsquo;ll need to run a local server. We&rsquo;ve included a server script in part6:</p>
+<pre class="highlight shell">git clone https://github.com/auser/ng-newsletter-beginner-series.git
+git checkout part6
+./bin/server.sh
+</pre>
+<div in-this-series prev="/posts/beginner2expert-directives.html" description="The AngularJS - from beginner to expert in 7 steps series" next="/posts/beginner2expert-config.html"></div>
+
+<p>Want to know when Part 7 is released? Sign up for ng-newsletter below.</p>
+
+
+          <div class="container" id="signupApp" ng-cloak>
+  <div id="topbar_signup_embed">
+  Get the weekly email all focused on AngularJS. <b>Sign up below</b> to receive the weekly email and exclusive content.
+  <form name="ngSignup" action="http://willcodeforfoo.us6.list-manage1.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=fa61364f13" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    
+    <div class="row collapse">
+      <div class="small-9 columns">
+        <input ng-class="{error: ngSignup.email.$dirty && ngSignup.email.$invalid}" type="email" ng-minlength=3 ng-model="ngSignup.email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address" required>
+      </div>
+      <div class="small-3 columns">
+        <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" ng-disabled="ngSignup.$invalid" class="button postfix"></div>
+      </div>
+        <div class="small-12 columns error" ng-show="ngSignup.EMAIL.$dirty && ngSignup.EMAIL.$invalid">
+          <small class="error" ng-show="ngSignup.EMAIL.$error.required">Your email is required.</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.minlength">Your email is required to be at least 3 characters</small>
+          <small class="error" ng-show="ngSignup.EMAIL.$error.email">That is not a valid email. Please input a valid email.</small>
+        </div>
+      </div>
+  </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  if (typeof(app) == 'undefined') {
+    angular.module("signupApp", [])
+    .controller("mailChimpValidation", ['$scope', function($scope) {}]);
+    var ele = document.getElementById("signupApp");
+    angular.element(ele, ['signupApp']);
+  }
+</script>
+          <section id="sample_chapter" ng-app="ngBookApp">    <div class="content">      <h3 class="title">Download a free sample of the ng-book: The Complete Book on AngularJS</h3> <span class="image"><img src="http://www.ng-book.com/images/flatbook-ngbook-small.png" alt="book"></span><div class="desc">It's free, so just enter your email address and the PDF will be sent directly to your inbox.</div>    </div>    <div class="form" ng-init="signedup=false" ng-show="!signuped">      <form action="http://willcodeforfoo.us6.list-manage.com/subscribe/post?u=86d6f14c7cc955128485e3b8e&amp;id=7bbfaae868" method="post" id="mc-embedded-subscribe-form" name="ngBookSignup" class="validate ng-pristine ng-invalid ng-invalid-required" target="_blank" novalidate="">
+<div class="mc-field-group">          <input type="email" ng-model="ngBookSignup.email" ng-class="{error: ngBookSignup.email.$dirty &amp;&amp; ngBookSignup.email.$invalid}" value="" name="EMAIL" placeholder="Your email address" class="required email ng-pristine ng-valid ng-valid-email ng-valid-minlength" id="mce-EMAIL" ng-minlength="3">        </div>        <div id="mce-responses" class="clear">          <div class="response" id="mce-error-response" style="display:none"></div>          <div class="response" id="mce-success-response" style="display:none"></div>        </div>        <div class="clear"><input type="submit" value="Send me a free chapter" name="subscribe" id="ngBookSignupSubmit" ng-disabled="ngBookSignup.$invalid" class="button postfix" ng-click="signedup=true" disabled="disabled"></div>      </form>      <div ng-show="signedup" class="ng-hide">      <p>Sweet! We are glad to hear you're interested in learning AngularJS. Enjoy the free chapter. We put a lot of work into building the book series, so we hope you like it!      Talk soon</p>      </div>      <div class="desc">        We won't ever send you spam! You can unsubscribe at any time.      </div>    </div>  </section>
+
+          <footer>
+            <ul class="actions">
+              <li><a href="/articles"><span class="arrow">←</span> Back to articles</a></li>
+              <li><a href="http://twitter.com/home/?status=Services (Part 6 of AngularJS from beginner to expert in 7 steps series) - http://ng-newsletter.com/posts/beginner2expert-services.html via @ngnewsletter" target="_blank"><img src="/img/twitter-bird-blue-on-white.png" style="width: 56px; height: 26px;" />Share on twitter</a></li>
+            </ul>
+          </footer>
+
+        </article>
+
+        <section id="comments">
+            <h2 class="gamma">Comments</h2>
+            <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'ngnewsletter'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section>
+
+        
+        <script src="/js/posts/beginner.js"></script>
+        
+
+        <script type="text/javascript" src="/js/vendor/zepto.js"></script>
+<script type="text/javascript" src="/js/vendor/foundation.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+        </div>
+    </div>
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-28176211-3', 'ng-newsletter.com');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript">
+  var $mcGoal = {'settings':{'uuid':'86d6f14c7cc955128485e3b8e','dc':'us6'}};
+  (function() {
+     var sp = document.createElement('script'); sp.type = 'text/javascript'; sp.async = true; sp.defer = true;
+    sp.src = ('https:' == document.location.protocol ? 'https://s3.amazonaws.com/downloads.mailchimp.com' : 'http://downloads.mailchimp.com') + '/js/goal.min.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sp, s);
+  })(); 
+</script>
+
+</body>
+</html>
