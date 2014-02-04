@@ -1,16 +1,18 @@
 ##Todo
 
-- 011969310606
-- grunt
-
-####Internet:
-
-- Sort out stats/genetic algorithm module
-- Sort out uploading to amazon
-- checkout jade
-- destroy all software talks
+- Find a stats/genetic algorithm module for calculations
+- Make calculation of predicted data
+- Configure uploading to amazon
+- Make d3 chart reusable
 
 
+####Done
+
+- Angularjs config
+- Mongodb/mongohq config
+- POST to `/algorithms` uploads CSV to mongodb via angularjs and mongohq
+- Basic d3 line graph built from CSV from `GET jobs/:jobId`
+- Deploy using heroku
 
 
 ##PART 1
@@ -92,12 +94,17 @@ Write down 10 specific questions that can be answered with this data set and sug
 
 Example: 
 What is the pair of products that will be bought together every monday so I can put them in promotion? - COMP: Analyze correlations of products bought together, or build a recommendation engine for products.
+
 This is just a brainstorming exercise, feel free to throw any ideas that come to your mind.
 
 ###Answer
 
-1. Customer clustering into groups
+1. Customer clustering into groups by products.
 2. Associating dates with products
 3. Patterns of customer buying
 4. Do people buy same product several times
 5. Which products are only bought once and never again.
+
+----------
+
+011969310606
