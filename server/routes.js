@@ -27,69 +27,49 @@ exports.get_job = function(db) {
 
 exports.post_algorithm = function(db, fs) {
     return function(req, res) {
-        console.log(req.files);
         var data = {}; // for the response
 
         // get the temporary location of the file
         var tmp_path = req.files.file.path;
-
-        fs.readFile(tmp_path, {encoding: 'utf-8'}, function (err, data) {
-          if (err) throw err;
-          delete_temporary(add_to_db, respond);
+        var file_data;
+        fs.readFile(tmp_path, {
+            encoding: 'utf-8'
+        }, function(err, data) {
+            if (err) throw err;
+            file_data = data.toString();
+            delete_temporary(add_to_db, respond);
         });
-        
-        function delete_temporary (next, next2) {
-            console.log('now delete temporary, add to db and return id');
-            console.log(tmp_path);
+
+        function delete_temporary(next, next2) {
             fs.unlink(tmp_path, function(err) {
                 if (err) throw err;
                 next(next2);
             });
         }
 
-        function add_to_db (next) {
-            console.log('add to db');
-            next();
+        function add_to_db(next) {
+            var collection = db.get('csvcollection');
+            console.log(file_data);
+            collection.insert({
+                data: file_data
+            }, next);
         }
 
-        function respond() {
-            res.send(201);
+        function respond(err, doc) {
+            if (err) {
+                res.send(403, {
+                    success: false,
+                    message: 'There was a problem adding the information to the database.'
+                });
+            } else {
+                res.send(201, {
+                    success : true,
+                    message : 'ok',
+                    jobId: doc._id
+                });
+            }
         }
-
-        // var errors = {};
-        // if (!url && !file) {
-        //     errors.url = 'Must include url or file';
-        // } 
-
-        // if (errors) {
-        //     data.success = false;
-        //     data.message = errors;
-        //     res.send(404, data);
-        // } else {
-        //     data.success = true;
-        //     data.message = 'Success!';
-        //     res.send(404, data);
-        // }
-
-        // // Set our collection
-        // var collection = db.get('algorithmcollection');
 
     };
 };
 
-var complete_insert = function(err, doc) {
-    if (err) {
-        // If it failed, return error
-        res.send(403, 'There was a problem adding the information to the database.');
-    } else {
-        // If it worked, set the header so the address bar doesn't still say /adduser
-        res.send(201, {
-            'algorithm': doc._id
-        });
-    }
-};
-var insert_algorithm = function(collection) {
-    collection.insert({
-        'url': url
-    }, complete_insert);
-};

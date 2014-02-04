@@ -32,7 +32,9 @@ AentropicApp.controller('uploadController', ['$scope', '$http', '$upload',
                 },
                 file: file
             }).then(function(response) {
-                console.log(response.data);
+                if (!response.data.success) {
+                    throw response.data.message;
+                }
             }, null, function(evt) {
                 $percentComplete.width(parseInt(100.0 * evt.loaded / evt.total) + '%');
             });
