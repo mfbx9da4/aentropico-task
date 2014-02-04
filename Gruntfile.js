@@ -6,22 +6,15 @@ module.exports = function(grunt) {
         concat: {
             options: {
                 // define a string to put between each file in the concatenated output
-                separator: ''
+                separator: ';'
             },
             libs:  {
                 src: [
-                    "libs/ace/ace.js",
-                    "libs/ace/theme-monokai.js",
-                    "libs/ace/mode-markdown.js",
-                    "libs/Markdown.Converter.js",
-                    "libs/Markdown.Editor.js",
-                    "libs/Markdown.Sanitizer.js",
                     "libs/jquery-2.0.3.min.js",
-                    "libs/moment.min.js",
-                    "libs/handlebars-1.1.2.js",
-                    "libs/ember-1.2.0.js",
-                    "libs/ember-data.js",
-                    "libs/lightbox-2.6.min.js",
+                    "libs/d3.v3.min.js",
+                    "libs/angular-file-upload-shim.js",
+                    "libs/angular.min.js",
+                    "libs/angular-file-upload.js",
                     "style/js/bootstrap.min.js"
                 ],
                 dest: 'output/libs.js'
@@ -29,15 +22,7 @@ module.exports = function(grunt) {
             app: {
                 // the files to concatenate
                 src: [
-                    'app/app.js',
-                    'app/router.js',
-                    'app/store.js',
-                    'app/components/*.js',
-                    'app/controllers/*.js',
-                    'app/helpers/*.js',
-                    'app/models/*.js',
-                    'app/routes/*.js',
-                    'app/views/*.js'
+                    'app/app.js'
                 ],
                 dest: 'output/app.js'
             }
@@ -57,7 +42,7 @@ module.exports = function(grunt) {
         },
         jshint: {
             // define the files to lint
-            files: ['<%= concat.app.src %>', 'server.js', 'Gruntfile.js'],
+            files: ['<%= concat.app.src %>', 'server.js', 'server/routes.js', 'Gruntfile.js'],
             // configure JSHint (documented at http://www.jshint.com/docs/)
             options: {
                 // more options here if you want to override JSHint defaults
@@ -83,7 +68,6 @@ module.exports = function(grunt) {
     // Default task(s).
     grunt.registerTask('default', ['concat', 'uglify', 'watch']);
 
-
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -91,3 +75,4 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
 };
+

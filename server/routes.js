@@ -6,9 +6,11 @@ exports.get_job = function(db) {
     response_body = {
         "id": "",
         "result": {
-          "htmlreport":{url:"url to report"}
-           },
-        "status": "" 
+            "htmlreport": {
+                url: "url to report"
+            }
+        },
+        "status": ""
     };
 
     return function(req, res) {
@@ -23,41 +25,71 @@ exports.get_job = function(db) {
     };
 };
 
-exports.post_algorithm = function(db) {
+exports.post_algorithm = function(db, fs) {
     return function(req, res) {
-        var complete_insert = function(err, doc) {
-            if (err) {
-                // If it failed, return error
-                res.send(403, 'There was a problem adding the information to the database.');
-            } else {
-                // If it worked, set the header so the address bar doesn't still say /adduser
-                res.send(201, {
-                    'algorithm': doc._id
-                });
-            }
-        };
-        this.insert_algorithm = function(count) {
-            collection.insert({
-                'title': title,
-                'article': article,
-                'dateCreated': dateCreated,
-                'dateModified': dateModified
-            }, complete_insert);
-        };
-        var complete_count = function(err, count) {
-            insert_algorithm(count);
-        };
+        console.log(req.files);
+        var data = {}; // for the response
 
-        var url = req.body.url;
+        // get the temporary location of the file
+        var tmp_path = req.files.file.path;
+
+        fs.readFile(tmp_path, {encoding: 'utf-8'}, function (err, data) {
+          if (err) throw err;
+          delete_temporary(add_to_db, respond);
+        });
         
-
-        if (!title || !article || !dateCreated || !dateModified) {
-            res.send(404, 'hey, I am missing some info');
+        function delete_temporary (next, next2) {
+            console.log('now delete temporary, add to db and return id');
+            console.log(tmp_path);
+            fs.unlink(tmp_path, function(err) {
+                if (err) throw err;
+                next(next2);
+            });
         }
 
-        // Set our collection
-        var collection = db.get('algorithmcollection');
-        var promise = collection.count({});
-        promise.on('complete', complete_count);
+        function add_to_db (next) {
+            console.log('add to db');
+            next();
+        }
+
+        function respond() {
+            res.send(201);
+        }
+
+        // var errors = {};
+        // if (!url && !file) {
+        //     errors.url = 'Must include url or file';
+        // } 
+
+        // if (errors) {
+        //     data.success = false;
+        //     data.message = errors;
+        //     res.send(404, data);
+        // } else {
+        //     data.success = true;
+        //     data.message = 'Success!';
+        //     res.send(404, data);
+        // }
+
+        // // Set our collection
+        // var collection = db.get('algorithmcollection');
+
     };
+};
+
+var complete_insert = function(err, doc) {
+    if (err) {
+        // If it failed, return error
+        res.send(403, 'There was a problem adding the information to the database.');
+    } else {
+        // If it worked, set the header so the address bar doesn't still say /adduser
+        res.send(201, {
+            'algorithm': doc._id
+        });
+    }
+};
+var insert_algorithm = function(collection) {
+    collection.insert({
+        'url': url
+    }, complete_insert);
 };

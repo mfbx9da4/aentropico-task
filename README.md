@@ -1,4 +1,4 @@
-##Checklist
+##Todo
 
 - 011969310606
 - grunt
@@ -15,6 +15,13 @@
 - set default sublime syntax
 - syntax not working sublime
 - destroy all software
+- ajax files upload
+- jquery docs
+- bower install
+
+####Done:
+
+
 
 
 ##PART 1

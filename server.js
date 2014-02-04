@@ -44,6 +44,7 @@ var colors = require('colors');
 var debug = require('debug');
 var http = require('http');
 var path = require('path');
+var fs = require('fs');
 var mongo = require('mongodb');
 var monk = require('monk');
 var routes = require('./server/routes');
@@ -54,6 +55,8 @@ setup_monk(function (db) {
     app.configure(function() {
         app.use(express.urlencoded());
         app.use(express.json());
+        // allow file uploads of up to 5 gb
+        app.use(express.multipart({limit:'5000mb'}));
     });
 
     // all environments
@@ -80,7 +83,7 @@ setup_monk(function (db) {
 
     app.get('/about', routes.get_about);
     app.get('/jobs/:id', routes.get_job(db));
-    app.post('/algorithms', routes.post_algorithm(db));
+    app.post('/algorithms', routes.post_algorithm(db, fs));
 
 
     http.createServer(app).listen(app.get('port'), function() {
