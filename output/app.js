@@ -39,7 +39,6 @@ AentropicApp.controller('uploadController', ['$scope', '$http', '$upload', '$loc
                 // $location.path('/jobs/' + response.data.job_id);
                 $http.get('/jobs/' + response.data.jobId)
                     .success(function(res) {
-                        console.log(res);
                         graph(res.data);
                     });
             }, null, function(evt) {

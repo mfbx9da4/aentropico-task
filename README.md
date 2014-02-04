@@ -5,21 +5,10 @@
 
 ####Internet:
 
-- Sort out stats/genetics module
+- Sort out stats/genetic algorithm module
 - Sort out uploading to amazon
-- Post form with url input
-- all docs from juan
-- passport for email and pwd
-- udacity algorithms docs
-- get jade for angular!
-- set default sublime syntax
-- syntax not working sublime
-- destroy all software
-- ajax files upload
-- jquery docs
-- bower install
-
-####Done:
+- checkout jade
+- destroy all software talks
 
 
 
