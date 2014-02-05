@@ -122,15 +122,18 @@ body{font-size:16px;}
 }
 </style><title>README</title></head><body><h2 id="todo">Todo</h2>
 <ul>
-<li>011969310606</li>
-<li>grunt</li>
+<li>Find a stats/genetic algorithm module for calculations</li>
+<li>Make calculation of predicted data</li>
+<li>Configure uploading to amazon</li>
+<li>Make d3 chart reusable</li>
 </ul>
-<h4 id="internet">Internet:</h4>
+<h4 id="done">Done</h4>
 <ul>
-<li>Sort out stats/genetic algorithm module</li>
-<li>Sort out uploading to amazon</li>
-<li>checkout jade</li>
-<li>destroy all software talks</li>
+<li>Angularjs config</li>
+<li>Mongodb/mongohq config</li>
+<li>POST to <code>/algorithms</code> uploads CSV to mongodb via angularjs and mongohq</li>
+<li>Basic d3 line graph built from <code>GET jobs/:jobId</code> which returns CSV data from db.</li>
+<li>Deploy using heroku</li>
 </ul>
 <h2 id="part-1">PART 1</h2>
 <p>Create a simple API using Node.js. 
@@ -188,13 +191,15 @@ Angular:</p>
 <p>These will help us identify who bought what, when, and in which transaction.</p>
 <p>Write down 10 specific questions that can be answered with this data set and suggest some computations to build next in the API you created so we can sell this report to a Store Manager.</p>
 <p>Example: 
-What is the pair of products that will be bought together every monday so I can put them in promotion? - COMP: Analyze correlations of products bought together, or build a recommendation engine for products.
-This is just a brainstorming exercise, feel free to throw any ideas that come to your mind.</p>
+What is the pair of products that will be bought together every monday so I can put them in promotion? - COMP: Analyze correlations of products bought together, or build a recommendation engine for products.</p>
+<p>This is just a brainstorming exercise, feel free to throw any ideas that come to your mind.</p>
 <h3 id="answer">Answer</h3>
 <ol>
-<li>Customer clustering into groups</li>
+<li>Customer clustering into groups by products.</li>
 <li>Associating dates with products</li>
 <li>Patterns of customer buying</li>
 <li>Do people buy same product several times</li>
 <li>Which products are only bought once and never again.</li>
-</ol></body></html>
+</ol>
+<hr />
+<p>011969310606</p></body></html>

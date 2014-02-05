@@ -11,7 +11,7 @@
 - Angularjs config
 - Mongodb/mongohq config
 - POST to `/algorithms` uploads CSV to mongodb via angularjs and mongohq
-- Basic d3 line graph built from CSV from `GET jobs/:jobId`
+- Basic d3 line graph built from `GET jobs/:jobId` which returns CSV data from db.
 - Deploy using heroku
 
 
