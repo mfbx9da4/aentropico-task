@@ -41,7 +41,9 @@ AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$lo
                     .success(function(res) {
                         var chart = lineChart()
                             .width($('#graph').width())
-                            .height($('#graph').width() / 2);
+                            .height($('#graph').width() / 2)
+                            .x(function (d) {return +d.x;})
+                            .y(function (d) {return +d.y;});
                         chart('#graph', res.data);
                     });
             }, null, function(evt) {
@@ -52,8 +54,6 @@ AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$lo
 ]);
 
 function lineChart() {
-    // make line modifyable
-    // make data loadable
     // redirect to permalink and create subview
     var margin = {
         top: 20,
@@ -97,18 +97,19 @@ function lineChart() {
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+        // data = data.map(function(d, i) {
+        //     return [xValue.call(data, d, i), yValue.call(data, d, i)];
+        // });
+        // .domain(d3.extent(data, function(d) { return d[0]; }))
+
         var data = d3.csv.parse(dataset_text);
 
         xScale
             .range([0, width - margin.left - margin.right])
-            .domain(d3.extent(data, function(d) {
-                return +d.x;
-            }));
+            .domain(d3.extent(data, xValue));
         yScale
             .range([height - margin.top - margin.bottom, 0])
-            .domain(d3.extent(data, function(d) {
-                return +d.y;
-            }));
+            .domain(d3.extent(data, yValue));
 
         svg.append("g")
             .attr("class", "x axis")
