@@ -3,11 +3,14 @@
 - Find a stats/genetic algorithm module for calculations
 - Make calculation of predicted data
 - Configure uploading to amazon
-- Make d3 chart reusable
+- redirect to job permalink
+- add angular-animations
+- refactor jobs to report and algorithms to upload
 
 
 ####Done
 
+- Make d3 chart reusable
 - Angularjs config
 - Mongodb/mongohq config
 - POST to `/algorithms` uploads CSV to mongodb via angularjs and mongohq

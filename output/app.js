@@ -2,50 +2,44 @@ var AentropicoApp = angular.module('AentropicoApp', ['angularFileUpload', 'ngRou
 
 AentropicoApp.config(function($routeProvider) {
     $routeProvider
-        .when('/upload', {
-            templateUrl: '../html/upload.html',
-            controller: 'uploadController'
-        })
         .when('/about', {
             templateUrl: '../README.html',
             controller: 'aboutController'
         })
+        .when('/jobs/:jobId', {
+            templateUrl: '../html/upload.html',
+            controller: 'uploadController'
+        })
+        .when('/jobs', {
+            templateUrl: '../html/upload.html',
+            controller: 'uploadController'
+        })
         .otherwise({
-            redirectTo: '/upload'
+            redirectTo: '/jobs'
         });
 });
 
-AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$location',
-    function($scope, $http, $upload, $location) {
-        $scope.formData = {};
-        $('input[type=file]').focus();
+AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$location', '$routeParams',
+    function($scope, $http, $upload, $location, $routeParams) {
+        // $('input[type=file]').focus();
+        window.sc = $scope;
+        if ($routeParams.jobId) {
+            buildGraphFromId($http, $routeParams.jobId);
+        }
 
         $scope.onFileSelect = function($files) {
-            //$files: an array of files selected, each file has name, size, and type.
             var $percentComplete = $('#percent-complete');
-            $percentComplete.width('0%');
+            $percentComplete.width('0%').parent().show();
             var file = $files[0];
             $scope.upload = $upload.upload({
                 url: '/algorithms',
                 method: 'POST',
-                data: {
-                    myObj: $scope.formData.url
-                },
                 file: file
-            }).then(function(response) {
-                if (!response.data.success) {
-                    throw response.data.message;
+            }).then(function(res) {
+                if (!res.data.success) {
+                    throw res.data.message;
                 }
-                // $location.path('/jobs/' + response.data.job_id);
-                $http.get('/jobs/' + response.data.jobId)
-                    .success(function(res) {
-                        var chart = lineChart()
-                            .width($('#graph').width())
-                            .height($('#graph').width() / 2)
-                            .x(function (d) {return +d.x;})
-                            .y(function (d) {return +d.y;});
-                        chart('#graph', res.data);
-                    });
+                $location.path('jobs/' + res.data.jobId);
             }, null, function(evt) {
                 $percentComplete.width(parseInt(100.0 * evt.loaded / evt.total) + '%');
             });
@@ -53,8 +47,34 @@ AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$lo
     }
 ]);
 
+AentropicoApp.controller('aboutController', ['$scope',
+    function($scope) {}
+]);
+
+
+AentropicoApp.controller('reportController', ['$scope', '$http', '$routeParams',
+    function($scope, $http, $routeParams) {
+        buildGraphFromId($http, $routeParams.jobId);
+    }
+]);
+
+function buildGraphFromId($http, jobId) {
+        $http.get('/jobs/' + jobId)
+            .success(function(res) {
+                var chart = lineChart()
+                    .width($('#graph').width())
+                    .height($('#graph').width() / 2)
+                    .x(function(d) {
+                        return +d.x;
+                    })
+                    .y(function(d) {
+                        return +d.y;
+                    });
+                chart('#graph', res.data);
+            });
+}
+
 function lineChart() {
-    // redirect to permalink and create subview
     var margin = {
         top: 20,
         right: 20,
@@ -96,11 +116,6 @@ function lineChart() {
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        // data = data.map(function(d, i) {
-        //     return [xValue.call(data, d, i), yValue.call(data, d, i)];
-        // });
-        // .domain(d3.extent(data, function(d) { return d[0]; }))
 
         var data = d3.csv.parse(dataset_text);
 
@@ -160,7 +175,3 @@ function lineChart() {
     return chart;
 }
 
-
-AentropicoApp.controller('aboutController', ['$scope',
-    function($scope) {}
-]);
