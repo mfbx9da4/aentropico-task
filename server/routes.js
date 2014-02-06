@@ -2,7 +2,7 @@ exports.get_about = function(req, res) {
     res.sendfile('README.html');
 };
 
-exports.get_job = function(db) {
+exports.get_report = function(db) {
     response_body = {
         "id": "",
         "result": {
@@ -14,22 +14,24 @@ exports.get_job = function(db) {
     };
     return function(req, res) {
 
-        console.log(req.params.id);
         var collection = db.get('csvcollection');
         collection.find({
             _id: req.params.id
         }, {}, function(e, docs) {
-            console.log(docs);
-            var doc = docs[0];
-            res.send(200, {
-                'id': doc._id,
-                'data': doc.data
-            });
+            if (docs) {
+                var doc = docs[0];
+                res.send(200, {
+                    'id': doc._id,
+                    'data': doc.data
+                });
+            } else {
+                res.send(404);
+            }
         });
     };
 };
 
-exports.post_algorithm = function(db, fs) {
+exports.post_csv = function(db, fs) {
     return function(req, res) {
 
         // get the temporary location of the file
@@ -58,7 +60,7 @@ exports.post_algorithm = function(db, fs) {
         }
 
         function respond(err, doc) {
-            if (err) {
+            if (err || !doc) {
                 res.send(403, {
                     success: false,
                     message: 'There was a problem adding the information to the database.'
@@ -67,7 +69,7 @@ exports.post_algorithm = function(db, fs) {
                 res.send(201, {
                     success : true,
                     message : 'ok',
-                    jobId: doc._id
+                    reportId: doc._id
                 });
             }
         }

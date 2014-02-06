@@ -82,8 +82,8 @@ setup_monk(function (db) {
     });
 
     app.get('/about', routes.get_about);
-    app.get('/jobs/:id', routes.get_job(db));
-    app.post('/algorithms', routes.post_algorithm(db, fs));
+    app.get('/reports/:id', routes.get_report(db));
+    app.post('/csv', routes.post_csv(db, fs));
 
 
     http.createServer(app).listen(app.get('port'), function() {

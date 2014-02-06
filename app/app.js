@@ -6,25 +6,25 @@ AentropicoApp.config(function($routeProvider) {
             templateUrl: '../README.html',
             controller: 'aboutController'
         })
-        .when('/jobs/:jobId', {
+        .when('/reports/:reportId', {
             templateUrl: '../html/upload.html',
             controller: 'uploadController'
         })
-        .when('/jobs', {
+        .when('/reports', {
             templateUrl: '../html/upload.html',
             controller: 'uploadController'
         })
         .otherwise({
-            redirectTo: '/jobs'
+            redirectTo: '/reports'
         });
 });
 
 AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$location', '$routeParams',
     function($scope, $http, $upload, $location, $routeParams) {
-        // $('input[type=file]').focus();
+        $('input[type=file]').focus();
         window.sc = $scope;
-        if ($routeParams.jobId) {
-            buildGraphFromId($http, $routeParams.jobId);
+        if ($routeParams.reportId) {
+            buildGraphFromId($http, $routeParams.reportId);
         }
 
         $scope.onFileSelect = function($files) {
@@ -32,14 +32,15 @@ AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$lo
             $percentComplete.width('0%').parent().show();
             var file = $files[0];
             $scope.upload = $upload.upload({
-                url: '/algorithms',
+                url: '/csv',
                 method: 'POST',
                 file: file
             }).then(function(res) {
                 if (!res.data.success) {
                     throw res.data.message;
                 }
-                $location.path('jobs/' + res.data.jobId);
+                // so user sees upload animation
+                $location.path('reports/' + res.data.reportId);
             }, null, function(evt) {
                 $percentComplete.width(parseInt(100.0 * evt.loaded / evt.total) + '%');
             });
@@ -54,24 +55,24 @@ AentropicoApp.controller('aboutController', ['$scope',
 
 AentropicoApp.controller('reportController', ['$scope', '$http', '$routeParams',
     function($scope, $http, $routeParams) {
-        buildGraphFromId($http, $routeParams.jobId);
+        buildGraphFromId($http, $routeParams.reportId);
     }
 ]);
 
-function buildGraphFromId($http, jobId) {
-        $http.get('/jobs/' + jobId)
-            .success(function(res) {
-                var chart = lineChart()
-                    .width($('#graph').width())
-                    .height($('#graph').width() / 2)
-                    .x(function(d) {
-                        return +d.x;
-                    })
-                    .y(function(d) {
-                        return +d.y;
-                    });
-                chart('#graph', res.data);
-            });
+function buildGraphFromId($http, reportId) {
+    $http.get('/reports/' + reportId)
+        .success(function(res) {
+            var chart = lineChart()
+                .width($('#graph').width())
+                .height($('#graph').width() / 2)
+                .x(function(d) {
+                    return +d.x;
+                })
+                .y(function(d) {
+                    return +d.y;
+                });
+            chart('#graph', res.data);
+        });
 }
 
 function lineChart() {
@@ -174,4 +175,3 @@ function lineChart() {
 
     return chart;
 }
-

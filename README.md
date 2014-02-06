@@ -3,9 +3,8 @@
 - Find a stats/genetic algorithm module for calculations
 - Make calculation of predicted data
 - Configure uploading to amazon
-- redirect to job permalink
 - add angular-animations
-- refactor jobs to report and algorithms to upload
+- delete everything on the remote db
 
 
 ####Done
@@ -16,6 +15,8 @@
 - POST to `/algorithms` uploads CSV to mongodb via angularjs and mongohq
 - Basic d3 line graph built from `GET jobs/:jobId` which returns CSV data from db.
 - Deploy using heroku
+- redirect to job permalink
+- refactor jobs to report and algorithms to upload
 
 
 ##PART 1
