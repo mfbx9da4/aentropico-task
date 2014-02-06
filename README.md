@@ -5,6 +5,7 @@
 - Configure uploading to amazon
 - add angular-animations
 - delete everything on the remote db
+- **check meetup email**
 
 
 ####Done

@@ -24,6 +24,7 @@ AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$lo
         $('input[type=file]').focus();
         window.sc = $scope;
         if ($routeParams.reportId) {
+            $('#percent-complete').width('100%');
             buildGraphFromId($http, $routeParams.reportId);
         }
 
