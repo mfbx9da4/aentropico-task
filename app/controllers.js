@@ -5,27 +5,35 @@ AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$lo
         // (for fast file uploading)
         $('input[type=file]').focus();
 
+        $scope.buildGraph = function (type, selector) {
+            $(selector).empty();
+            var chart_types ={'line': d3.custom.charts.lineChart,
+                        'bar': d3.custom.charts.barChart};
+
+            var chart = chart_types[type]()
+                .width($(selector).width())
+                .height($(selector).width() / 2)
+                // .xDomain(function(data) {var extent = d3.extent(data, function(d, i) {return +i; }); var domain = []; var intervals = 10; for (var i = extent[0]; i < intervals; i ++) {var ratio = intervals /i; domain.push(extent[1] * ratio); } console.log(domain); return domain; })
+                .x(function(d) {return +d.x; })
+                .y(function(d) {return +d.y; });
+
+            d3.select(selector)
+                .datum($scope.data)
+                .call(chart);
+        };
+
         if ($routeParams.reportId) {
             $('#percent-complete').width('100%');
             getDataFromReportId($routeParams.reportId, {getDataFromAmazon: false}, function(data) {
-                var type = d3.custom.charts.lineChart;
+                var type = 'line';
                 var selector = '#graph';
-
-                var chart = type()
-                    .width($(selector).width())
-                    .height($(selector).width() / 2)
-                    // .xDomain(function(data) {var extent = d3.extent(data, function(d, i) {return +i; }); var domain = []; var intervals = 10; for (var i = extent[0]; i < intervals; i ++) {var ratio = intervals /i; domain.push(extent[1] * ratio); } console.log(domain); return domain; })
-                    .x(function(d) {return +d.x; })
-                    .y(function(d) {return +d.y; });
-
-                d3.select(selector)
-                    .datum(data)
-                    .call(chart);
+                $scope.data = data;
+                $scope.buildGraph(type, selector);
             });
         }
 
-
         $scope.onFileSelect = function($files) {
+            // prepare animation
             var $percentComplete = $('#percent-complete');
             $percentComplete.width('0%').parent().show();
             var file = $files[0];
@@ -109,7 +117,6 @@ function submitFileToS3(file, callback) {
             success: function (res) {
                 var xml = $.parseXML(res);
                 var file_key = xml.children[0].getElementsByTagName('Key')[0].innerHTML;
-                console.log(file_key);
                 callback(file_key);
             },
             error: function(res, status, error) {

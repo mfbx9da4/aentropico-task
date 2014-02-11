@@ -1,11 +1,5 @@
 ##Todo
-
-- Make calculation of predicted data
-- delete aws stuff
-- deleted commented
 - switcher between types of graphs
-- delete conslogs
-- make charts functions into one function
 - prepare qus, opinions and part 2
 
 
@@ -25,6 +19,11 @@
 - Show prediction
 - clean up response body stuff in route
 - make sure you handle report id's which throw errors
+- deleted commented
+- delete aws stuff
+- delete conslogs
+- Make calculation of predicted data
+- make charts functions into one function
 
 
 ####Thoughts on angular:
@@ -32,6 +31,11 @@
 - ember comes with a debugger
 - much more configurable
 - greater community and more plugins
+
+####Thoughts on d3:
+- very powerful
+- likely to continue using it
+
 
 
 ##PART 1
@@ -118,6 +122,28 @@ This is just a brainstorming exercise, feel free to throw any ideas that come to
 
 ###Answer
 
+1. What time of day/day of the week are very few products sold so I can optimize opening hours? 
+	- Correlate data/time and frequency of transactions
+2. What products sell well in summer so I can optimize buying of stock?
+	- Correlate product ids with a line which indicates amount of summer (0-1) over the year
+3. What products are bought more than once by the same customer?
+	- Count number of customers who bought product twice per product
+4. What product has been bought the most times this week/month/ever?
+	- Count product code
+5. Who are the customers who have bought the most products, so I can reward their loyalty?
+	- Count transactions per customer id
+6. What product do customers buy once but never again so I can buy less of that stock?
+	- Collect products which show unique
+7. Which product has the most buys per customer, so I can increase this stock?
+	- Average buys of product per customer (could average over time)
+8. What do customers often buy together so I can optimize layout of my store?
+	- Clustering of customers into groups based on products. (k-means clustering/neural networks each customer is an input)
+9. What products should I put on promotion?
+	- Things that have low frequency of purchases
+10. What product brings the greatest revenue? (assuming trans_id provides transaction amount)
+	- Calculate total revenue
+
+
 1. Customer clustering into groups by products.
 2. Associating dates with products
 3. Patterns of customer buying
@@ -134,7 +160,11 @@ This is just a brainstorming exercise, feel free to throw any ideas that come to
 14. predict how much stock to buy
 15. what's selling badly? try out with promotion
 16. suggest products to put on promotion
-17. suggest products to 
+
+- optimize:
+	- stock buying
+	- shop layout
+	- opening hours
 
 ----------
 

@@ -122,15 +122,7 @@ body{font-size:16px;}
 }
 </style><title>README</title></head><body><h2 id="todo">Todo</h2>
 <ul>
-<li>Make calculation of predicted data</li>
-<li>Show prediction</li>
-<li>delete aws stuff</li>
-<li>clean up response body stuff in route</li>
-<li>deleted commented</li>
-<li>make sure you handle report id's which throw errors</li>
 <li>switcher between types of graphs</li>
-<li>delete conslogs</li>
-<li>make charts functions into one function</li>
 <li>prepare qus, opinions and part 2</li>
 </ul>
 <h4 id="done">Done</h4>
@@ -146,6 +138,14 @@ body{font-size:16px;}
 <li>Configure uploading to amazon</li>
 <li>Configure downloading from amazon</li>
 <li>Make bar chart</li>
+<li>Show prediction</li>
+<li>clean up response body stuff in route</li>
+<li>make sure you handle report id's which throw errors</li>
+<li>deleted commented</li>
+<li>delete aws stuff</li>
+<li>delete conslogs</li>
+<li>Make calculation of predicted data</li>
+<li>make charts functions into one function</li>
 </ul>
 <h4 id="thoughts-on-angular">Thoughts on angular:</h4>
 <ul>
@@ -153,6 +153,11 @@ body{font-size:16px;}
 <li>ember comes with a debugger</li>
 <li>much more configurable</li>
 <li>greater community and more plugins</li>
+</ul>
+<h4 id="thoughts-on-d3">Thoughts on d3:</h4>
+<ul>
+<li>very powerful</li>
+<li>likely to continue using it</li>
 </ul>
 <h2 id="part-1">PART 1</h2>
 <p>Create a simple API using Node.js. 
@@ -214,23 +219,76 @@ What is the pair of products that will be bought together every monday so I can 
 <p>This is just a brainstorming exercise, feel free to throw any ideas that come to your mind.</p>
 <h3 id="answer">Answer</h3>
 <ol>
-<li>Customer clustering into groups by products.</li>
+<li>What time of day/day of the week are very few products sold so I can optimize opening hours? <ul>
+<li>Correlate data/time and frequency of transactions</li>
+</ul>
+</li>
+<li>What products sell well in summer so I can optimize buying of stock?<ul>
+<li>Correlate product ids with a line which indicates amount of summer (0-1) over the year</li>
+</ul>
+</li>
+<li>What products are bought more than once by the same customer?<ul>
+<li>Count number of customers who bought product twice per product</li>
+</ul>
+</li>
+<li>What product has been bought the most times this week/month/ever?<ul>
+<li>Count product code</li>
+</ul>
+</li>
+<li>Who are the customers who have bought the most products, so I can reward their loyalty?<ul>
+<li>Count transactions per customer id</li>
+</ul>
+</li>
+<li>What product do customers buy once but never again so I can buy less of that stock?<ul>
+<li>Collect products which show unique</li>
+</ul>
+</li>
+<li>Which product has the most buys per customer, so I can increase this stock?<ul>
+<li>Average buys of product per customer (could average over time)</li>
+</ul>
+</li>
+<li>What do customers often buy together so I can optimize layout of my store?<ul>
+<li>Clustering of customers into groups based on products. (k-means clustering/neural networks each customer is an input)</li>
+</ul>
+</li>
+<li>What products should I put on promotion?<ul>
+<li>Things that have low frequency of purchases</li>
+</ul>
+</li>
+<li>
+<p>What product brings the greatest revenue? (assuming trans_id provides transaction amount)</p>
+<ul>
+<li>Calculate total revenue</li>
+</ul>
+</li>
+<li>
+<p>Customer clustering into groups by products.</p>
+</li>
 <li>Associating dates with products</li>
 <li>Patterns of customer buying</li>
 <li>Do people buy same product several times</li>
 <li>Which products are only bought once and never again.</li>
-<li>Summer based products</li>
+<li>Seasonal products</li>
 <li>which brand</li>
 <li>associate with location</li>
-<li>time of day</li>
+<li>time of day, optimize opening hours. close on certain days?</li>
 <li>day of the month</li>
 <li>what day of the week/month people eat fruit/things that will go off</li>
 <li>what more brands to buy</li>
 <li>what more category of product to get</li>
 <li>predict how much stock to buy</li>
 <li>what's selling badly? try out with promotion</li>
-<li>suggest products to put on promotion</li>
-<li>suggest products to </li>
+<li>
+<p>suggest products to put on promotion</p>
+</li>
+<li>
+<p>optimize:</p>
+<ul>
+<li>stock buying</li>
+<li>shop layout</li>
+<li>opening hours</li>
+</ul>
+</li>
 </ol>
 <hr />
 <p>011969310606</p></body></html>
