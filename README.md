@@ -1,10 +1,7 @@
 ##Todo
 
-- Configure uploading to amazon
-- Configure downloading from amazon
 - Make calculation of predicted data
 - Show prediction
-- Make bar chart
 - delete aws stuff
 - clean up response body stuff in route
 - deleted commented
@@ -12,7 +9,8 @@
 - switcher between types of graphs
 - delete conslogs
 - make charts functions into one function
-- prepare qus and opinions
+- prepare qus, opinions and part 2
+
 
 ####Done
 
@@ -24,6 +22,15 @@
 - Deploy using heroku
 - redirect to job permalink
 - refactor jobs to report and algorithms to upload
+- Configure uploading to amazon
+- Configure downloading from amazon
+- Make bar chart
+
+####Thoughts on angular:
+- alot less magic
+- ember comes with a debugger
+- much more configurable
+- greater community and more plugins
 
 
 ##PART 1
@@ -115,10 +122,10 @@ This is just a brainstorming exercise, feel free to throw any ideas that come to
 3. Patterns of customer buying
 4. Do people buy same product several times
 5. Which products are only bought once and never again.
-6. Summer based products
+6. Seasonal products
 7. which brand
 8. associate with location
-9. time of day
+9. time of day, optimize opening hours. close on certain days?
 10. day of the month
 11. what day of the week/month people eat fruit/things that will go off
 12. what more brands to buy
