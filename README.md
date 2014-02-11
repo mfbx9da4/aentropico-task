@@ -1,6 +1,7 @@
 ##Todo
 
 - Configure uploading to amazon
+- Configure downloading from amazon
 - Make calculation of predicted data
 - Show prediction
 - Make bar chart
@@ -9,6 +10,7 @@
 - deleted commented
 - make sure you handle report id's which throw errors
 - switcher between types of graphs
+- delete conslogs
 
 ####Done
 

@@ -1,12 +1,14 @@
 AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$location', '$routeParams',
     function($scope, $http, $upload, $location, $routeParams) {
         
-        buildBarChart($http, $routeParams.reportId);
 
+        // (for fast debugging)
         $('input[type=file]').focus();
+
         if ($routeParams.reportId) {
             $('#percent-complete').width('100%');
-            buildChartFromReportId($http, $routeParams.reportId);
+            buildLineChartFromReportId($http, $routeParams.reportId);
+            buildBarChartFromReportId($http, $routeParams.reportId);
         }
 
 
@@ -14,19 +16,18 @@ AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$lo
             var $percentComplete = $('#percent-complete');
             $percentComplete.width('0%').parent().show();
             var file = $files[0];
-            console.log(file);
+
+            submitFileToS3(file);
+
             $scope.upload = $upload.upload({
-                url: '/csv',
-                method: 'POST',
-                file: file
-            }).then(function(res) {
-                if (!res.data.success) {
-                    throw res.data.message;
-                }
-                // so user sees upload animation
-                $location.path('reports/' + res.data.reportId);
-            }, null, function(evt) {
-                $percentComplete.width(parseInt(100.0 * evt.loaded / evt.total) + '%');
+                    url: '/csv',
+                    method: 'POST',
+                    file: file
+                }).then(function(res) {
+                    if (!res.data.success) {throw res.data.message; }
+                    $location.path('reports/' + res.data.reportId);
+                }, null, function(evt) {
+                    $percentComplete.width(parseInt(100.0 * evt.loaded / evt.total) + '%');
             });
         };
     }
@@ -38,7 +39,7 @@ AentropicoApp.controller('aboutController', ['$scope',
 
 
 
-function buildChartFromReportId($http, reportId) {
+function buildLineChartFromReportId($http, reportId) {
     $http.get('/reports/' + reportId)
         .success(function(res) {
             var chart = d3.custom.charts.lineChart()
@@ -46,11 +47,16 @@ function buildChartFromReportId($http, reportId) {
                 .height($('#graph').width() / 2)
                 .x(function(d) {return +d.x; })
                 .y(function(d) {return +d.y; });
-            chart('#graph', res.data);
+
+            var data = d3.csv.parse(res.data);
+
+            d3.select('#graph')
+                .datum(data)
+                .call(chart);
         });
 }
 
-function buildBarChart($http, reportId) {
+function buildBarChartFromReportId($http, reportId) {
     // var randomDataset = function () {
     //     return d3.range(~~(Math.random() * 50)).map(function(d, i) {
     //         return~~ (Math.random() * 1000);
@@ -75,36 +81,47 @@ function buildBarChart($http, reportId) {
 
 }
 
-// direct uploading to s3
-function AWS() {
-    var processResponse = function (res) {
-        console.log('res');
-        console.log(res);
-        $("#fld_redirect").val(res.S3Redirect);
-        $("#fld_AWSAccessKeyId").val(res.s3Key);
-        $("#fld_Policy").val(res.s3PolicyBase64);
-        $("#fld_Signature").val(res.s3Signature);
-        $("#myform").submit();
-    };
-
-    this.requestCredentials = function(filename) {
-        var _file;
-
-        _file = filename.replace(/.+[\\\/]/, "");
-
+function submitFileToS3(file) {
+    var requestCredentials = function(filename) {
+        filename = filename.replace(/.+[\\\/]/, "");
         $.ajax({
-            url: "/gets3credentials/" + _file,
-            dataType: "JSONP",
+            url: "/signed",
+            data: {title: filename },
+            type: "GET",
+            dataType: "json",
             success: processResponse,
             error: function(res, status, error) {
-                console.log('here');
-                console.log(res);
-                console.log(status);
-                console.log(error);
+                throw error;
             }
         });
     };
 
-}
+    var processResponse = function (data) {
+        var formData = new FormData();    
+        formData.append('key', data.key);
+        formData.append('AWSAccessKeyId', data.AWSAccessKeyId);
+        formData.append('acl', 'public-read');
+        formData.append('policy', data.policy);
+        formData.append('signature', data.signature);
+        formData.append('success_action_status', "201");
+        formData.append('Content-Type', data.contentType);
+        formData.append('file', file);
 
-window.aws = new AWS();
+        $.ajax({
+            url: "http://aedeveloper.s3.amazonaws.com/",
+            type: "POST",
+            processData: false,
+            contentType: false,
+            async:false,
+            data: formData,
+            dataType: 'text',
+            success: function (res) {},
+            error: function(res, status, error) {
+                alert('Error', error);
+            }
+        });
+    };
+
+    return requestCredentials(file.name);
+
+}

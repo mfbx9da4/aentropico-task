@@ -40,38 +40,39 @@ d3.custom.charts.lineChart = function() {
         });
     var svg;
     
-    function exports(selector, dataset_text) {
+    // function exports(selector, dataset_text) {
+    function exports(_selection) {
+        _selection.each(function(data) {
+            svg = d3.select(this).append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        svg = d3.select(selector).append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var data = d3.csv.parse(dataset_text);
+            xScale
+                .range([0, width - margin.left - margin.right])
+                .domain(d3.extent(data, xValue));
+            yScale
+                .range([height - margin.top - margin.bottom, 0])
+                .domain(d3.extent(data, yValue));
 
-        xScale
-            .range([0, width - margin.left - margin.right])
-            .domain(d3.extent(data, xValue));
-        yScale
-            .range([height - margin.top - margin.bottom, 0])
-            .domain(d3.extent(data, yValue));
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
+                .call(xAxis);
 
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + (height - margin.top - margin.bottom) + ")")
-            .call(xAxis);
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)");
 
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-            .append("text")
-            .attr("transform", "rotate(-90)");
-
-        svg.append("path")
-            .datum(data)
-            .attr("class", "line")
-            .attr("d", line);
+            svg.append("path")
+                .datum(data)
+                .attr("class", "line")
+                .attr("d", line);
+        });
     }
     exports.margin = function(_) {
         if (!arguments.length) return margin;
@@ -119,19 +120,17 @@ d3.custom.charts.barChart = function () {
 
 
     function exports(_selection) {
-        _selection.each(function(_data) {
-            var chartW = width - margin.left - margin.right,
+        _selection.each(function(data) {
+            var chartW = width ,
                 chartH = height - margin.top - margin.bottom;
 
 
-            console.log(_data);
-
             var xScale = d3.scale.ordinal()
-                    .domain(_data.map(function(d, i) { return +i; }))
+                    .domain(data.map(function(d, i) { return +i; }))
                     .rangeRoundBands([0, chartW], 0.1);
 
             var yScale = d3.scale.linear()
-                    .domain([0, d3.max(_data, function(d, i) {return +yValue(d); })])
+                    .domain([0, d3.max(data, function(d, i) {return +yValue(d); })])
                     .range([chartH, 0]);
 
             var xAxis = d3.svg.axis()
@@ -142,7 +141,7 @@ d3.custom.charts.barChart = function () {
                     .scale(yScale)
                     .orient("left");
 
-            var barW = chartW / _data.length;
+            // var barW = chartW / data.length;
 
             if (!svg) {
                 svg = d3.select(this)
@@ -165,10 +164,10 @@ d3.custom.charts.barChart = function () {
                 .call(yAxis);
 
             var gapSize = xScale.rangeBand() / 100 * gap;
-            barW = xScale.rangeBand() - gapSize;
+            var barW = xScale.rangeBand() - gapSize;
             var bars = svg.select(".chart-group")
                     .selectAll(".bar")
-                    .data(_data);
+                    .data(data);
             bars.enter().append("rect")
                 .classed("bar", true)
                 .attr({x: chartW,

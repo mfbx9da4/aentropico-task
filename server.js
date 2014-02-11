@@ -88,7 +88,6 @@ setup_monk(function (db) {
     app.get('/about', routes.get_about);
     app.get('/aws', routes.get_aws);
     app.get('/signed', aws.signed);
-    app.get('/gets3credentials/:filename', routes.get_s3Credentials);
     app.get('/reports/:id', routes.get_report(db));
     app.post('/csv', routes.post_csv(db, fs));
 
