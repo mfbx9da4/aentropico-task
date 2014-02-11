@@ -86,7 +86,6 @@ setup_monk(function (db) {
     });
 
     app.get('/about', routes.get_about);
-    app.get('/aws', routes.get_aws);
     app.get('/signed', aws.signed);
     app.get('/reports/:id', routes.get_report(db));
     app.post('/csv', routes.post_csv(db, fs));

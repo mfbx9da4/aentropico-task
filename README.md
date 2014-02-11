@@ -1,7 +1,6 @@
 ##Todo
 
 - Make calculation of predicted data
-- Show prediction
 - delete aws stuff
 - clean up response body stuff in route
 - deleted commented
@@ -25,6 +24,8 @@
 - Configure uploading to amazon
 - Configure downloading from amazon
 - Make bar chart
+- Show prediction
+
 
 ####Thoughts on angular:
 - alot less magic
