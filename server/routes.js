@@ -38,15 +38,20 @@ exports.get_report = function(db) {
 exports.post_csv = function(db, fs) {
     return function(req, res) {
 
+        var file_url = req.body.url;
+        console.log(file_url);
+        var file_data;
+        
         // get the temporary location of the file
         var tmp_path = req.files.file.path;
-        var file_data;
         fs.readFile(tmp_path, {
-            encoding: 'utf-8'
-        }, function(err, data) {
-            if (err) throw err;
-            file_data = data.toString();
-            delete_temporary(add_to_db, respond);
+                encoding: 'utf-8'
+            }, function(err, data) {
+                if (err) throw err;
+                
+                file_data = data.toString();
+                // sequentially delete temp, add it to db and then respond
+                delete_temporary(add_to_db, respond);
         });
 
         function delete_temporary(next, next2) {
@@ -59,7 +64,8 @@ exports.post_csv = function(db, fs) {
         function add_to_db(next) {
             var collection = db.get('csvcollection');
             collection.insert({
-                data: file_data
+                data: file_data,
+                url: file_url
             }, next);
         }
 

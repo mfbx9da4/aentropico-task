@@ -11,6 +11,8 @@
 - make sure you handle report id's which throw errors
 - switcher between types of graphs
 - delete conslogs
+- make charts functions into one function
+- prepare qus and opinions
 
 ####Done
 

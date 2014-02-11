@@ -269,18 +269,22 @@ AentropicoApp.config(function($routeProvider, $locationProvider) {
             $percentComplete.width('0%').parent().show();
             var file = $files[0];
 
-            submitFileToS3(file);
-
-            $scope.upload = $upload.upload({
-                    url: '/csv',
-                    method: 'POST',
-                    file: file
-                }).then(function(res) {
-                    if (!res.data.success) {throw res.data.message; }
-                    $location.path('reports/' + res.data.reportId);
-                }, null, function(evt) {
-                    $percentComplete.width(parseInt(100.0 * evt.loaded / evt.total) + '%');
+            var file_key = submitFileToS3(file, function onUploadToAmazon (file_key){
+                var file_url = 'https://s3.amazonaws.com/aedeveloper/' + file_key;
+                $scope.upload = $upload.upload({
+                        url: '/csv',
+                        method: 'POST',
+                        file: file,
+                        data: {url: file_url},
+                    }).then(function(res) {
+                        if (!res.data.success) {throw res.data.message; }
+                        $location.path('reports/' + res.data.reportId);
+                    }, null, function(evt) {
+                        $percentComplete.width(parseInt(100.0 * evt.loaded / evt.total) + '%');
+                });
+                
             });
+
         };
     }
 ]);
@@ -309,12 +313,6 @@ function buildLineChartFromReportId($http, reportId) {
 }
 
 function buildBarChartFromReportId($http, reportId) {
-    // var randomDataset = function () {
-    //     return d3.range(~~(Math.random() * 50)).map(function(d, i) {
-    //         return~~ (Math.random() * 1000);
-    //     });
-    // };
-
     $http.get('/reports/' + reportId)
         .success(function(res) {
             var chart = d3.custom.charts.barChart()
@@ -328,12 +326,12 @@ function buildBarChartFromReportId($http, reportId) {
             d3.select("#figure")
                 .datum(data)
                 .call(chart);
-            // chart('#figure', res.data);
         });
 
 }
 
-function submitFileToS3(file) {
+function submitFileToS3(file, callback) {
+    var file_key;
     var requestCredentials = function(filename) {
         filename = filename.replace(/.+[\\\/]/, "");
         $.ajax({
@@ -359,7 +357,7 @@ function submitFileToS3(file) {
         formData.append('Content-Type', data.contentType);
         formData.append('file', file);
 
-        $.ajax({
+         $.ajax({
             url: "http://aedeveloper.s3.amazonaws.com/",
             type: "POST",
             processData: false,
@@ -367,13 +365,18 @@ function submitFileToS3(file) {
             async:false,
             data: formData,
             dataType: 'text',
-            success: function (res) {},
+            success: function (res) {
+                var xml = $.parseXML(res);
+                file_key = xml.children[0].getElementsByTagName('Key')[0].innerHTML;
+                console.log(file_key);
+                callback(file_key);
+            },
             error: function(res, status, error) {
                 alert('Error', error);
             }
         });
     };
 
-    return requestCredentials(file.name);
+    requestCredentials(file.name);
 
 }
