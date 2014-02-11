@@ -2,13 +2,26 @@ AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$lo
     function($scope, $http, $upload, $location, $routeParams) {
         
 
-        // (for fast debugging)
+        // (for fast file uploading)
         $('input[type=file]').focus();
 
         if ($routeParams.reportId) {
             $('#percent-complete').width('100%');
-            buildChartFromReportId(d3.custom.charts.lineChart, '#graph', $routeParams.reportId, 
-                {getDataFromAmazon: false});
+            getDataFromReportId($routeParams.reportId, {getDataFromAmazon: false}, function(data) {
+                var type = d3.custom.charts.lineChart;
+                var selector = '#graph';
+
+                var chart = type()
+                    .width($(selector).width())
+                    .height($(selector).width() / 2)
+                    // .xDomain(function(data) {var extent = d3.extent(data, function(d, i) {return +i; }); var domain = []; var intervals = 10; for (var i = extent[0]; i < intervals; i ++) {var ratio = intervals /i; domain.push(extent[1] * ratio); } console.log(domain); return domain; })
+                    .x(function(d) {return +d.x; })
+                    .y(function(d) {return +d.y; });
+
+                d3.select(selector)
+                    .datum(data)
+                    .call(chart);
+            });
         }
 
 
@@ -42,35 +55,20 @@ AentropicoApp.controller('aboutController', ['$scope',
 ]);
 
 
-
-function buildChartFromReportId(type, selector, reportId, config) {
-    var buildChart = function (data) {
-        var chart = type()
-            .width($(selector).width())
-            .height($(selector).width() / 2)
-            .x(function(d) {return +d.x; })
-            .y(function(d) {return +d.y; });
-
-        d3.select(selector)
-            .datum(data)
-            .call(chart);
-    };
-
+function getDataFromReportId(reportId, config, callback) {
     $.get('/reports/' + reportId)
         .success(function(res) {
             if (config.getDataFromAmazon) {
                 $.get(res.url)
                     .success(function(data) {
                         data = d3.csv.parse(data);
-                        buildChart(data);
+                        callback(data);
                     });
             } else {
                 var data = d3.csv.parse(res.data);
-                buildChart(data);
-                
+                callback(data);
+
             }
-
-
         });
 }
 

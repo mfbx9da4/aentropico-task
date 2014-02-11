@@ -138,6 +138,9 @@ d3.custom.charts.barChart = function () {
         return d[1];
     };
 
+    var xDomain = function (data) {
+        return data.map(function(d, i) { return +i; });
+    };
 
     function exports(_selection) {
         _selection.each(function(data) {
@@ -146,7 +149,7 @@ d3.custom.charts.barChart = function () {
 
 
             var xScale = d3.scale.ordinal()
-                    .domain(data.map(function(d, i) { return +i; }))
+                    .domain(xDomain(data))
                     .rangeRoundBands([0, chartW], 0.1);
 
             var yScale = d3.scale.linear()
@@ -222,6 +225,11 @@ d3.custom.charts.barChart = function () {
     exports.x = function(_) {
         if (!arguments.length) return xValue;
         xValue = _;
+        return exports;
+    };
+    exports.xDomain = function(_) {
+        if (!arguments.length) return xDomain;
+        xDomain = _;
         return exports;
     };
     exports.y = function(_) {

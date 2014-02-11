@@ -2,20 +2,7 @@ exports.get_about = function(req, res) {
     res.sendfile('README.html');
 };
 
-exports.get_aws = function(req, res) {
-    res.sendfile('misc/aws.html');
-};
-
 exports.get_report = function(db) {
-    response_body = {
-        "id": "",
-        "result": {
-            "htmlreport": {
-                url: "url to report"
-            }
-        },
-        "status": ""
-    };
     return function(req, res) {
 
         var collection = db.get('csvcollection');
