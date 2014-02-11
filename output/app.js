@@ -259,8 +259,8 @@ AentropicoApp.config(function($routeProvider, $locationProvider) {
 
         if ($routeParams.reportId) {
             $('#percent-complete').width('100%');
-            buildLineChartFromReportId($http, $routeParams.reportId);
-            buildBarChartFromReportId($http, $routeParams.reportId);
+            buildChartFromReportId(d3.custom.charts.lineChart, '#graph', $routeParams.reportId, 
+                {getDataFromAmazon: false});
         }
 
 
@@ -295,39 +295,35 @@ AentropicoApp.controller('aboutController', ['$scope',
 
 
 
-function buildLineChartFromReportId($http, reportId) {
-    $http.get('/reports/' + reportId)
+function buildChartFromReportId(type, selector, reportId, config) {
+    var buildChart = function (data) {
+        var chart = type()
+            .width($(selector).width())
+            .height($(selector).width() / 2)
+            .x(function(d) {return +d.x; })
+            .y(function(d) {return +d.y; });
+
+        d3.select(selector)
+            .datum(data)
+            .call(chart);
+    };
+
+    $.get('/reports/' + reportId)
         .success(function(res) {
-            var chart = d3.custom.charts.lineChart()
-                .width($('#graph').width())
-                .height($('#graph').width() / 2)
-                .x(function(d) {return +d.x; })
-                .y(function(d) {return +d.y; });
+            if (config.getDataFromAmazon) {
+                $.get(res.url)
+                    .success(function(data) {
+                        data = d3.csv.parse(data);
+                        buildChart(data);
+                    });
+            } else {
+                var data = d3.csv.parse(res.data);
+                buildChart(data);
+                
+            }
 
-            var data = d3.csv.parse(res.data);
 
-            d3.select('#graph')
-                .datum(data)
-                .call(chart);
         });
-}
-
-function buildBarChartFromReportId($http, reportId) {
-    $http.get('/reports/' + reportId)
-        .success(function(res) {
-            var chart = d3.custom.charts.barChart()
-                .width($('#figure').width())
-                .height($('#figure').width() / 2)
-                .x(function(d) {return +d.x; })
-                .y(function(d) {return +d.y; });
-
-            var data = d3.csv.parse(res.data);
-
-            d3.select("#figure")
-                .datum(data)
-                .call(chart);
-        });
-
 }
 
 function submitFileToS3(file, callback) {
@@ -372,7 +368,7 @@ function submitFileToS3(file, callback) {
                 callback(file_key);
             },
             error: function(res, status, error) {
-                alert('Error', error);
+                alert('Error uploading to amazon', error);
             }
         });
     };

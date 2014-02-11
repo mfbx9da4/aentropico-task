@@ -26,7 +26,8 @@ exports.get_report = function(db) {
                 var doc = docs[0];
                 res.send(200, {
                     'id': doc._id,
-                    'data': doc.data
+                    'data': doc.data,
+                    'url': doc.url
                 });
             } else {
                 res.send(404);
@@ -39,7 +40,6 @@ exports.post_csv = function(db, fs) {
     return function(req, res) {
 
         var file_url = req.body.url;
-        console.log(file_url);
         var file_data;
         
         // get the temporary location of the file
