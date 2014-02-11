@@ -44,8 +44,6 @@ d3.custom.charts.lineChart = function() {
     function exports(_selection) {
         _selection.each(function(data) {
 
-
-
             svg = d3.select(this).append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
@@ -59,7 +57,6 @@ d3.custom.charts.lineChart = function() {
 
             var predictive_range = d3.extent(data, xValue);
             predictive_range[1] = predictive_range[1] * 1.4;
-            console.log(predictive_range);
             var lindata = predictive_range.map(function(x) {
                     return {x: +x, 
                             y: lin(+x)};
