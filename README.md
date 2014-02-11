@@ -1,12 +1,14 @@
 ##Todo
 
-- Find a stats/genetic algorithm module for calculations
-- Make calculation of predicted data
 - Configure uploading to amazon
-- add angular-animations
-- delete everything on the remote db
-- **check meetup email**
-
+- Make calculation of predicted data
+- Show prediction
+- Make bar chart
+- delete aws stuff
+- clean up response body stuff in route
+- deleted commented
+- make sure you handle report id's which throw errors
+- switcher between types of graphs
 
 ####Done
 
@@ -109,6 +111,18 @@ This is just a brainstorming exercise, feel free to throw any ideas that come to
 3. Patterns of customer buying
 4. Do people buy same product several times
 5. Which products are only bought once and never again.
+6. Summer based products
+7. which brand
+8. associate with location
+9. time of day
+10. day of the month
+11. what day of the week/month people eat fruit/things that will go off
+12. what more brands to buy
+13. what more category of product to get
+14. predict how much stock to buy
+15. what's selling badly? try out with promotion
+16. suggest products to put on promotion
+17. suggest products to 
 
 ----------
 

@@ -2,7 +2,8 @@ var setup_monk = function(fn) {
     // checks if connected to the internet,
     // if connected uses mongohq db else uses local db
     // NB: must export mongohq url as env var.
-    // require('monk')(process.env.MONGOHQ_URL).get('algorithmcollection').find({}, function(e,d){console.log(e || d)})
+    // require('monk')(process.env.MONGOHQ_URL).get('csvcollection').find({}, function(e,d){console.log(e || d)})
+    // require('monk')(LOCAL_DB_URL).get('csvcollection').find({}, function(e,d){console.log(e || d)})
     var db;
     if (process.argv[2] == "local") {
         console.log('Override: using local db'.yellow);
@@ -48,6 +49,7 @@ var fs = require('fs');
 var mongo = require('mongodb');
 var monk = require('monk');
 var routes = require('./server/routes');
+var aws = require('./server/aws');
 var LOCAL_DB_URL = 'localhost:27017/aentropic-task';
 
 setup_monk(function (db) {
@@ -72,6 +74,8 @@ setup_monk(function (db) {
     // development only
     if ('development' == app.get('env')) {
         app.use(express.errorHandler());
+    } else {
+        config.redirect_host = 'http://still-citadel-3009.herokuapp.com/';
     }
 
     // CORS
@@ -82,6 +86,9 @@ setup_monk(function (db) {
     });
 
     app.get('/about', routes.get_about);
+    app.get('/aws', routes.get_aws);
+    app.get('/signed', aws.signed);
+    app.get('/gets3credentials/:filename', routes.get_s3Credentials);
     app.get('/reports/:id', routes.get_report(db));
     app.post('/csv', routes.post_csv(db, fs));
 

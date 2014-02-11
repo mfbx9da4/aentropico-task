@@ -23,7 +23,9 @@ module.exports = function(grunt) {
             app: {
                 // the files to concatenate
                 src: [
-                    'app/app.js'
+                    'app/charts.js',
+                    'app/app.js',
+                    'app/controllers.js'
                 ],
                 dest: 'output/app.js'
             }
