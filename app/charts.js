@@ -43,19 +43,37 @@ d3.custom.charts.lineChart = function() {
     // function exports(selector, dataset_text) {
     function exports(_selection) {
         _selection.each(function(data) {
+
+
+
             svg = d3.select(this).append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+            // Derive a linear regression
+            var lin = ss.linear_regression().data(data.map(function(d) {
+                return [+d.x, +d.y];
+            })).line();
+
+            var predictive_range = d3.extent(data, xValue);
+            predictive_range[1] = predictive_range[1] * 1.4;
+            console.log(predictive_range);
+            var lindata = predictive_range.map(function(x) {
+                    return {x: +x, 
+                            y: lin(+x)};
+            });
 
             xScale
                 .range([0, width - margin.left - margin.right])
-                .domain(d3.extent(data, xValue));
+                .domain(d3.extent(predictive_range));
             yScale
                 .range([height - margin.top - margin.bottom, 0])
                 .domain(d3.extent(data, yValue));
+
+
+
 
             svg.append("g")
                 .attr("class", "x axis")
@@ -71,6 +89,11 @@ d3.custom.charts.lineChart = function() {
             svg.append("path")
                 .datum(data)
                 .attr("class", "line")
+                .attr("d", line);
+
+            svg.append("path")
+                .datum(lindata)
+                .attr("class", "reg")
                 .attr("d", line);
         });
     }
@@ -141,7 +164,6 @@ d3.custom.charts.barChart = function () {
                     .scale(yScale)
                     .orient("left");
 
-            // var barW = chartW / data.length;
 
             if (!svg) {
                 svg = d3.select(this)

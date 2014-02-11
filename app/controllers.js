@@ -75,7 +75,6 @@ function buildChartFromReportId(type, selector, reportId, config) {
 }
 
 function submitFileToS3(file, callback) {
-    var file_key;
     var requestCredentials = function(filename) {
         filename = filename.replace(/.+[\\\/]/, "");
         $.ajax({
@@ -111,7 +110,7 @@ function submitFileToS3(file, callback) {
             dataType: 'text',
             success: function (res) {
                 var xml = $.parseXML(res);
-                file_key = xml.children[0].getElementsByTagName('Key')[0].innerHTML;
+                var file_key = xml.children[0].getElementsByTagName('Key')[0].innerHTML;
                 console.log(file_key);
                 callback(file_key);
             },

@@ -12,6 +12,7 @@ module.exports = function(grunt) {
                 src: [
                     "libs/jquery-2.0.3.min.js",
                     "libs/d3.v3.min.js",
+                    "libs/simple-statistics.js",
                     "libs/angular-file-upload-shim.js",
                     "libs/angular.min.js",
                     "libs/angular-route.min.js",
