@@ -4,22 +4,25 @@ exports.get_about = function(req, res) {
 
 exports.get_report = function(db) {
     return function(req, res) {
-
         var collection = db.get('csvcollection');
-        collection.find({
-            _id: req.params.id
-        }, {}, function(e, docs) {
-            if (docs) {
-                var doc = docs[0];
-                res.send(200, {
-                    'id': doc._id,
-                    'data': doc.data,
-                    'url': doc.url
-                });
-            } else {
-                res.send(404);
-            }
-        });
+        if (req.params.id) {
+            collection.find({
+                _id: req.params.id
+            }, {}, function(e, docs) {
+                if (docs) {
+                    var doc = docs[0];
+                    res.send(200, {
+                        'id': doc._id,
+                        'data': doc.data,
+                        'url': doc.url
+                    });
+                } else {
+                    res.send(404, 'No docs found!');
+                }
+            });
+        } else {
+            res.send(404, 'No id given!');
+        }
     };
 };
 
@@ -35,7 +38,6 @@ exports.post_csv = function(db, fs) {
                 encoding: 'utf-8'
             }, function(err, data) {
                 if (err) throw err;
-                
                 file_data = data.toString();
                 // sequentially delete temp, add it to db and then respond
                 delete_temporary(add_to_db, respond);

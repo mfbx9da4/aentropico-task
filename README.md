@@ -2,9 +2,7 @@
 
 - Make calculation of predicted data
 - delete aws stuff
-- clean up response body stuff in route
 - deleted commented
-- make sure you handle report id's which throw errors
 - switcher between types of graphs
 - delete conslogs
 - make charts functions into one function
@@ -25,6 +23,8 @@
 - Configure downloading from amazon
 - Make bar chart
 - Show prediction
+- clean up response body stuff in route
+- make sure you handle report id's which throw errors
 
 
 ####Thoughts on angular:
