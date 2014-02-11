@@ -143,6 +143,7 @@ This is just a brainstorming exercise, feel free to throw any ideas that come to
 10. What product brings the greatest revenue? (assuming trans_id provides transaction amount)
 	- Calculate total revenue
 
+--------------
 
 1. Customer clustering into groups by products.
 2. Associating dates with products
