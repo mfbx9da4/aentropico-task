@@ -62,7 +62,8 @@ setup_monk(function (db) {
     });
 
     // all environments
-    app.set('port', process.env.PORT || 8000);
+    console.log();
+    app.set('port', process.argv[3] || 8000);
     app.set('views', path.join(__dirname, 'views'));
     app.use(express.favicon());
     app.use(express.logger('dev'));

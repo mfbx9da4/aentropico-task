@@ -7,8 +7,11 @@ AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$lo
 
         $scope.buildGraph = function (type, selector) {
             $(selector).empty();
-            var chart_types ={'line': d3.custom.charts.lineChart,
-                        'bar': d3.custom.charts.barChart};
+            var chart_types ={
+                'line': d3.custom.charts.lineChart,
+                'bar': d3.custom.charts.barChart,
+                'world': d3.custom.charts.worldChart
+            };
 
             var chart = chart_types[type]()
                 .width($(selector).width())
@@ -25,7 +28,7 @@ AentropicoApp.controller('uploadController', ['$scope', '$http', '$upload', '$lo
         if ($routeParams.reportId) {
             $('#percent-complete').width('100%');
             getDataFromReportId($routeParams.reportId, {getDataFromAmazon: false}, function(data) {
-                var type = 'line';
+                var type = 'world';
                 var selector = '#graph';
                 $scope.data = data;
                 $scope.buildGraph(type, selector);

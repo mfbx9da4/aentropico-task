@@ -12,6 +12,7 @@ module.exports = function(grunt) {
                 src: [
                     "libs/jquery-2.0.3.min.js",
                     "libs/d3.v3.min.js",
+                    "libs/topojson.v1.min.js",
                     "libs/simple-statistics.js",
                     "libs/angular-file-upload-shim.js",
                     "libs/angular.min.js",
@@ -24,7 +25,10 @@ module.exports = function(grunt) {
             app: {
                 // the files to concatenate
                 src: [
-                    'app/charts.js',
+                    'app/custom.js',
+                    'app/lineChart.js',
+                    'app/barChart.js',
+                    'app/worldChart.js',
                     'app/app.js',
                     'app/controllers.js'
                 ],

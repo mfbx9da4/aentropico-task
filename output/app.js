@@ -3,7 +3,7 @@ d3.custom = {
 };
 
 
-d3.custom.charts.lineChart = function() {
+;d3.custom.charts.lineChart = function() {
     var margin = {
         top: 20,
         right: 20,
@@ -40,7 +40,6 @@ d3.custom.charts.lineChart = function() {
         });
     var svg;
     
-    // function exports(selector, dataset_text) {
     function exports(_selection) {
         _selection.each(function(data) {
 
@@ -123,7 +122,7 @@ d3.custom.charts.lineChart = function() {
     return exports;
 };
 
-d3.custom.charts.barChart = function () {
+;d3.custom.charts.barChart = function () {
     var margin = {top: 20, right: 20, bottom: 40, left: 40},
         width = 500,
         height = 500,
@@ -241,6 +240,162 @@ d3.custom.charts.barChart = function () {
     return exports;
 };
 
+;d3.custom.charts.worldChart = function() {
+    var margin = {
+        top: 20,
+        right: 20,
+        bottom: 30,
+        left: 50
+    };
+    var width = 760 - margin.left - margin.right;
+    var height = 120 - margin.top - margin.bottom;
+
+    var xValue = function(d) {
+        return d[0];
+    };
+
+    var yValue = function(d) {
+        return d[1];
+    };
+
+    var xScale = d3.scale.linear();
+    var yScale = d3.scale.linear();
+
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .orient("bottom");
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient("left");
+
+    var line = d3.svg.line()
+        .x(function(d) {
+            return xScale(d.x);
+        })
+        .y(function(d) {
+            return yScale(d.y);
+        });
+
+    var svg;
+
+// var all = $('table.wikitable tr').map(function() {
+//     return new Array($('td', this).map(function() {
+//             var cell = $(this);
+//             cell.find('span').empty();
+//         return cell.text()
+//     }).slice(0, 8).get())
+// }).get()
+// var hash = {};
+// all.map(function (item) {hash[item[0]] = item[5];})
+
+    function exports(_selection) {
+        _selection.each(function(data) {
+            var path = d3.geo.path()
+                    .projection(cylindrical(width, height));
+
+            svg = d3.select(this).append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            d3.json("/misc/world-50m.json", function(error, world) {
+                d3.tsv("/misc/country-names.tsv", function (error, names) {
+                    var countries = topojson.feature(world, world.objects.countries);
+                    var land = topojson.feature(world, world.objects.land);
+                    // var globe = {type: "Sphere"};
+                    
+                    var randColor = function() {
+                        var rand255 = function () {return parseInt(Math.random()*255);};
+                        var color = 'rgb(' + rand255() + ',' + rand255() + ',' + rand255() + ')'; 
+                        return color;
+                    };
+
+                    svg.append("path")
+                        .datum(land)
+                        .attr("class", "land")
+                        // .style("fill", randColor())
+                        .attr("d", path);
+
+                    svg.append("path")
+                        .datum(topojson.mesh(world, world.objects.countries, function(a, b) {
+                            return a !== b;
+                        }))
+                        .attr("class", "country-border")
+                        .attr("d", path);
+
+                    min_wages = countries.features.filter(function(d) {
+                        return names.some(function(n) {
+                            if (d.id == n.id) {
+                                d.name = n.name;
+                                return true;
+                            }
+                        });
+                    });
+
+                    console.log('min_wages');
+                    console.log(min_wages);
+
+                    var returnId = function(d) {return min_wages[i].id; };
+                    var returnName = function(d) {return min_wages[i].name; };
+                    
+                    for (i = 0; i < min_wages.length; i++) {
+
+                        var bounds = path.bounds(min_wages[i]);
+                        if (bounds[0][0] < 0) bounds[0][0] = 0;
+                        if (bounds[1][0] > width) bounds[1][0] = width;
+                        if (bounds[0][1] < 0) bounds[0][1] = 0;
+                        if (bounds[1][1] < 0) bounds[1][1] = height;
+
+                        svg.append("path")
+                            .style("fill", randColor())  
+                            .attr("x", bounds[0][0])
+                            .attr("y", bounds[0][1])
+                            .attr("width", bounds[1][0] - bounds[0][0])
+                            .attr("height", bounds[1][1] - bounds[0][1])
+                            .attr("d", path(min_wages[i]));
+                    }
+
+                });
+            });
+
+            function cylindrical(width, height) {
+                return d3.geo.projection(function(λ, φ) {
+                    return [λ, φ * 2 / width * height];
+                })
+                    .scale(width / 2 / Math.PI)
+                    .translate([width / 2, height / 2]);
+            }
+
+        });
+    }
+    exports.margin = function(_) {
+        if (!arguments.length) return margin;
+        margin = _;
+        return exports;
+    };
+    exports.width = function(_) {
+        if (!arguments.length) return width;
+        width = _;
+        return exports;
+    };
+    exports.height = function(_) {
+        if (!arguments.length) return height;
+        height = _;
+        return exports;
+    };
+    exports.x = function(_) {
+        if (!arguments.length) return xValue;
+        xValue = _;
+        return exports;
+    };
+    exports.y = function(_) {
+        if (!arguments.length) return yValue;
+        yValue = _;
+        return exports;
+    };
+
+    return exports;
+};
+
 ;var AentropicoApp = angular.module('AentropicoApp', ['angularFileUpload', 'ngRoute']);
 
 AentropicoApp.config(function($routeProvider, $locationProvider) {
@@ -271,8 +426,11 @@ AentropicoApp.config(function($routeProvider, $locationProvider) {
 
         $scope.buildGraph = function (type, selector) {
             $(selector).empty();
-            var chart_types ={'line': d3.custom.charts.lineChart,
-                        'bar': d3.custom.charts.barChart};
+            var chart_types ={
+                'line': d3.custom.charts.lineChart,
+                'bar': d3.custom.charts.barChart,
+                'world': d3.custom.charts.worldChart
+            };
 
             var chart = chart_types[type]()
                 .width($(selector).width())
@@ -289,7 +447,7 @@ AentropicoApp.config(function($routeProvider, $locationProvider) {
         if ($routeParams.reportId) {
             $('#percent-complete').width('100%');
             getDataFromReportId($routeParams.reportId, {getDataFromAmazon: false}, function(data) {
-                var type = 'line';
+                var type = 'world';
                 var selector = '#graph';
                 $scope.data = data;
                 $scope.buildGraph(type, selector);
