@@ -1,41 +1,4 @@
-## Todo
-
-*   switcher between types of graphs
-*   prepare qus, opinions and part 2
-
-#### Done
-
-*   Make d3 chart reusable
-*   Angularjs config
-*   Mongodb/mongohq config
-*   POST to `/algorithms` uploads CSV to mongodb via angularjs and mongohq
-*   Basic d3 line graph built from `GET jobs/:jobId` which returns CSV data from db.
-*   Deploy using heroku
-*   redirect to job permalink
-*   refactor jobs to report and algorithms to upload
-*   Configure uploading to amazon
-*   Configure downloading from amazon
-*   Make bar chart
-*   Show prediction
-*   clean up response body stuff in route
-*   make sure you handle report id's which throw errors
-*   deleted commented
-*   delete aws stuff
-*   delete conslogs
-*   Make calculation of predicted data
-*   make charts functions into one function
-
-#### Thoughts on angular:
-
-*   alot less magic
-*   ember comes with a debugger
-*   much more configurable
-*   greater community and more plugins
-
-#### Thoughts on d3:
-
-*   very powerful
-*   likely to continue using it
+This was set as an employer challenge completed in 2014. Below is the challenge
 
 ## PART 1
 
@@ -155,6 +118,4 @@ This is just a brainstorming exercise, feel free to throw any ideas that come to
     *   shop layout
     *   opening hours
 
-* * *
 
-011969310606
