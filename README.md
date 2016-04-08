@@ -1,4 +1,4 @@
-This was set as an employer challenge completed in 2014. Below is the challenge
+This was set by an employer as an admission challenge. Completed in 2014. Below is the original challenge.
 
 ## PART 1
 
